@@ -40,5 +40,16 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(new URL('/auth/signin', request.url));
   }
 
+  if (session) {
+    // ALLOWED_EMAILS is a comma-separated list of email addresses permitted to access
+    // this portal. It can hold any number of emails — add or remove addresses freely
+    // without touching code. If the env var is unset, the check is skipped entirely.
+    const allowedEmails = process.env.ALLOWED_EMAILS?.split(',').map(e => e.trim()) ?? [];
+    if (allowedEmails.length > 0 && !allowedEmails.includes(session.user.email ?? '')) {
+      await supabase.auth.signOut();
+      return NextResponse.redirect(new URL('/auth/signin?error=unauthorized', request.url));
+    }
+  }
+
   return response;
 }
