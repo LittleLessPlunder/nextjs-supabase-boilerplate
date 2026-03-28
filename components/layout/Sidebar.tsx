@@ -1,32 +1,22 @@
 'use client'
 
 import { Button } from "@/components/ui/button";
-import { Users, Briefcase, X, ChevronLeft, ChevronRight, Calendar, FolderTree, BookOpen, FileText, Network, List, Clock, ClipboardList, Database } from "lucide-react";
+import { Users, Briefcase, X, ChevronLeft, ChevronRight, Calendar, FileText, Network, Clock, ClipboardList, Database } from "lucide-react";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Logo } from './Logo';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 interface SidebarProps {
   onClose?: () => void;
 }
 
-const NAVIGATION_ITEMS = [
-  {
-    title: "Allocations",
-    href: "/allocations",
-    icon: Calendar,
-  },
-  {
-    title: "Projects",
-    href: "/projects",
-    icon: Briefcase,
-  },
-  {
-    title: "Clients",
-    href: "/clients",
-    icon: Users,
-  },
+type NavChild = { title: string; href: string; icon: React.ElementType };
+type NavItem =
+  | { title: string; href: string; icon: React.ElementType; children?: never }
+  | { title: string; href?: never; icon: React.ElementType; children: NavChild[] };
+
+const NAVIGATION_ITEMS: NavItem[] = [
   {
     title: "HR",
     icon: Users,
@@ -59,22 +49,6 @@ const NAVIGATION_ITEMS = [
     ]
   },
   {
-    title: "CRM",
-    icon: Users,
-    children: [
-      {
-        title: "Leads",
-        href: "/leads",
-        icon: Network,
-      },
-      {
-        title: "Opportunities",
-        href: "/opportunities",
-        icon: Briefcase,
-      },
-    ]
-  },
-  {
     title: "Master",
     icon: Database,
     children: [
@@ -97,11 +71,6 @@ const NAVIGATION_ITEMS = [
         title: "Positions",
         href: "/master/positions",
         icon: Briefcase,
-      },
-      {
-        title: "Knowledge",
-        href: "/master/knowledge",
-        icon: BookOpen,
       },
     ]
   },
