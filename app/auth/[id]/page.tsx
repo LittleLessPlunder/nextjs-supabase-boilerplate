@@ -1,14 +1,8 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
-import AuthForm, { AuthState } from '@/components/misc/AuthForm';
-import { Navbar } from '@/components/layout/Navbar';
+import AuthForm from '@/components/misc/AuthForm';
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-export default async function Auth({ params }: PageProps) {
-  const { id } = await params;
+export default async function Auth() {
   const supabase = await createClient();
 
   const {
@@ -19,16 +13,10 @@ export default async function Auth({ params }: PageProps) {
     return redirect('/');
   }
 
-  const currState = id as AuthState;
-  if (!['signin', 'signup', 'forgot_password'].includes(currState)) {
-    return redirect('/auth/signin');
-  }
-
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <Navbar user={user} onMenuClick={() => {}} />
-      <div className="flex grow justify-center items-center">
-        <AuthForm state={currState} />
+    <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="w-full max-w-md">
+        <AuthForm />
       </div>
     </div>
   );
