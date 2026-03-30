@@ -30,7 +30,8 @@ export function ThemeProvider({
   const [theme, setTheme] = useState<Theme>(defaultTheme);
 
   useEffect(() => {
-    setTheme((localStorage.getItem(storageKey) as Theme) || defaultTheme);
+    // Always force light mode — theme toggle is disabled for this app
+    setTheme('light');
   }, []);
 
   useEffect(() => {

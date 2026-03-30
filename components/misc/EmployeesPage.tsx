@@ -13,31 +13,41 @@ import { Pagination } from '@/components/ui/pagination';
 import { DEFAULT_ITEMS_PER_PAGE } from '@/utils/constants';
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from '@/components/ui/use-toast';
+import { RevenueStream } from '@/utils/types';
+
 interface EmployeesPageProps {
   user: User;
 }
+
+type EmploymentStatus = 'active' | 'probationary' | 'on_leave' | 'suspended' | 'under_investigation' | 'resigned' | 'terminated';
+
+const STATUS_META: Record<EmploymentStatus, { label: string; className: string }> = {
+  active:               { label: 'Active',               className: 'bg-green-100 text-green-800'  },
+  probationary:         { label: 'Probationary',         className: 'bg-blue-100 text-blue-800'    },
+  on_leave:             { label: 'On Leave',             className: 'bg-yellow-100 text-yellow-800'},
+  suspended:            { label: 'Suspended',            className: 'bg-orange-100 text-orange-800'},
+  under_investigation:  { label: 'Under Investigation',  className: 'bg-red-100 text-red-800'      },
+  resigned:             { label: 'Resigned',             className: 'bg-gray-100 text-gray-500'    },
+  terminated:           { label: 'Terminated',           className: 'bg-gray-200 text-gray-600'    },
+};
 
 interface Employee {
   id: string;
   given_name: string;
   surname: string;
-  company_email: string;
   is_active: boolean;
-  departments: Array<{
-    department: {
-      id: string;
-      name: string;
-    }
-  }>;
-  contracts: Array<{
-    id: string;
-    start_date: string;
-    end_date: string | null;
-    position: {
-      title: string;
-    }
-  }>;
+  employment_status: EmploymentStatus | null;
+  revenue_stream: RevenueStream | null;
+  daily_rate: number | null;
+  position: { title: string } | null;
 }
+
+const REVENUE_STREAM_LABELS: Record<RevenueStream, string> = {
+  fnb: 'F&B',
+  yoga: 'Yoga',
+  boutique: 'Boutique',
+  general: 'General / Admin',
+};
 
 export default function EmployeesPage({ user }: EmployeesPageProps) {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -47,11 +57,9 @@ export default function EmployeesPage({ user }: EmployeesPageProps) {
   const [totalItems, setTotalItems] = useState(0);
   const router = useRouter();
   const { currentTenant } = useTenant();
-  
+
   useEffect(() => {
-    if (currentTenant) {
-      loadEmployees();
-    }
+    if (currentTenant) loadEmployees();
   }, [currentPage, itemsPerPage, currentTenant]);
 
   async function loadEmployees() {
@@ -65,64 +73,24 @@ export default function EmployeesPage({ user }: EmployeesPageProps) {
       }
     } catch (error) {
       console.error('Error loading employees:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load employees. Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: "Failed to load employees.", variant: "destructive" });
     } finally {
       setLoading(false);
     }
   }
-
-  const getActivePosition = (contracts: Employee['contracts']) => {
-    if (!contracts?.length) return '-';
-
-    // Sort contracts by start date (newest first)
-    const sortedContracts = [...contracts].sort((a, b) => 
-      new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
-    );
-
-    // Find the active contract
-    const now = new Date();
-    const activeContract = sortedContracts.find(contract => {
-      const startDate = new Date(contract.start_date);
-      const endDate = contract.end_date ? new Date(contract.end_date) : null;
-      return startDate <= now && (!endDate || endDate >= now);
-    });
-
-    return activeContract?.position.title || '-';
-  };
 
   if (!currentTenant) {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
           <h2 className="text-lg font-semibold">No Tenant Selected</h2>
-          <p className="text-muted-foreground">Please select a tenant from your account settings.</p>
-          <Button 
-            className="mt-4"
-            onClick={() => router.push('/account')}
-          >
-            Go to Account Settings
-          </Button>
+          <Button className="mt-4" onClick={() => router.push('/account')}>Go to Account Settings</Button>
         </div>
       </div>
     );
   }
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const handleItemsPerPageChange = (items: number) => {
-    setItemsPerPage(items);
-    setCurrentPage(1); // Reset to first page when changing items per page
-  };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <div>Loading...</div>;
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
@@ -130,7 +98,7 @@ export default function EmployeesPage({ user }: EmployeesPageProps) {
     <div className="container mx-auto">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Employee List</CardTitle>
+          <CardTitle>Employee Registry</CardTitle>
           <Link href="/employees/add">
             <Button variant="default">+ Add New</Button>
           </Link>
@@ -139,50 +107,49 @@ export default function EmployeesPage({ user }: EmployeesPageProps) {
           <table className="w-full">
             <thead>
               <tr className="text-left bg-muted">
-                <th className="p-2">Given Name</th>
-                <th className="p-2">Surname</th>
-                <th className="p-2">Email</th>
+                <th className="p-2">Name</th>
                 <th className="p-2">Position</th>
-                <th className="p-2">Departments</th>
+                <th className="p-2">Revenue Stream</th>
+                <th className="p-2">Daily Rate</th>
                 <th className="p-2">Status</th>
                 <th className="p-2">Actions</th>
               </tr>
             </thead>
             <tbody>
               {employees?.map((employee) => (
-                <tr 
-                  key={employee.id} 
+                <tr
+                  key={employee.id}
                   className="border-b hover:bg-muted/50 cursor-pointer"
                   onClick={() => router.push(`/employees/edit/${employee.id}`)}
                 >
-                  <td className="p-2">{employee.given_name}</td>
-                  <td className="p-2">{employee.surname}</td>
-                  <td className="p-2">{employee.company_email}</td>
-                  <td className="p-2">{getActivePosition(employee.contracts)}</td>
                   <td className="p-2">
-                    <div className="flex flex-wrap gap-1">
-                      {employee.departments?.map((ed) => (
-                        <span 
-                          key={ed.department.id}
-                          className="inline-flex px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800"
-                        >
-                          {ed.department.name}
+                    {employee.given_name}{employee.surname ? ` ${employee.surname}` : ''}
+                  </td>
+                  <td className="p-2">{employee.position?.title ?? '—'}</td>
+                  <td className="p-2">
+                    {employee.revenue_stream
+                      ? REVENUE_STREAM_LABELS[employee.revenue_stream]
+                      : '—'}
+                  </td>
+                  <td className="p-2">
+                    {employee.daily_rate != null
+                      ? `₱${employee.daily_rate.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`
+                      : '—'}
+                  </td>
+                  <td className="p-2">
+                    {(() => {
+                      const s = employee.employment_status ?? (employee.is_active ? 'active' : 'terminated');
+                      const meta = STATUS_META[s as EmploymentStatus] ?? STATUS_META.active;
+                      return (
+                        <span className={`inline-flex px-2 py-1 text-xs font-medium rounded ${meta.className}`}>
+                          {meta.label}
                         </span>
-                      ))}
-                    </div>
+                      );
+                    })()}
                   </td>
                   <td className="p-2">
-                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded ${
-                      employee.is_active 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {employee.is_active ? 'Active' : 'Inactive'}
-                    </span>
-                  </td>
-                  <td className="p-2">
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="icon"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -202,8 +169,8 @@ export default function EmployeesPage({ user }: EmployeesPageProps) {
             totalPages={totalPages}
             itemsPerPage={itemsPerPage}
             totalItems={totalItems}
-            onPageChange={handlePageChange}
-            onItemsPerPageChange={handleItemsPerPageChange}
+            onPageChange={setCurrentPage}
+            onItemsPerPageChange={(items) => { setItemsPerPage(items); setCurrentPage(1); }}
           />
         </CardContent>
       </Card>

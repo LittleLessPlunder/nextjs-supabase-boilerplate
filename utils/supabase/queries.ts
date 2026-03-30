@@ -17,15 +17,7 @@ export async function getEmployees(
     .from('Employees')
     .select(`
       *,
-      departments:EmployeeDepartments(
-        department:Departments(*)
-      ),
-      contracts:EmployeeContracts(
-        id,
-        start_date,
-        end_date,
-        position:Positions(title)
-      )
+      position:Positions(title)
     `, { count: 'exact' })
     .eq('is_deleted', false)
     .eq('tenant_id', tenantId)
@@ -2172,4 +2164,488 @@ export async function convertLeadToClient(
     console.error('Error converting lead:', error);
     throw error;
   }
+}
+
+// ─── Payroll ────────────────────────────────────────────────────────────────
+
+export async function getPayrollEntries(
+  supabase: SupabaseClient,
+  tenantId: string,
+  periodStart: string,
+  periodEnd: string
+) {
+  const { data, error } = await supabase
+    .from('PayrollEntries')
+    .select(`
+      *,
+      employee:Employees(id, given_name, surname, daily_rate, revenue_stream)
+    `)
+    .eq('tenant_id', tenantId)
+    .eq('period_start', periodStart)
+    .eq('period_end', periodEnd)
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching payroll entries:', error);
+    return null;
+  }
+  return data;
+}
+
+export async function upsertPayrollEntries(
+  supabase: SupabaseClient,
+  entries: any[]
+) {
+  const { data, error } = await supabase
+    .from('PayrollEntries')
+    .upsert(entries, {
+      onConflict: 'employee_id,period_start,period_end',
+    })
+    .select();
+
+  if (error) {
+    console.error('Error upserting payroll entries:', error);
+    throw error;
+  }
+  return data;
+}
+
+// ─── Vendors ─────────────────────────────────────────────────────────────────
+
+export async function getVendors(supabase: SupabaseClient, tenantId: string) {
+  const { data, error } = await supabase
+    .from('Vendors')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .eq('is_deleted', false)
+    .order('name');
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function getVendor(supabase: SupabaseClient, tenantId: string, id: string) {
+  const { data, error } = await supabase
+    .from('Vendors')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .eq('id', id)
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function addVendor(supabase: SupabaseClient, vendor: any) {
+  const { data, error } = await supabase
+    .from('Vendors')
+    .insert(vendor)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateVendor(supabase: SupabaseClient, id: string, vendor: any) {
+  const { data, error } = await supabase
+    .from('Vendors')
+    .update({ ...vendor, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteVendor(supabase: SupabaseClient, id: string) {
+  const { error } = await supabase
+    .from('Vendors')
+    .update({ is_deleted: true, updated_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) throw error;
+}
+
+// ─── Expense Categories ───────────────────────────────────────────────────────
+
+export async function getExpenseCategories(supabase: SupabaseClient, tenantId: string) {
+  const { data, error } = await supabase
+    .from('ExpenseCategories')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .order('sort_order');
+  if (error) throw error;
+  return data ?? [];
+}
+
+// ─── Expenses ─────────────────────────────────────────────────────────────────
+
+export async function getExpenses(
+  supabase: SupabaseClient,
+  tenantId: string,
+  filters?: { dateFrom?: string; dateTo?: string; categoryId?: string; status?: string }
+) {
+  let query = supabase
+    .from('Expenses')
+    .select(`*, vendor:Vendors(name, tin), category:ExpenseCategories(name, is_cogs)`)
+    .eq('tenant_id', tenantId)
+    .eq('is_deleted', false)
+    .order('date', { ascending: false })
+    .order('created_at', { ascending: false });
+
+  if (filters?.dateFrom)   query = query.gte('date', filters.dateFrom);
+  if (filters?.dateTo)     query = query.lte('date', filters.dateTo);
+  if (filters?.categoryId) query = query.eq('category_id', filters.categoryId);
+  if (filters?.status)     query = query.eq('status', filters.status);
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function getExpense(supabase: SupabaseClient, tenantId: string, id: string) {
+  const { data, error } = await supabase
+    .from('Expenses')
+    .select(`*, vendor:Vendors(id, name, address, tin, is_vat_registered), category:ExpenseCategories(id, name)`)
+    .eq('tenant_id', tenantId)
+    .eq('id', id)
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function addExpense(supabase: SupabaseClient, expense: any) {
+  const { data, error } = await supabase
+    .from('Expenses')
+    .insert(expense)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateExpense(supabase: SupabaseClient, id: string, expense: any) {
+  const { data, error } = await supabase
+    .from('Expenses')
+    .update({ ...expense, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteExpense(supabase: SupabaseClient, id: string) {
+  const { error } = await supabase
+    .from('Expenses')
+    .update({ is_deleted: true, updated_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) throw error;
+}
+
+// ─── Consignors ───────────────────────────────────────────────────────────────
+
+export async function getConsignors(supabase: SupabaseClient, tenantId: string) {
+  const { data, error } = await supabase
+    .from('Vendors')
+    .select('id, name')
+    .eq('tenant_id', tenantId)
+    .eq('is_consignor', true)
+    .eq('is_deleted', false)
+    .order('name');
+  if (error) throw error;
+  return data ?? [];
+}
+
+// ─── Revenue ──────────────────────────────────────────────────────────────────
+
+export async function getRevenue(
+  supabase: SupabaseClient,
+  tenantId: string,
+  filters?: { dateFrom?: string; dateTo?: string; stream?: string }
+) {
+  let query = supabase
+    .from('Revenue')
+    .select(`*, consignors:RevenueConsignors(vendor:Vendors(id, name))`)
+    .eq('tenant_id', tenantId)
+    .eq('is_deleted', false)
+    .order('date', { ascending: false })
+    .order('created_at', { ascending: false });
+
+  if (filters?.dateFrom) query = query.gte('date', filters.dateFrom);
+  if (filters?.dateTo)   query = query.lte('date', filters.dateTo);
+  if (filters?.stream)   query = query.eq('revenue_stream', filters.stream);
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return data ?? [];
+}
+
+// ─── Card Settlements ─────────────────────────────────────────────────────────
+
+export async function getSettlements(
+  supabase: SupabaseClient,
+  tenantId: string,
+  filters?: { dateFrom?: string; dateTo?: string }
+) {
+  let query = supabase
+    .from('CardSettlements')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .order('date', { ascending: false })
+    .order('created_at', { ascending: false });
+
+  if (filters?.dateFrom) query = query.gte('date', filters.dateFrom);
+  if (filters?.dateTo)   query = query.lte('date', filters.dateTo);
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function getSettlement(supabase: SupabaseClient, tenantId: string, id: string) {
+  const { data, error } = await supabase
+    .from('CardSettlements')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .eq('id', id)
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function addSettlement(supabase: SupabaseClient, settlement: any) {
+  const { data, error } = await supabase
+    .from('CardSettlements')
+    .insert(settlement)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateSettlement(supabase: SupabaseClient, id: string, settlement: any) {
+  const { data, error } = await supabase
+    .from('CardSettlements')
+    .update({ ...settlement, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteSettlement(supabase: SupabaseClient, id: string) {
+  const { error } = await supabase
+    .from('CardSettlements')
+    .delete()
+    .eq('id', id);
+  if (error) throw error;
+}
+
+// ─── P&L Period Settings ──────────────────────────────────────────────────────
+
+export async function getPnLSettings(
+  supabase: SupabaseClient,
+  tenantId: string,
+  year: number,
+  month: number
+) {
+  const { data } = await supabase
+    .from('PnLSettings')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .eq('period_year', year)
+    .eq('period_month', month)
+    .maybeSingle();
+  return data;
+}
+
+export async function upsertPnLSettings(supabase: SupabaseClient, settings: {
+  tenant_id: string;
+  period_year: number;
+  period_month: number;
+  initial_revolving_funds: number;
+  dist_metrobank: number;
+  dist_cash: number;
+  dist_gcash: number;
+}) {
+  const { data, error } = await supabase
+    .from('PnLSettings')
+    .upsert({ ...settings, updated_at: new Date().toISOString() }, {
+      onConflict: 'tenant_id,period_year,period_month',
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function getRevenueEntry(supabase: SupabaseClient, tenantId: string, id: string) {
+  const { data, error } = await supabase
+    .from('Revenue')
+    .select(`*, consignors:RevenueConsignors(vendor:Vendors(id, name))`)
+    .eq('tenant_id', tenantId)
+    .eq('id', id)
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function addRevenueEntry(
+  supabase: SupabaseClient,
+  entry: any,
+  consignorIds: string[]
+) {
+  const { data, error } = await supabase
+    .from('Revenue')
+    .insert(entry)
+    .select()
+    .single();
+  if (error) throw error;
+
+  if (consignorIds.length > 0) {
+    const junctions = consignorIds.map(vid => ({ revenue_id: data.id, vendor_id: vid }));
+    const { error: je } = await supabase.from('RevenueConsignors').insert(junctions);
+    if (je) throw je;
+  }
+  return data;
+}
+
+export async function updateRevenueEntry(
+  supabase: SupabaseClient,
+  id: string,
+  entry: any,
+  consignorIds: string[]
+) {
+  const { data, error } = await supabase
+    .from('Revenue')
+    .update({ ...entry, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+
+  await supabase.from('RevenueConsignors').delete().eq('revenue_id', id);
+  if (consignorIds.length > 0) {
+    const junctions = consignorIds.map(vid => ({ revenue_id: id, vendor_id: vid }));
+    const { error: je } = await supabase.from('RevenueConsignors').insert(junctions);
+    if (je) throw je;
+  }
+  return data;
+}
+
+export async function deleteRevenueEntry(supabase: SupabaseClient, id: string) {
+  const { error } = await supabase
+    .from('Revenue')
+    .update({ is_deleted: true, updated_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) throw error;
+}
+
+// ─── Month-End Close ──────────────────────────────────────────────────────────
+
+export async function getMonthEndCloses(supabase: SupabaseClient, tenantId: string) {
+  const { data, error } = await supabase
+    .from('MonthEndClose')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .order('period', { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function getMonthEndClose(supabase: SupabaseClient, tenantId: string, period: string) {
+  const { data, error } = await supabase
+    .from('MonthEndClose')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .eq('period', period)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+export async function upsertMonthEndClose(supabase: SupabaseClient, record: any) {
+  const { data, error } = await supabase
+    .from('MonthEndClose')
+    .upsert(record, { onConflict: 'tenant_id,period' })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+// ─── Employee Records ─────────────────────────────────────────────────────────
+
+export async function getEmployeeRecords(supabase: SupabaseClient, employeeId: string) {
+  const { data, error } = await supabase
+    .from('EmployeeRecords')
+    .select('*')
+    .eq('employee_id', employeeId)
+    .eq('is_deleted', false)
+    .order('date', { ascending: false })
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function addEmployeeRecord(supabase: SupabaseClient, record: any) {
+  const { data, error } = await supabase
+    .from('EmployeeRecords')
+    .insert(record)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateEmployeeRecord(supabase: SupabaseClient, id: string, record: any) {
+  const { data, error } = await supabase
+    .from('EmployeeRecords')
+    .update({ ...record, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteEmployeeRecord(supabase: SupabaseClient, id: string) {
+  const { error } = await supabase
+    .from('EmployeeRecords')
+    .update({ is_deleted: true, updated_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) throw error;
+}
+
+export async function uploadEmployeeRecordAttachment(
+  supabase: SupabaseClient,
+  file: File,
+  tenantId: string,
+  employeeId: string
+): Promise<{ url: string; name: string }> {
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Date.now()}-${crypto.randomUUID()}.${fileExt}`;
+  const filePath = `${tenantId}/employees/${employeeId}/${fileName}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from('employee-records')
+    .upload(filePath, file, { cacheControl: '3600', upsert: false });
+  if (uploadError) throw uploadError;
+
+  const { data: { publicUrl } } = supabase.storage
+    .from('employee-records')
+    .getPublicUrl(filePath);
+
+  return { url: publicUrl, name: file.name };
+}
+
+export async function getAllEmployeeRecords(supabase: SupabaseClient, tenantId: string) {
+  const { data, error } = await supabase
+    .from('EmployeeRecords')
+    .select('*, employee:Employees(id, given_name, surname)')
+    .eq('tenant_id', tenantId)
+    .eq('is_deleted', false)
+    .order('date', { ascending: false })
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data ?? [];
 }

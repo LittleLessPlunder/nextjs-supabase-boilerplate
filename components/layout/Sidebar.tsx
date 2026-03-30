@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button";
-import { Users, Briefcase, X, ChevronLeft, ChevronRight, Calendar, FileText, Network, Clock, ClipboardList, Database } from "lucide-react";
+import { Users, Briefcase, X, ChevronLeft, ChevronRight, Calendar, FileText, Clock, Database, Calculator, Receipt, Store, TrendingUp, CreditCard, BarChart2, LayoutDashboard, Search, CheckSquare } from "lucide-react";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Logo } from './Logo';
@@ -18,61 +18,46 @@ type NavItem =
 
 const NAVIGATION_ITEMS: NavItem[] = [
   {
-    title: "HR",
-    icon: Users,
-    children: [
-      {
-        title: "Departments",
-        href: "/departments",
-        icon: Network,
-      },
-      {
-        title: "Employees",
-        href: "/employees",
-        icon: Users,
-      },
-      {
-        title: "Employee Contracts",
-        href: "/contracts",
-        icon: FileText,
-      },
-      {
-        title: "Work Logs",
-        href: "/work-logs",
-        icon: ClipboardList,
-      },
-      {
-        title: "Payslips",
-        href: "/payslips",
-        icon: FileText,
-      },
-    ]
+    title: "Dashboard",
+    href: "/",
+    icon: LayoutDashboard,
   },
   {
-    title: "Master",
+    title: "Search",
+    href: "/search",
+    icon: Search,
+  },
+  {
+    title: "Finance",
+    icon: Receipt,
+    children: [
+      { title: "P&L Report",       href: "/finance/pnl",         icon: BarChart2      },
+      { title: "Revenue",          href: "/finance/revenue",     icon: TrendingUp     },
+      { title: "Expenses",         href: "/finance/expenses",    icon: Receipt        },
+      { title: "Expense Report",   href: "/finance/expenses/report", icon: BarChart2  },
+      { title: "Card Settlements", href: "/finance/settlements", icon: CreditCard     },
+      { title: "Vendors",          href: "/finance/vendors",     icon: Store          },
+      { title: "Month-End Close",  href: "/finance/close",       icon: CheckSquare    },
+    ],
+  },
+  {
+    title: "People",
+    icon: Users,
+    children: [
+      { title: "Employees",       href: "/employees",         icon: Users      },
+      { title: "Employee Records", href: "/employees/records", icon: FileText   },
+      { title: "Payroll",         href: "/payroll",           icon: Calculator },
+    ],
+  },
+  {
+    title: "Master Data",
     icon: Database,
     children: [
-      {
-        title: "Contract Types",
-        href: "/master/contract-types",
-        icon: FileText,
-      },
-      {
-        title: "Work Schedules",
-        href: "/master/schedules",
-        icon: Clock,
-      },
-      {
-        title: "Public Holidays",
-        href: "/master/holidays",
-        icon: Calendar,
-      },
-      {
-        title: "Positions",
-        href: "/master/positions",
-        icon: Briefcase,
-      },
-    ]
+      { title: "Positions",       href: "/master/positions",      icon: Briefcase },
+      { title: "Contract Types",  href: "/master/contract-types", icon: FileText  },
+      { title: "Work Schedules",  href: "/master/schedules",      icon: Clock     },
+      { title: "Public Holidays", href: "/master/holidays",       icon: Calendar  },
+    ],
   },
 ];
 
@@ -94,10 +79,13 @@ export function Sidebar({ onClose }: SidebarProps) {
     }
   };
 
-  const isActiveLink = (href: string) => pathname.startsWith(href);
+  const isActiveLink = (href: string) => {
+    if (href === '/') return pathname === '/';
+    return pathname === href || pathname.startsWith(href + '/');
+  };
 
   return (
-    <aside className={`bg-card shadow-md flex flex-col h-full transition-all duration-300 ${
+    <aside className={`bg-[#3D4028] text-[#E8EAE0] flex flex-col h-full transition-all duration-300 ${
       isExpanded ? 'w-64' : 'w-20'
     }`}>
       <div className="p-4">
@@ -138,8 +126,8 @@ export function Sidebar({ onClose }: SidebarProps) {
                 // Parent item with children
                 <div className="space-y-1">
                   <Button
-                    variant={expandedSection === item.title ? "secondary" : "ghost"}
-                    className={`w-full ${isExpanded ? 'justify-start' : 'justify-center'}`}
+                    variant="ghost"
+                    className={`w-full ${isExpanded ? 'justify-start' : 'justify-center'} text-[#E8EAE0] hover:bg-white/10 hover:text-white ${expandedSection === item.title ? 'bg-white/10 text-white' : ''}`}
                     onClick={() => toggleSection(item.title)}
                     title={item.title}
                   >
@@ -151,8 +139,12 @@ export function Sidebar({ onClose }: SidebarProps) {
                       {item.children.map((child) => (
                         <Link key={child.href} href={child.href}>
                           <Button
-                            variant={isActiveLink(child.href) ? "secondary" : "ghost"}
-                            className="w-full justify-start"
+                            variant="ghost"
+                            className={`w-full justify-start text-[#E8EAE0] hover:bg-white/10 hover:text-white text-sm ${
+                              isActiveLink(child.href)
+                                ? 'bg-[#A55437] text-white hover:bg-[#A55437]/90'
+                                : ''
+                            }`}
                             size="sm"
                           >
                             <child.icon className="h-4 w-4" />
@@ -167,8 +159,12 @@ export function Sidebar({ onClose }: SidebarProps) {
                 // Single item
                 <Link href={item.href}>
                   <Button
-                    variant={isActiveLink(item.href) ? "secondary" : "ghost"}
-                    className={`w-full ${isExpanded ? 'justify-start' : 'justify-center'}`}
+                    variant="ghost"
+                    className={`w-full ${isExpanded ? 'justify-start' : 'justify-center'} text-[#E8EAE0] hover:bg-white/10 hover:text-white ${
+                      isActiveLink(item.href)
+                        ? 'bg-[#A55437] text-white hover:bg-[#A55437]/90'
+                        : ''
+                    }`}
                     title={item.title}
                   >
                     <item.icon className="h-4 w-4" />
