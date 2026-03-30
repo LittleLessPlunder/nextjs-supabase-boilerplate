@@ -18,7 +18,7 @@ const meta = {
   description: 'Business Management System — Yoga Tayo Wellness, El Nido',
   cardImage: '/og.png',
   robots: 'noindex, nofollow',
-  favicon: '/favicon.ico',
+  favicon: '/ytw-icon.png',
   url: getURL()
 };
 
