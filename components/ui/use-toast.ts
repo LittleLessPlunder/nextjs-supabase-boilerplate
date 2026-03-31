@@ -20,3 +20,5 @@ function toast({ title = '', description, variant }: ToastOptions) {
 export function useToast() {
   return { toast };
 }
+
+export { toast };
