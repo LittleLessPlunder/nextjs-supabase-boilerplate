@@ -320,7 +320,8 @@ export default function PayrollGrid({ year, month, period }: Props) {
             date:        end,
             category_id: swCat.id,
             amount:      c.gross_pay,
-            particulars: `Payroll ${periodLabel} — ${row.employee_name}`,
+            vendor_name: row.employee_name,
+            particulars: `Payroll ${periodLabel}`,
             status:      'paid',
             notes:       `[PAYROLL] ${start} to ${end} — ${row.employee_name}`,
           });
