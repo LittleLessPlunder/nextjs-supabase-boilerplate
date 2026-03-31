@@ -284,7 +284,8 @@ export default function PayrollGrid({ year, month, period }: Props) {
   async function handlePost() {
     if (!currentTenant) return;
 
-    const totalGross = rows.map(compute).reduce((s, c) => s + c.gross_pay, 0);
+    const computed = rows.map(compute);
+    const totalGross = computed.reduce((s, c) => s + c.gross_pay, 0);
     if (totalGross === 0) {
       toast({ title: 'Nothing to post', description: 'Save payroll entries first.', variant: 'destructive' });
       return;
@@ -309,20 +310,27 @@ export default function PayrollGrid({ year, month, period }: Props) {
         return;
       }
 
-      await addExpense(supabase, {
-        tenant_id:   currentTenant.id,
-        date:        end,
-        category_id: swCat.id,
-        amount:      totalGross,
-        particulars: `Payroll ${periodLabel} — ${rows.length} employee${rows.length !== 1 ? 's' : ''}`,
-        status:      'paid',
-        notes:       `[PAYROLL] ${start} to ${end} — ${rows.length} employees, gross ${php(totalGross)}`,
-      });
+      // One expense entry per employee
+      await Promise.all(
+        rows.map((row, i) => {
+          const c = computed[i];
+          if (c.gross_pay === 0) return Promise.resolve();
+          return addExpense(supabase, {
+            tenant_id:   currentTenant.id,
+            date:        end,
+            category_id: swCat.id,
+            amount:      c.gross_pay,
+            particulars: `Payroll ${periodLabel} — ${row.employee_name}`,
+            status:      'paid',
+            notes:       `[PAYROLL] ${start} to ${end} — ${row.employee_name}`,
+          });
+        })
+      );
 
       setIsPosted(true);
       toast({
         title: 'Posted to Expenses',
-        description: `${php(totalGross)} added as Salaries & Wages for ${periodLabel}.`,
+        description: `${php(totalGross)} posted as ${rows.length} Salaries & Wages entries for ${periodLabel}.`,
       });
     } catch (err: any) {
       toast({ title: 'Error', description: err.message ?? 'Failed to post.', variant: 'destructive' });
