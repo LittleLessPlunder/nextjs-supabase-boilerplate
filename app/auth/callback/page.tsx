@@ -1,30 +1,30 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 
 export default function AuthCallback() {
-  const router = useRouter();
-
   useEffect(() => {
     const supabase = createClient();
 
-    // Handle both PKCE (code param) and implicit (hash fragment) flows
     const handleCallback = async () => {
       const params = new URLSearchParams(window.location.search);
       const code = params.get('code');
 
-      if (code) {
-        await supabase.auth.exchangeCodeForSession(code);
+      try {
+        if (code) {
+          await supabase.auth.exchangeCodeForSession(code);
+        }
+      } catch (_) {
+        // session may already be set via hash/implicit flow — proceed
       }
 
-      // Give the auth state a moment to settle then redirect
-      setTimeout(() => router.replace('/'), 500);
+      // Hard navigation so the server re-reads the fresh session cookies
+      window.location.replace('/');
     };
 
     handleCallback();
-  }, [router]);
+  }, []);
 
   return (
     <div className="flex min-h-screen items-center justify-center">
