@@ -277,7 +277,7 @@ export default function AddEmployeeContractForm({ contractId }: { contractId: st
 
               <div>
                 <Label htmlFor="end_date">End Date</Label>
-                <DatePicker value={formData.end_date} onChange={val => setFormData(prev => ({ ...prev, end_date: val }))} />
+                <DatePicker value={formData.end_date ?? ''} onChange={val => setFormData(prev => ({ ...prev, end_date: val }))} />
               </div>
             </div>
 
