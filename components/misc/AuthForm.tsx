@@ -1,11 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+const COOLDOWN_SECONDS = 60;
+const COOLDOWN_KEY = 'ytw_magic_link_sent_at';
 
 export type AuthState = 'signin' | 'signup' | 'forgot_password';
 
@@ -14,9 +17,33 @@ export default function AuthForm() {
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+
+  // Restore cooldown from localStorage on mount
+  useEffect(() => {
+    const sentAt = localStorage.getItem(COOLDOWN_KEY);
+    if (sentAt) {
+      const elapsed = Math.floor((Date.now() - Number(sentAt)) / 1000);
+      const remaining = COOLDOWN_SECONDS - elapsed;
+      if (remaining > 0) setCooldown(remaining);
+    }
+  }, []);
+
+  // Countdown tick
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const t = setTimeout(() => setCooldown(c => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [cooldown]);
+
+  const startCooldown = () => {
+    localStorage.setItem(COOLDOWN_KEY, String(Date.now()));
+    setCooldown(COOLDOWN_SECONDS);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (cooldown > 0) return;
     setError(null);
     setLoading(true);
 
@@ -30,9 +57,16 @@ export default function AuthForm() {
       });
 
       if (otpError) throw otpError;
+      startCooldown();
       setSent(true);
     } catch (err: any) {
-      setError(err.message || 'Something went wrong');
+      const msg: string = err.message ?? '';
+      if (msg.toLowerCase().includes('rate limit')) {
+        setError('Too many requests — please wait a minute before trying again.');
+      } else {
+        setError(msg || 'Something went wrong');
+      }
+      startCooldown();
     } finally {
       setLoading(false);
     }
@@ -49,6 +83,16 @@ export default function AuthForm() {
           <p className="text-sm text-muted-foreground">
             Click the link in the email to access the YTW Portal. You can close this tab.
           </p>
+          {cooldown > 0 && (
+            <p className="mt-3 text-xs text-muted-foreground">
+              Didn't receive it? You can resend in {cooldown}s.
+            </p>
+          )}
+          {cooldown === 0 && (
+            <Button variant="outline" size="sm" className="mt-3 w-full" onClick={() => setSent(false)}>
+              Resend link
+            </Button>
+          )}
         </CardContent>
       </Card>
     );
@@ -79,8 +123,8 @@ export default function AuthForm() {
               {error}
             </div>
           )}
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Sending…' : 'Send Sign-In Link'}
+          <Button type="submit" className="w-full" disabled={loading || cooldown > 0}>
+            {loading ? 'Sending…' : cooldown > 0 ? `Resend in ${cooldown}s` : 'Send Sign-In Link'}
           </Button>
         </form>
       </CardContent>
