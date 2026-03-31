@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { createClient } from '@/utils/supabase/client';
@@ -286,7 +287,7 @@ export default function AddExpenseForm({ expenseId }: Props) {
 
             <div>
               <Label>Date *</Label>
-              <Input type="date" value={form.date} onChange={e => set('date', e.target.value)} />
+              <DatePicker value={form.date} onChange={val => set('date', val)} />
             </div>
 
             {/* Vendor search */}

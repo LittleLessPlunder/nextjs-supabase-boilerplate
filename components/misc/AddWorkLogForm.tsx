@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createClient } from '@/utils/supabase/client';
@@ -352,11 +353,9 @@ export default function AddWorkLogForm({ workLogId, user }: AddWorkLogFormProps)
               <Label>Date{formData.dates.length > 1 ? 's' : ''}</Label>
               {formData.dates.map((dateEntry, index) => (
                 <div key={dateEntry.id} className="flex items-center gap-2">
-                  <Input
-                    type="date"
+                  <DatePicker
                     value={dateEntry.date}
-                    onChange={(e) => handleDateChange(dateEntry.id, e.target.value)}
-                    required={dateEntry.required}
+                    onChange={(val) => handleDateChange(dateEntry.id, val)}
                   />
                   {!dateEntry.required && (
                     <Button

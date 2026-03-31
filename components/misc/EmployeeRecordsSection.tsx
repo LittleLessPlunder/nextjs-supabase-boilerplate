@@ -12,6 +12,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -453,12 +454,7 @@ export default function EmployeeRecordsSection({ employeeId, tenantId }: Props) 
                 {/* Date */}
                 <div className="space-y-1">
                   <Label htmlFor="rec-date">Date <span className="text-red-500">*</span></Label>
-                  <Input
-                    id="rec-date"
-                    type="date"
-                    value={form.date}
-                    onChange={(e) => handleField('date', e.target.value)}
-                  />
+                  <DatePicker value={form.date} onChange={val => handleField('date', val)} />
                 </div>
 
                 {/* Title */}
@@ -544,12 +540,7 @@ export default function EmployeeRecordsSection({ employeeId, tenantId }: Props) 
                     {form.acknowledged && (
                       <div className="space-y-1 pl-6">
                         <Label htmlFor="rec-ack-date">Acknowledged Date</Label>
-                        <Input
-                          id="rec-ack-date"
-                          type="date"
-                          value={form.acknowledged_at}
-                          onChange={(e) => handleField('acknowledged_at', e.target.value)}
-                        />
+                        <DatePicker value={form.acknowledged_at} onChange={val => handleField('acknowledged_at', val)} />
                       </div>
                     )}
                   </div>

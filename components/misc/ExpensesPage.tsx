@@ -6,7 +6,7 @@ import { createClient } from '@/utils/supabase/client';
 import { getExpenses, getExpenseCategories, deleteExpense } from '@/utils/supabase/queries';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from '@/components/ui/use-toast';
@@ -141,11 +141,11 @@ export default function ExpensesPage({ user }: { user: User }) {
       <div className="grid grid-cols-2 gap-3 mb-4 sm:grid-cols-4">
         <div>
           <p className="text-xs text-muted-foreground mb-1">From</p>
-          <Input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} />
+          <DatePicker value={dateFrom} onChange={setDateFrom} />
         </div>
         <div>
           <p className="text-xs text-muted-foreground mb-1">To</p>
-          <Input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} />
+          <DatePicker value={dateTo} onChange={setDateTo} />
         </div>
         <div>
           <p className="text-xs text-muted-foreground mb-1">Category</p>

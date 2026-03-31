@@ -99,6 +99,11 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
+  /* ── Lucide icons — lighter stroke for a modern feel ───────────────────── */
+  svg[class*="lucide"] {
+    stroke-width: 1.5;
+  }
+
   /* ── Global interaction transitions ─────────────────────────────────────── */
   /* Fast, spring-feel easing — smooth is fast */
   a, button, [role="button"],

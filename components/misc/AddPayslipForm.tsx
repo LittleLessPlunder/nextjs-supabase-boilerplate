@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from "@/components/ui/label";
 import { createClient } from '@/utils/supabase/client';
 import { format, parse, startOfMonth, endOfMonth, addMonths } from 'date-fns';
@@ -383,11 +384,11 @@ export default function AddPayslipForm({
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Period Start</Label>
-                <Input name="period_start" type="date" value={formData.period_start} onChange={handleInputChange} readOnly required />
+                <DatePicker value={formData.period_start} onChange={val => setFormData(prev => ({ ...prev, period_start: val }))} />
               </div>
               <div>
                 <Label>Period End</Label>
-                <Input name="period_end" type="date" value={formData.period_end} onChange={handleInputChange} readOnly required />
+                <DatePicker value={formData.period_end} onChange={val => setFormData(prev => ({ ...prev, period_end: val }))} />
               </div>
             </div>
 
@@ -398,7 +399,7 @@ export default function AddPayslipForm({
               </div>
               <div>
                 <Label>Payment Date</Label>
-                <Input name="payment_date" type="date" value={formData.payment_date} onChange={handleInputChange} required />
+                <DatePicker value={formData.payment_date} onChange={val => setFormData(prev => ({ ...prev, payment_date: val }))} />
               </div>
             </div>
 

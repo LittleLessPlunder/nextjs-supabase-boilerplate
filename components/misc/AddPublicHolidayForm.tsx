@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createClient } from '@/utils/supabase/client';
@@ -140,12 +141,7 @@ export default function AddPublicHolidayForm({ holidayId }: { holidayId: string 
             <div className="grid gap-4">
               <div>
                 <Label htmlFor="date">Date *</Label>
-                <Input
-                  id="date" name="date" type="date"
-                  value={formData.date}
-                  onChange={handleInputChange}
-                  required
-                />
+                <DatePicker value={formData.date} onChange={val => setFormData(prev => ({ ...prev, date: val }))} />
               </div>
 
               <div>

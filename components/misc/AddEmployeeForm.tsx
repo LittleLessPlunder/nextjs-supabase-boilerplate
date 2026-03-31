@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from "@/components/ui/label";
 import { createClient } from '@/utils/supabase/client';
 import { Employee, RevenueStream } from '@/utils/types';
@@ -217,13 +218,7 @@ export default function AddEmployeeForm({ employeeId }: { employeeId: string | n
                     </div>
                     <div>
                       <Label htmlFor="birth_date">Birth Date</Label>
-                      <Input
-                        id="birth_date"
-                        name="birth_date"
-                        type="date"
-                        value={formData.birth_date}
-                        onChange={handleInputChange}
-                      />
+                      <DatePicker value={formData.birth_date} onChange={val => setFormData(prev => ({ ...prev, birth_date: val }))} />
                     </div>
                   </div>
                   <div>
@@ -238,13 +233,7 @@ export default function AddEmployeeForm({ employeeId }: { employeeId: string | n
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="hire_date">Hire Date</Label>
-                      <Input
-                        id="hire_date"
-                        name="hire_date"
-                        type="date"
-                        value={formData.hire_date}
-                        onChange={handleInputChange}
-                      />
+                      <DatePicker value={formData.hire_date} onChange={val => setFormData(prev => ({ ...prev, hire_date: val }))} />
                     </div>
                     <div>
                       <Label>Employment Status</Label>

@@ -6,7 +6,7 @@ import { createClient } from '@/utils/supabase/client';
 import { getAllEmployeeRecords } from '@/utils/supabase/queries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { DatePicker } from '@/components/ui/date-picker';
 import {
   Select,
   SelectContent,
@@ -277,23 +277,13 @@ export default function EmployeeRecordsReport({ user }: Props) {
             {/* Date From */}
             <div>
               <p className="text-xs text-muted-foreground mb-1">Date From</p>
-              <Input
-                type="date"
-                value={filterDateFrom}
-                onChange={(e) => setFilterDateFrom(e.target.value)}
-                className="w-[145px]"
-              />
+              <DatePicker value={filterDateFrom} onChange={setFilterDateFrom} />
             </div>
 
             {/* Date To */}
             <div>
               <p className="text-xs text-muted-foreground mb-1">Date To</p>
-              <Input
-                type="date"
-                value={filterDateTo}
-                onChange={(e) => setFilterDateTo(e.target.value)}
-                className="w-[145px]"
-              />
+              <DatePicker value={filterDateTo} onChange={setFilterDateTo} />
             </div>
 
             {/* Acknowledged */}
