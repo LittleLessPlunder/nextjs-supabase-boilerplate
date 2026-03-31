@@ -13,14 +13,5 @@ export default async function SignIn() {
     return redirect('/');
   }
 
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('/ytw-bg-portal.png')" }}
-    >
-      <div className="w-full max-w-md">
-        <AuthForm />
-      </div>
-    </div>
-  );
+  return <AuthForm />;
 } 
