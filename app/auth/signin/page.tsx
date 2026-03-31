@@ -14,7 +14,10 @@ export default async function SignIn() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
+    <div
+      className="flex min-h-screen items-center justify-center bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('/ytw-bg-portal.png')" }}
+    >
       <div className="w-full max-w-md">
         <AuthForm />
       </div>

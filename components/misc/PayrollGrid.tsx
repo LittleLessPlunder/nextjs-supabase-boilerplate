@@ -369,7 +369,7 @@ export default function PayrollGrid({ year, month, period }: Props) {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs text-muted-foreground hidden sm:block">
-            {period === 1 ? 'SSS deducted this period' : 'PhilHealth + Pag-IBIG deducted this period'}
+            {period === 1 ? 'PhilHealth + Pag-IBIG deducted this period' : 'SSS deducted this period'}
           </span>
           {isPosted && (
             <span className="flex items-center gap-1 text-xs text-green-700 font-medium bg-green-50 border border-green-200 px-2 py-1 rounded-md">
@@ -421,11 +421,11 @@ export default function PayrollGrid({ year, month, period }: Props) {
                 {/* Deductions inputs */}
                 <th className="p-2 text-center font-medium min-w-[80px] border-l">Undertime<br/>(hrs)</th>
                 {period === 1
-                  ? <th className="p-2 text-center font-medium min-w-[80px]">SSS</th>
-                  : <>
+                  ? <>
                       <th className="p-2 text-center font-medium min-w-[80px]">PhilHealth</th>
                       <th className="p-2 text-center font-medium min-w-[80px]">Pag-IBIG</th>
                     </>
+                  : <th className="p-2 text-center font-medium min-w-[80px]">SSS</th>
                 }
                 <th className="p-2 text-center font-medium min-w-[80px]">Other<br/>Deductions</th>
                 {/* Computed */}
@@ -469,11 +469,11 @@ export default function PayrollGrid({ year, month, period }: Props) {
                     {/* Deductions inputs */}
                     <td className="p-1 text-center border-l"><N value={row.undertime_hours}        onChange={v => update(i, 'undertime_hours', v)} /></td>
                     {period === 1
-                      ? <td className="p-1 text-center"><N value={row.sss_deduction}        onChange={v => update(i, 'sss_deduction', v)} /></td>
-                      : <>
+                      ? <>
                           <td className="p-1 text-center"><N value={row.philhealth_deduction} onChange={v => update(i, 'philhealth_deduction', v)} /></td>
                           <td className="p-1 text-center"><N value={row.pagibig_deduction}    onChange={v => update(i, 'pagibig_deduction', v)} /></td>
                         </>
+                      : <td className="p-1 text-center"><N value={row.sss_deduction}        onChange={v => update(i, 'sss_deduction', v)} /></td>
                     }
                     <td className="p-1 text-center"><N value={row.other_deductions}      onChange={v => update(i, 'other_deductions', v)} /></td>
                     {/* Computed */}
@@ -487,7 +487,7 @@ export default function PayrollGrid({ year, month, period }: Props) {
               {/* Totals row */}
               <tr className="border-t-2 bg-muted font-semibold">
                 <td className="p-2 sticky left-0 bg-muted" colSpan={3}>TOTAL ({rows.length} employees)</td>
-                <td colSpan={period === 1 ? 8 : 9} className="border-l" />
+                <td colSpan={period === 1 ? 9 : 8} className="border-l" />
                 <td className="p-2 text-right bg-green-100">{php(sumField('gross_pay'))}</td>
                 <td className="p-2 text-right bg-red-100">{php(sumField('total_deductions'))}</td>
                 <td className="p-2 text-right bg-blue-100">{php(sumField('net_pay'))}</td>

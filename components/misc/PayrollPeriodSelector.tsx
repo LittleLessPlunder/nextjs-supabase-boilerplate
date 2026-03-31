@@ -123,7 +123,7 @@ export default function PayrollPeriodSelector() {
                       <div className="font-medium">{p === 1 ? '1st Period' : '2nd Period'}</div>
                       <div className="text-xs text-muted-foreground mt-0.5">{label}</div>
                       <div className="text-xs text-muted-foreground">
-                        {p === 1 ? 'SSS deducted' : 'PhilHealth + Pag-IBIG deducted'}
+                        {p === 1 ? 'PhilHealth + Pag-IBIG deducted' : 'SSS deducted'}
                       </div>
                     </button>
                   );
