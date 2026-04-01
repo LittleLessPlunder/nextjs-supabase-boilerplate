@@ -36,7 +36,7 @@ export async function updateSession(request: NextRequest) {
 
   const { data: { session } } = await supabase.auth.getSession();
 
-  const isAuthPage = ['/auth/signin', '/auth/callback'].some(p =>
+  const isAuthPage = ['/auth/signin', '/auth/callback', '/auth/update-password'].some(p =>
     request.nextUrl.pathname.startsWith(p)
   );
   if (!session && !isAuthPage) {
