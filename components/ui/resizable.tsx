@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels"
+import { Group as PanelGroup, Panel, Separator as PanelResizeHandle } from "react-resizable-panels"
 import { DotsSixVertical } from "@phosphor-icons/react"
 import { cn } from "@/utils/cn"
 
