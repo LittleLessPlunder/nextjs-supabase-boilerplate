@@ -18,12 +18,9 @@ export async function GET(request: NextRequest) {
     } else if (errorMessage) {
       throw new Error(errorMessage);
     }
-  } catch (e) {
-    if (!(e instanceof Error)) throw e;
+  } catch {
     return NextResponse.redirect(
-      getURL(
-        `/auth/signin?toast_title=Error&toast_description=${e.message}&toast_variant=destructive`
-      )
+      getURL(`/auth/signin?toast_title=Error&toast_description=Authentication+failed.+Please+try+again.&toast_variant=destructive`)
     );
   }
 
