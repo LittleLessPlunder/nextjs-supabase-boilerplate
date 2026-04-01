@@ -67,8 +67,13 @@ export function Sidebar({ onClose, user }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const isActive = (href: string) =>
-    href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(href + '/');
+  const allHrefs = NAV.flatMap(item =>
+    item.kind === 'link' ? [item.href] : item.children.map(c => c.href)
+  );
+  const bestMatch = allHrefs
+    .filter(h => h === '/' ? pathname === '/' : pathname === h || pathname.startsWith(h + '/'))
+    .sort((a, b) => b.length - a.length)[0];
+  const isActive = (href: string) => href === bestMatch;
 
   async function handleSignOut() {
     const supabase = createClient();
