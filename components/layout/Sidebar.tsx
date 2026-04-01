@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button";
-import { Users, Briefcase, X, ChevronLeft, ChevronRight, Calendar, FileText, Network, Clock, ClipboardList, Database, TrendingUp, DollarSign, BarChart2, LayoutDashboard } from "lucide-react";
+import { Users, Briefcase, X, ChevronLeft, ChevronRight, Calendar, FileText, Network, Clock, ClipboardList, Database } from "lucide-react";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Logo } from './Logo';
@@ -17,32 +17,6 @@ type NavItem =
   | { title: string; href?: never; icon: React.ElementType; children: NavChild[] };
 
 const NAVIGATION_ITEMS: NavItem[] = [
-  {
-    title: "Dashboard",
-    href: "/",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Finance",
-    icon: TrendingUp,
-    children: [
-      {
-        title: "Overview",
-        href: "/finance",
-        icon: BarChart2,
-      },
-      {
-        title: "Revenue",
-        href: "/finance/revenue",
-        icon: DollarSign,
-      },
-      {
-        title: "Expenses",
-        href: "/finance/expenses",
-        icon: DollarSign,
-      },
-    ],
-  },
   {
     title: "HR",
     icon: Users,
