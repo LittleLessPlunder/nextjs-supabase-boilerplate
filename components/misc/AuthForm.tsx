@@ -63,10 +63,10 @@ export default function AuthForm() {
       const msg: string = err.message ?? '';
       if (msg.toLowerCase().includes('rate limit')) {
         setError('Too many requests — please wait a minute before trying again.');
+        startCooldown();
       } else {
         setError(msg || 'Something went wrong');
       }
-      startCooldown();
     } finally {
       setLoading(false);
     }
