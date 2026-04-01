@@ -2173,3 +2173,134 @@ export async function convertLeadToClient(
     throw error;
   }
 }
+
+// =============================================================
+// FINANCE
+// =============================================================
+
+export type FinanceEntry = {
+  id: string;
+  tenant_id: string;
+  date: string;
+  type: 'revenue' | 'expense';
+  stream: 'yoga' | 'fnb' | 'boutique' | 'other';
+  category: string;
+  amount: number;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  is_deleted: boolean;
+};
+
+/** Fetch all non-deleted entries for a tenant, ordered by date. */
+export async function getFinanceEntries(
+  supabase: SupabaseClient,
+  tenantId: string
+): Promise<FinanceEntry[]> {
+  const { data, error } = await supabase
+    .from('FinanceEntries')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .eq('is_deleted', false)
+    .order('date', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching finance entries:', error);
+    return [];
+  }
+
+  return data as FinanceEntry[];
+}
+
+export type MonthlyFinanceSummary = {
+  month: string; // 'YYYY-MM'
+  revenue: number;
+  expense: number;
+  profit: number;
+};
+
+/** Aggregate entries into per-month revenue / expense / profit. */
+export function aggregateByMonth(entries: FinanceEntry[]): MonthlyFinanceSummary[] {
+  const map = new Map<string, { revenue: number; expense: number }>();
+
+  for (const e of entries) {
+    const month = e.date.slice(0, 7); // 'YYYY-MM'
+    const current = map.get(month) ?? { revenue: 0, expense: 0 };
+    if (e.type === 'revenue') {
+      map.set(month, { ...current, revenue: current.revenue + Number(e.amount) });
+    } else {
+      map.set(month, { ...current, expense: current.expense + Number(e.amount) });
+    }
+  }
+
+  return Array.from(map.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([month, { revenue, expense }]) => ({
+      month,
+      revenue,
+      expense,
+      profit: revenue - expense,
+    }));
+}
+
+export type StreamSummary = {
+  stream: string;
+  revenue: number;
+};
+
+/** Revenue totals grouped by stream (for donut chart). */
+export function aggregateRevenueByStream(entries: FinanceEntry[]): StreamSummary[] {
+  const map = new Map<string, number>();
+
+  for (const e of entries) {
+    if (e.type !== 'revenue') continue;
+    const current = map.get(e.stream) ?? 0;
+    map.set(e.stream, current + Number(e.amount));
+  }
+
+  const labels: Record<string, string> = { yoga: 'Yoga', fnb: 'F&B', boutique: 'Boutique', other: 'Other' };
+
+  return Array.from(map.entries()).map(([stream, revenue]) => ({
+    stream: labels[stream] ?? stream,
+    revenue,
+  }));
+}
+
+export async function addFinanceEntry(
+  supabase: SupabaseClient,
+  entry: Omit<FinanceEntry, 'id' | 'created_at' | 'updated_at' | 'is_deleted'>
+): Promise<FinanceEntry> {
+  const { data, error } = await supabase
+    .from('FinanceEntries')
+    .insert([{ ...entry, is_deleted: false }])
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data as FinanceEntry;
+}
+
+export async function updateFinanceEntry(
+  supabase: SupabaseClient,
+  id: string,
+  updates: Partial<Omit<FinanceEntry, 'id' | 'tenant_id' | 'created_at'>>
+): Promise<FinanceEntry> {
+  const { data, error } = await supabase
+    .from('FinanceEntries')
+    .update({ ...updates, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data as FinanceEntry;
+}
+
+export async function deleteFinanceEntry(supabase: SupabaseClient, id: string): Promise<void> {
+  const { error } = await supabase
+    .from('FinanceEntries')
+    .update({ is_deleted: true, updated_at: new Date().toISOString() })
+    .eq('id', id);
+
+  if (error) throw error;
+}
