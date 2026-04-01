@@ -6,6 +6,7 @@ import '@/styles/main.css';
 import { ThemeProvider } from '@/app/theme-provider';
 import { TenantProvider } from '@/utils/tenant-context';
 import { Toaster } from '@/components/ui/sonner';
+import NextTopLoader from 'nextjs-toploader';
 
 const rubik = Rubik({
   subsets: ['latin'],
@@ -61,6 +62,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className={rubik.variable}>
       <body className="font-sans">
+        <NextTopLoader color="#A55437" showSpinner={false} />
         <TenantProvider>
           <ThemeProvider
             defaultTheme="system"
