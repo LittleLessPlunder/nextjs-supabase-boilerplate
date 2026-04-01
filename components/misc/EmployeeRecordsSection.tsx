@@ -54,6 +54,7 @@ import {
   CheckCircle,
   Paperclip,
   Download,
+  type Icon as PhosphorIcon,
 } from '@phosphor-icons/react';
 import { Loading } from '@/components/ui/loading';
 
@@ -94,7 +95,7 @@ const TYPE_META: Record<
   RecordType,
   {
     label: string;
-    icon: React.ComponentType<{ className?: string }>;
+    icon: PhosphorIcon;
     color: string;
     badge: string;
   }
