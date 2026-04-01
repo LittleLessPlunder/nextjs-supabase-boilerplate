@@ -71,7 +71,7 @@ const TYPE_META: Record<RecordType, { label: string; badge: string }> = {
   other:        { label: 'Other',        badge: 'bg-gray-100 text-gray-600'                },
 };
 
-const TYPE_ICONS: Record<RecordType, React.ComponentType<{ className?: string }>> = {
+const TYPE_ICONS: Record<RecordType, React.ComponentType<{ className?: string; weight?: string }>> = {
   tardiness:    Clock,
   warning:      Warning,
   memo:         FileText,
