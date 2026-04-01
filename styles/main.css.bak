@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── YTW Brand Theme — Yoga Tayo Wellness, El Nido ───────────────────────────
+   Terracotta:  #A55437  HSL(16, 50%, 43%)  — primary actions
+   Olive:       #808368  HSL(67, 12%, 46%)  — surfaces & navigation
+   Background:  warm parchment cream
+   Font:        Rubik
+   ──────────────────────────────────────────────────────────────────────────── */
+
+@layer base {
+  :root {
+    /* Warm parchment background */
+    --background:          35 30% 96%;
+    --foreground:          20 15% 16%;
+
+    --card:                35 20% 99%;
+    --card-foreground:     20 15% 16%;
+
+    --popover:             35 20% 99%;
+    --popover-foreground:  20 15% 16%;
+
+    /* Terracotta — primary action color */
+    --primary:             16 50% 43%;
+    --primary-foreground:  35 40% 97%;
+
+    /* Olive-tinted secondary (active nav, chips) */
+    --secondary:           67 14% 88%;
+    --secondary-foreground: 67 18% 22%;
+
+    /* Olive-tinted muted surfaces */
+    --muted:               67 10% 93%;
+    --muted-foreground:    67  6% 46%;
+
+    /* Olive accent */
+    --accent:              67 14% 88%;
+    --accent-foreground:   67 18% 22%;
+
+    --destructive:         0  84% 58%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border:              35 15% 87%;
+    --input:               35 15% 87%;
+
+    /* Terracotta focus ring */
+    --ring:                16 50% 43%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background:          24 10%  8%;
+    --foreground:          35 18% 92%;
+
+    --card:                24 10% 12%;
+    --card-foreground:     35 18% 92%;
+
+    --popover:             24 10% 10%;
+    --popover-foreground:  35 18% 92%;
+
+    /* Terracotta lightened for dark */
+    --primary:             16 55% 58%;
+    --primary-foreground:  24 10%  8%;
+
+    --secondary:           67  8% 18%;
+    --secondary-foreground: 35 18% 90%;
+
+    --muted:               67  8% 15%;
+    --muted-foreground:    35  8% 54%;
+
+    --accent:              67  8% 18%;
+    --accent-foreground:   35 18% 90%;
+
+    --destructive:         0  63% 31%;
+    --destructive-foreground: 0 86% 97%;
+
+    --border:              24  8% 20%;
+    --input:               24  8% 20%;
+    --ring:                16 55% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
