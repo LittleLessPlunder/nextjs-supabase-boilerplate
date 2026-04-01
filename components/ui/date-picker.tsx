@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { format, parse, isValid } from "date-fns"
-import { CalendarIcon } from "lucide-react"
+import { Calendar as CalendarIcon } from "@phosphor-icons/react"
 
 import { cn } from "@/utils/cn"
 import { Button } from "@/components/ui/button"
@@ -54,7 +54,7 @@ export function DatePicker({
             className
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4 opacity-50" />
+          <CalendarIcon weight="light" className="mr-2 h-4 w-4 opacity-50" />
           {selected ? format(selected, "dd MMM yyyy") : placeholder}
         </Button>
       </PopoverTrigger>

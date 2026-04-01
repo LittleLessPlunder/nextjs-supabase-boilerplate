@@ -27,11 +27,11 @@ function YTWMark({ className = '' }: { className?: string }) {
 export function Logo({ className = "", iconOnly = false }: LogoProps) {
   return (
     <Link href="/" className={`flex items-center gap-2.5 ${className}`}>
-      <YTWMark className="h-5 w-auto text-[#E8EAE0] shrink-0" />
+      <YTWMark className="h-5 w-auto text-sidebar-fg shrink-0" />
       {iconOnly ? null : (
-        <span className="font-semibold text-sm tracking-tight leading-none text-[#E8EAE0]">
+        <span className="font-semibold text-sm tracking-tight leading-none text-sidebar-fg">
           YTW{' '}
-          <span className="font-normal text-[#B0B49A]">Portal</span>
+          <span className="font-normal text-sidebar-fg-muted">Portal</span>
         </span>
       )}
     </Link>

@@ -206,7 +206,7 @@ export default function AddEmployeeContractForm({ contractId }: { contractId: st
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Basic Information */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <Label htmlFor="employee_id">Employee *</Label>
                 <Select
@@ -282,7 +282,7 @@ export default function AddEmployeeContractForm({ contractId }: { contractId: st
             </div>
 
             {/* Salary Information */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <Label htmlFor="base_salary">Base Salary *</Label>
                 <Input
@@ -371,7 +371,7 @@ export default function AddEmployeeContractForm({ contractId }: { contractId: st
             </div>
 
             {/* Terms */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <Label htmlFor="probation_period">Probation Period (months)</Label>
                 <Input

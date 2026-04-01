@@ -5,11 +5,12 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Logo } from './Logo';
 import {
   Users, Briefcase, X, Calendar, FileText, Clock, Database,
-  Calculator, Receipt, Store, TrendingUp, CreditCard, BarChart2,
-  LayoutDashboard, Search, CheckSquare, LogOut,
-} from 'lucide-react';
+  Calculator, Receipt, Storefront, TrendUp, CreditCard, ChartBar,
+  SquaresFour, MagnifyingGlass, CheckSquare, SignOut,
+} from '@phosphor-icons/react';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface SidebarProps {
   onClose?: () => void;
@@ -22,17 +23,17 @@ type NavSection =
   | { kind: 'section'; title: string; children: NavChild[] };
 
 const NAV: NavSection[] = [
-  { kind: 'link',    title: 'Dashboard', href: '/',       icon: LayoutDashboard },
-  { kind: 'link',    title: 'Search',    href: '/search', icon: Search          },
+  { kind: 'link',    title: 'Dashboard', href: '/',       icon: SquaresFour     },
+  { kind: 'link',    title: 'Search',    href: '/search', icon: MagnifyingGlass },
   {
     kind: 'section', title: 'Finance',
     children: [
-      { title: 'P&L Report',       href: '/finance/pnl',             icon: BarChart2   },
-      { title: 'Revenue',          href: '/finance/revenue',         icon: TrendingUp  },
+      { title: 'P&L Report',       href: '/finance/pnl',             icon: ChartBar    },
+      { title: 'Revenue',          href: '/finance/revenue',         icon: TrendUp     },
       { title: 'Expenses',         href: '/finance/expenses',        icon: Receipt     },
-      { title: 'Expense Report',   href: '/finance/expenses/report', icon: BarChart2   },
+      { title: 'Expense Report',   href: '/finance/expenses/report', icon: ChartBar    },
       { title: 'Card Settlements', href: '/finance/settlements',     icon: CreditCard  },
-      { title: 'Vendors',          href: '/finance/vendors',         icon: Store       },
+      { title: 'Vendors',          href: '/finance/vendors',         icon: Storefront  },
       { title: 'Month-End Close',  href: '/finance/close',           icon: CheckSquare },
     ],
   },
@@ -77,14 +78,14 @@ export function Sidebar({ onClose, user }: SidebarProps) {
   }
 
   return (
-    <aside className="bg-[#3D4028] flex flex-col h-full w-64 shrink-0">
+    <aside className="bg-sidebar flex flex-col h-full w-64 shrink-0">
 
       {/* Logo */}
       <div className="flex items-center justify-between px-5 pt-6 pb-5">
         <Logo />
         {onClose && (
-          <button onClick={onClose} className="lg:hidden text-[#B0B49A] hover:text-white p-1 rounded">
-            <X className="h-4 w-4" />
+          <button onClick={onClose} className="lg:hidden text-sidebar-fg-muted hover:text-sidebar-fg p-1 rounded">
+            <X weight="light" className="h-4 w-4" />
           </button>
         )}
       </div>
@@ -98,10 +99,10 @@ export function Sidebar({ onClose, user }: SidebarProps) {
               <Link key={item.href} href={item.href} onClick={onClose}>
                 <span className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
                   active
-                    ? 'bg-white/15 text-white font-medium'
-                    : 'text-[#C8CCBA] hover:bg-white/8 hover:text-white'
+                    ? 'bg-sidebar-active text-sidebar-active-fg font-medium'
+                    : 'text-sidebar-fg hover:bg-sidebar-hover hover:text-sidebar-fg'
                 }`}>
-                  <item.icon className="h-4 w-4 shrink-0" />
+                  <item.icon weight="light" className="h-4 w-4 shrink-0" />
                   {item.title}
                 </span>
               </Link>
@@ -110,7 +111,7 @@ export function Sidebar({ onClose, user }: SidebarProps) {
 
           return (
             <div key={item.title} className="pt-4">
-              <p className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-[#7A7F64]">
+              <p className="px-3 mb-1.5 text-xs font-semibold uppercase tracking-widest text-sidebar-fg-muted">
                 {item.title}
               </p>
               <div className="space-y-0.5">
@@ -120,10 +121,10 @@ export function Sidebar({ onClose, user }: SidebarProps) {
                     <Link key={child.href} href={child.href} onClick={onClose}>
                       <span className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
                         active
-                          ? 'bg-[#A55437]/80 text-white font-medium'
-                          : 'text-[#C8CCBA] hover:bg-white/8 hover:text-white'
+                          ? 'bg-sidebar-active text-sidebar-active-fg font-medium'
+                          : 'text-sidebar-fg hover:bg-sidebar-hover hover:text-sidebar-fg'
                       }`}>
-                        <child.icon className="h-4 w-4 shrink-0" />
+                        <child.icon weight="light" className="h-4 w-4 shrink-0" />
                         {child.title}
                       </span>
                     </Link>
@@ -138,19 +139,25 @@ export function Sidebar({ onClose, user }: SidebarProps) {
       {/* User footer */}
       <div className="px-3 pb-5 pt-3 border-t border-white/10">
         <div className="flex items-center gap-3 px-3 py-2">
-          <div className="w-7 h-7 rounded-full bg-[#A55437] flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+          <div className="w-7 h-7 rounded-full bg-sidebar-avatar flex items-center justify-center text-sidebar-active-fg text-xs font-bold shrink-0">
             {getInitials(user?.email)}
           </div>
-          <span className="flex-1 text-xs text-[#B0B49A] truncate">
+          <span className="flex-1 text-xs text-sidebar-fg-muted truncate">
             {user?.email?.split('@')[0] ?? ''}
           </span>
-          <button
-            onClick={handleSignOut}
-            title="Sign out"
-            className="text-[#7A7F64] hover:text-white transition-colors p-1 rounded"
-          >
-            <LogOut className="h-3.5 w-3.5" />
-          </button>
+          <TooltipProvider delayDuration={400}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={handleSignOut}
+                  className="text-sidebar-fg-muted hover:text-sidebar-fg transition-colors p-1 rounded"
+                >
+                  <SignOut weight="light" className="h-3.5 w-3.5" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right">Sign out</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
     </aside>

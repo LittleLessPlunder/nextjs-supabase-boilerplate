@@ -14,6 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "@/components/ui/use-toast";
 import { getDepartments, addPosition, getPosition, updatePosition } from '@/utils/supabase/queries';
 import { DepartmentSelect } from "@/components/ui/department-select";
+import { Loading } from '@/components/ui/loading';
 
 interface FormData {
   title: string;
@@ -179,7 +180,7 @@ export default function AddPositionForm({ positionId }: { positionId: string | n
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

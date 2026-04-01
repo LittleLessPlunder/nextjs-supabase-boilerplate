@@ -7,7 +7,7 @@ import { getWorkLogs } from '@/utils/supabase/queries';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Settings, Calendar, List, ChevronLeft, ChevronRight } from 'lucide-react';
+import { GearSix, Calendar, List, CaretLeft, CaretRight, Check, X } from '@phosphor-icons/react';
 import { useRouter } from 'next/navigation';
 import { Pagination } from '@/components/ui/pagination';
 import { DEFAULT_ITEMS_PER_PAGE } from '@/utils/constants';
@@ -17,9 +17,9 @@ import { Badge } from '@/components/ui/badge';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addMonths, subMonths, addWeeks, subWeeks, eachDayOfInterval, isWeekend, isSameMonth, isToday } from 'date-fns';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import BulkImportWorkLogs from '@/components/misc/BulkImportWorkLogs';
-import { Check, X } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { approveWorkLog, rejectWorkLog } from '@/utils/supabase/queries';
+import { Loading } from '@/components/ui/loading';
 
 interface WorkLog {
   id: string;
@@ -174,9 +174,9 @@ export default function WorkLogsPage({ user }: WorkLogsPageProps) {
               e.stopPropagation();
               handleApprove(log.id);
             }}
-            className="text-green-600 hover:text-green-700"
+            className="text-finance-positive hover:text-finance-positive"
           >
-            <Check className="h-4 w-4" />
+            <Check weight="light" className="h-4 w-4" />
           </Button>
           <Button
             variant="ghost"
@@ -185,9 +185,9 @@ export default function WorkLogsPage({ user }: WorkLogsPageProps) {
               e.stopPropagation();
               handleReject(log.id);
             }}
-            className="text-red-600 hover:text-red-700"
+            className="text-finance-negative hover:text-finance-negative"
           >
-            <X className="h-4 w-4" />
+            <X weight="light" className="h-4 w-4" />
           </Button>
         </div>
       );
@@ -201,7 +201,7 @@ export default function WorkLogsPage({ user }: WorkLogsPageProps) {
           router.push(`/work-logs/edit/${log.id}`);
         }}
       >
-        <Settings className="h-4 w-4" />
+        <GearSix weight="light" className="h-4 w-4" />
       </Button>
     );
   };
@@ -281,9 +281,9 @@ export default function WorkLogsPage({ user }: WorkLogsPageProps) {
               key={log.id}
               className={cn(
                 "w-6 h-6 rounded-full flex items-center justify-center text-xs cursor-pointer",
-                log.status === 'approved' ? 'bg-green-200 dark:bg-green-900/50' :
-                log.status === 'rejected' ? 'bg-red-200 dark:bg-red-900/50' :
-                'bg-yellow-200 dark:bg-yellow-900/50'
+                log.status === 'approved' ? 'bg-status-success' :
+                log.status === 'rejected' ? 'bg-status-danger' :
+                'bg-status-warning'
               )}
               onClick={() => router.push(`/work-logs/edit/${log.id}`)}
               title={`${log.employee_name} (${log.start_time} - ${log.end_time})`}
@@ -322,7 +322,7 @@ export default function WorkLogsPage({ user }: WorkLogsPageProps) {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -339,7 +339,7 @@ export default function WorkLogsPage({ user }: WorkLogsPageProps) {
                 size="icon"
                 onClick={() => navigateDate('prev')}
               >
-                <ChevronLeft className="h-4 w-4" />
+                <CaretLeft weight="light" className="h-4 w-4" />
               </Button>
               <span className="text-sm">
                 {viewMode === 'month' 
@@ -352,7 +352,7 @@ export default function WorkLogsPage({ user }: WorkLogsPageProps) {
                 size="icon"
                 onClick={() => navigateDate('next')}
               >
-                <ChevronRight className="h-4 w-4" />
+                <CaretRight weight="light" className="h-4 w-4" />
               </Button>
             </div>
           </div>
@@ -374,7 +374,7 @@ export default function WorkLogsPage({ user }: WorkLogsPageProps) {
               onClick={() => setViewMode('list')}
               className={viewMode === 'list' ? 'bg-accent' : ''}
             >
-              <List className="h-4 w-4" />
+              <List weight="light" className="h-4 w-4" />
             </Button>
             <Button
               variant="outline"
@@ -382,7 +382,7 @@ export default function WorkLogsPage({ user }: WorkLogsPageProps) {
               onClick={() => setViewMode('week')}
               className={viewMode === 'week' ? 'bg-accent' : ''}
             >
-              <Calendar className="h-4 w-4" />
+              <Calendar weight="light" className="h-4 w-4" />
             </Button>
             <Button
               variant="outline"
@@ -390,7 +390,7 @@ export default function WorkLogsPage({ user }: WorkLogsPageProps) {
               onClick={() => setViewMode('month')}
               className={viewMode === 'month' ? 'bg-accent' : ''}
             >
-              <Calendar className="h-4 w-4" />
+              <Calendar weight="light" className="h-4 w-4" />
             </Button>
             <Link href="/work-logs/add">
               <Button variant="default">+ Add New</Button>
@@ -400,7 +400,8 @@ export default function WorkLogsPage({ user }: WorkLogsPageProps) {
         <CardContent>
           {viewMode === 'list' ? (
             <>
-              <table className="w-full">
+              <div className="overflow-x-auto -mx-0">
+              <table className="w-full min-w-[640px]">
                 <thead>
                   <tr className="text-left bg-muted">
                     <th className="p-2">Employee</th>
@@ -440,13 +441,14 @@ export default function WorkLogsPage({ user }: WorkLogsPageProps) {
                             router.push(`/work-logs/edit/${log.id}`);
                           }}
                         >
-                          <Settings className="h-4 w-4" />
+                          <GearSix weight="light" className="h-4 w-4" />
                         </Button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              </div>
 
               <Pagination
                 currentPage={currentPage}

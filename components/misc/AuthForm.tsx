@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,9 +13,19 @@ const COOLDOWN_KEY = 'ytw_magic_link_sent_at';
 
 export type AuthState = 'signin' | 'signup' | 'forgot_password';
 
+const URL_ERROR_MESSAGES: Record<string, string> = {
+  unauthorized: 'Your email is not authorized to access this portal.',
+  link_expired: 'That sign-in link has expired or already been used. Please request a new one.',
+};
+
 export default function AuthForm() {
+  const searchParams = useSearchParams();
+  const urlError = searchParams.get('error');
+
   const [email, setEmail] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    urlError ? (URL_ERROR_MESSAGES[urlError] ?? 'An error occurred. Please try again.') : null
+  );
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [cooldown, setCooldown] = useState(0);

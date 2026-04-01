@@ -13,6 +13,7 @@ import { useTenant } from '@/utils/tenant-context';
 import { toast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { addContractType, getContractType, updateContractType } from '@/utils/supabase/queries';
+import { Loading } from '@/components/ui/loading';
 
 interface FormData {
   name: string;
@@ -137,7 +138,7 @@ export default function AddContractTypeForm({ contractTypeId }: { contractTypeId
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

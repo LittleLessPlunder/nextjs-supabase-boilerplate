@@ -2,7 +2,7 @@
 
 import { Button } from './button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { CaretLeft, CaretRight, CaretDoubleLeft, CaretDoubleRight } from '@phosphor-icons/react';
 import { ITEMS_PER_PAGE_OPTIONS } from '@/utils/constants';
 
 interface PaginationProps {
@@ -81,7 +81,7 @@ export function Pagination({
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1}
         >
-          <ChevronsLeft className="h-4 w-4" />
+          <CaretDoubleLeft weight="light" className="h-4 w-4" />
         </Button>
         <Button
           variant="outline"
@@ -89,7 +89,7 @@ export function Pagination({
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
-          <ChevronLeft className="h-4 w-4" />
+          <CaretLeft weight="light" className="h-4 w-4" />
         </Button>
 
         {getPageNumbers().map((page, index) => (
@@ -110,7 +110,7 @@ export function Pagination({
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
         >
-          <ChevronRight className="h-4 w-4" />
+          <CaretRight weight="light" className="h-4 w-4" />
         </Button>
         <Button
           variant="outline"
@@ -118,7 +118,7 @@ export function Pagination({
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages}
         >
-          <ChevronsRight className="h-4 w-4" />
+          <CaretDoubleRight weight="light" className="h-4 w-4" />
         </Button>
       </div>
     </div>

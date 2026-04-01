@@ -24,7 +24,8 @@ import {
   bulkAddWorkLogs
 } from '@/utils/supabase/queries';
 import { Badge } from "@/components/ui/badge";
-import { Check, X, Plus, Trash2 } from "lucide-react";
+import { Check, X, Plus, Trash } from "@phosphor-icons/react";
+import { Loading } from '@/components/ui/loading';
 import { format } from 'date-fns';
 
 interface WorkLogDate {
@@ -298,7 +299,7 @@ export default function AddWorkLogForm({ workLogId, user }: AddWorkLogFormProps)
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
@@ -364,7 +365,7 @@ export default function AddWorkLogForm({ workLogId, user }: AddWorkLogFormProps)
                       size="icon"
                       onClick={() => removeDate(dateEntry.id)}
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash weight="light" className="h-4 w-4" />
                     </Button>
                   )}
                 </div>
@@ -377,13 +378,13 @@ export default function AddWorkLogForm({ workLogId, user }: AddWorkLogFormProps)
                   onClick={addDate}
                   className="mt-2"
                 >
-                  <Plus className="h-4 w-4 mr-2" />
+                  <Plus weight="light" className="h-4 w-4 mr-2" />
                   Add Date
                 </Button>
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <Label htmlFor="start_time">Start Time *</Label>
                 <Input

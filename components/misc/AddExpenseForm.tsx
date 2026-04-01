@@ -15,8 +15,9 @@ import {
   getVendors, getExpenseCategories,
   addExpense, updateExpense, getExpense,
 } from '@/utils/supabase/queries';
-import { ArrowLeft, Upload, X, BadgeCheck } from 'lucide-react';
+import { ArrowLeft, Upload, X, SealCheck } from '@phosphor-icons/react';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Loading } from '@/components/ui/loading';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -264,7 +265,7 @@ export default function AddExpenseForm({ expenseId }: Props) {
     }
   }
 
-  if (fetching) return <div className="p-8 text-muted-foreground">Loading…</div>;
+  if (fetching) return <Loading />;
 
   const isVAT = selectedVendor?.is_vat_registered ?? false;
 
@@ -273,7 +274,7 @@ export default function AddExpenseForm({ expenseId }: Props) {
 
       <div className="flex items-center gap-3 mb-6">
         <Button variant="ghost" size="icon" onClick={() => router.push('/finance/expenses')}>
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft weight="light" className="h-4 w-4" />
         </Button>
         <h1 className="text-lg font-semibold">{isEdit ? 'Edit Expense' : 'Log Expense'}</h1>
       </div>
@@ -299,8 +300,8 @@ export default function AddExpenseForm({ expenseId }: Props) {
                     <div className="font-medium flex items-center gap-1.5">
                       {selectedVendor.name}
                       {selectedVendor.is_vat_registered && (
-                        <span className="inline-flex items-center gap-0.5 text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-medium">
-                          <BadgeCheck className="h-3 w-3" /> VAT
+                        <span className="inline-flex items-center gap-0.5 text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-medium">
+                          <SealCheck weight="light" className="h-3 w-3" /> VAT
                         </span>
                       )}
                     </div>
@@ -312,7 +313,7 @@ export default function AddExpenseForm({ expenseId }: Props) {
                     )}
                   </div>
                   <Button type="button" variant="ghost" size="icon" className="h-6 w-6" onClick={clearVendor}>
-                    <X className="h-3.5 w-3.5" />
+                    <X weight="light" className="h-3.5 w-3.5" />
                   </Button>
                 </div>
               ) : (
@@ -335,7 +336,7 @@ export default function AddExpenseForm({ expenseId }: Props) {
                             >
                               <span>{v.name}</span>
                               {v.is_vat_registered && (
-                                <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded">VAT</span>
+                                <span className="text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded">VAT</span>
                               )}
                             </button>
                           ))
@@ -404,10 +405,10 @@ export default function AddExpenseForm({ expenseId }: Props) {
             {isVAT ? (
               // VAT vendor: enter the breakdown from the receipt directly
               <>
-                <div className="grid grid-cols-2 gap-4 p-3 rounded-md bg-green-50 border border-green-200">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 p-3 rounded-md bg-green-50 border border-green-200">
                   <div>
                     <Label className="text-xs font-medium">Non-VAT Base (₱) *</Label>
-                    <p className="text-[10px] text-muted-foreground mb-1">Amount before VAT on your OR</p>
+                    <p className="text-xs text-muted-foreground mb-1">Amount before VAT on your OR</p>
                     <Input
                       type="number"
                       min="0"
@@ -419,7 +420,7 @@ export default function AddExpenseForm({ expenseId }: Props) {
                   </div>
                   <div>
                     <Label className="text-xs font-medium">VAT Amount (₱) *</Label>
-                    <p className="text-[10px] text-muted-foreground mb-1">12% VAT shown on your OR</p>
+                    <p className="text-xs text-muted-foreground mb-1">12% VAT shown on your OR</p>
                     <Input
                       type="number"
                       min="0"
@@ -460,7 +461,7 @@ export default function AddExpenseForm({ expenseId }: Props) {
           <CardHeader><CardTitle className="text-sm">Payment</CardTitle></CardHeader>
           <CardContent className="grid gap-4">
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <Label>Payment Method</Label>
                 <Select value={form.payment_method} onValueChange={v => set('payment_method', v)}>
@@ -555,7 +556,7 @@ export default function AddExpenseForm({ expenseId }: Props) {
               </div>
             ) : (
               <label className="flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-muted-foreground/30 p-8 cursor-pointer hover:bg-muted/30 transition-colors">
-                <Upload className="h-6 w-6 text-muted-foreground" />
+                <Upload weight="light" className="h-6 w-6 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Upload receipt photo or PDF</span>
                 <input type="file" accept="image/*,application/pdf" className="hidden" onChange={handleReceiptChange} />
               </label>

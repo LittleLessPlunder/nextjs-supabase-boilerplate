@@ -1,7 +1,8 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Menu, LogOut, Search } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { List, SignOut, MagnifyingGlass } from '@phosphor-icons/react';
 import { User } from '@supabase/supabase-js';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
@@ -38,44 +39,55 @@ export function Navbar({ user, onMenuClick }: NavbarProps) {
           className="lg:hidden"
           onClick={onMenuClick}
         >
-          <Menu className="h-5 w-5" />
+          <List weight="light" className="h-5 w-5" />
         </Button>
 
         {/* Right side */}
-        <div className="flex items-center gap-2">
-          {/* Search */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => router.push('/search')}
-            title="Search (⌘K)"
-            className="text-muted-foreground"
-          >
-            <Search className="h-4 w-4" />
-          </Button>
-          {/* User avatar chip */}
-          {user && (
-            <div className="flex items-center gap-2 rounded-full border bg-card px-3 py-1.5">
-              <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-[10px] font-bold shrink-0">
-                {getInitials(user.email)}
-              </div>
-              <span className="text-sm text-muted-foreground hidden sm:block">
-                {user.email?.split('@')[0]}
-              </span>
-            </div>
-          )}
+        <TooltipProvider delayDuration={400}>
+          <div className="flex items-center gap-2">
+            {/* Search */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => router.push('/search')}
+                  className="text-muted-foreground"
+                >
+                  <MagnifyingGlass weight="light" className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Search (⌘K)</TooltipContent>
+            </Tooltip>
 
-          {/* Sign out */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleSignOut}
-            title="Sign out"
-            className="text-muted-foreground hover:text-destructive"
-          >
-            <LogOut className="h-4 w-4" />
-          </Button>
-        </div>
+            {/* User avatar chip */}
+            {user && (
+              <div className="flex items-center gap-2 rounded-full border bg-card px-3 py-1.5">
+                <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold shrink-0">
+                  {getInitials(user.email)}
+                </div>
+                <span className="text-sm text-muted-foreground hidden sm:block">
+                  {user.email?.split('@')[0]}
+                </span>
+              </div>
+            )}
+
+            {/* Sign out */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleSignOut}
+                  className="text-muted-foreground hover:text-destructive"
+                >
+                  <SignOut weight="light" className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Sign out</TooltipContent>
+            </Tooltip>
+          </div>
+        </TooltipProvider>
       </div>
     </header>
   );

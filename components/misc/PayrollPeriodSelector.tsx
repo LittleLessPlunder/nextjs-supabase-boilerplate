@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { Calculator } from 'lucide-react';
+import { Calculator } from '@phosphor-icons/react';
 
 const MONTHS = [
   { value: 1,  label: 'January' },
@@ -64,7 +64,7 @@ export default function PayrollPeriodSelector() {
     <div className="container mx-auto max-w-lg mt-16">
       <Card>
         <CardHeader className="flex flex-row items-center gap-3">
-          <Calculator className="h-5 w-5 text-muted-foreground" />
+          <Calculator weight="light" className="h-5 w-5 text-muted-foreground" />
           <CardTitle>Payroll Calculator</CardTitle>
         </CardHeader>
         <CardContent>

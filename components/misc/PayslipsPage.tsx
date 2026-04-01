@@ -130,7 +130,8 @@ export default function PayslipsPage() {
         </Select>
       </CardHeader>
       <CardContent>
-        <table className="w-full">
+        <div className="overflow-x-auto -mx-0">
+        <table className="w-full min-w-[640px]">
           <thead>
             <tr className="text-left bg-muted">
               <th className="p-2">Employee</th>
@@ -158,6 +159,7 @@ export default function PayslipsPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </CardContent>
     </Card>
   );

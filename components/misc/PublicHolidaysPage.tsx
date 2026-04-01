@@ -7,13 +7,14 @@ import { getPublicHolidays } from '@/utils/supabase/queries';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { CaretLeft, CaretRight } from '@phosphor-icons/react';
 import { useRouter } from 'next/navigation';
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from '@/components/ui/use-toast';
 import { format, startOfYear, endOfYear, eachMonthOfInterval, eachDayOfInterval, startOfMonth, endOfMonth, isWeekend, isSameDay } from 'date-fns';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import BulkImportHolidays from './BulkImportHolidays';
+import { Loading } from '@/components/ui/loading';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -112,7 +113,7 @@ export default function PublicHolidaysPage({ user }: PublicHolidaysPageProps) {
     );
   }
 
-  if (loading) return <div>Loading…</div>;
+  if (loading) return <Loading />;
 
   const regularHolidays = holidays.filter(h => h.type === 'regular');
   const specialHolidays = holidays.filter(h => h.type === 'special_non_working');
@@ -127,10 +128,10 @@ export default function PublicHolidaysPage({ user }: PublicHolidaysPageProps) {
             <CardTitle>Public Holidays {selectedYear}</CardTitle>
             <div className="flex items-center gap-1">
               <Button variant="outline" size="icon" onClick={() => setSelectedYear(y => y - 1)}>
-                <ChevronLeft className="h-4 w-4" />
+                <CaretLeft weight="light" className="h-4 w-4" />
               </Button>
               <Button variant="outline" size="icon" onClick={() => setSelectedYear(y => y + 1)}>
-                <ChevronRight className="h-4 w-4" />
+                <CaretRight weight="light" className="h-4 w-4" />
               </Button>
             </div>
           </div>
@@ -212,7 +213,8 @@ export default function PublicHolidaysPage({ user }: PublicHolidaysPageProps) {
             {regularHolidays.length === 0
               ? <p className="text-sm text-muted-foreground px-4 pb-4">None added yet.</p>
               : (
-                <table className="w-full text-sm">
+                <div className="overflow-x-auto -mx-0">
+                <table className="w-full min-w-[640px] text-sm">
                   <tbody>
                     {regularHolidays.map((h, i) => (
                       <tr key={h.id} className={`border-t ${i === 0 ? 'border-t-0' : ''} hover:bg-muted/30`}>
@@ -229,6 +231,7 @@ export default function PublicHolidaysPage({ user }: PublicHolidaysPageProps) {
                     ))}
                   </tbody>
                 </table>
+                </div>
               )
             }
           </CardContent>
@@ -249,7 +252,8 @@ export default function PublicHolidaysPage({ user }: PublicHolidaysPageProps) {
             {specialHolidays.length === 0
               ? <p className="text-sm text-muted-foreground px-4 pb-4">None added yet.</p>
               : (
-                <table className="w-full text-sm">
+                <div className="overflow-x-auto -mx-0">
+                <table className="w-full min-w-[640px] text-sm">
                   <tbody>
                     {specialHolidays.map((h, i) => (
                       <tr key={h.id} className={`border-t ${i === 0 ? 'border-t-0' : ''} hover:bg-muted/30`}>
@@ -266,6 +270,7 @@ export default function PublicHolidaysPage({ user }: PublicHolidaysPageProps) {
                     ))}
                   </tbody>
                 </table>
+                </div>
               )
             }
           </CardContent>

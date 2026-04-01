@@ -8,8 +8,9 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from '@/components/ui/use-toast';
-import { Plus, Pencil, Trash2, BadgeCheck, Building2, ShoppingBag } from 'lucide-react';
+import { Plus, PencilSimple, Trash, SealCheck, Buildings, ShoppingBag } from '@phosphor-icons/react';
 import { useRouter } from 'next/navigation';
+import { Loading } from '@/components/ui/loading';
 
 interface Vendor {
   id: string;
@@ -62,21 +63,22 @@ export default function VendorsPage({ user }: { user: User }) {
           <p className="text-sm text-muted-foreground">Suppliers used in expense entries</p>
         </div>
         <Button size="sm" onClick={() => router.push('/finance/vendors/add')}>
-          <Plus className="h-4 w-4 mr-1.5" />Add Vendor
+          <Plus weight="light" className="h-4 w-4 mr-1.5" />Add Vendor
         </Button>
       </div>
 
       <Card>
         <CardContent className="p-0">
           {loading ? (
-            <div className="p-8 text-center text-muted-foreground">Loading…</div>
+            <Loading />
           ) : vendors.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
-              <Building2 className="h-8 w-8 mx-auto mb-2 opacity-40" />
+              <Buildings weight="light" className="h-8 w-8 mx-auto mb-2 opacity-40" />
               <p>No vendors yet. Add your first supplier.</p>
             </div>
           ) : (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto -mx-0">
+            <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b bg-muted text-left">
                   <th className="p-3 font-medium">Name</th>
@@ -95,20 +97,20 @@ export default function VendorsPage({ user }: { user: User }) {
                     <td className="p-3 text-muted-foreground">{v.address ?? '—'}</td>
                     <td className="p-3 text-center">
                       {v.is_vat_registered
-                        ? <BadgeCheck className="h-4 w-4 text-green-600 mx-auto" />
+                        ? <SealCheck weight="light" className="h-4 w-4 text-green-600 mx-auto" />
                         : <span className="text-muted-foreground">—</span>
                       }
                     </td>
                     <td className="p-3 text-center">
                       {v.is_consignor
-                        ? <ShoppingBag className="h-4 w-4 text-purple-600 mx-auto" />
+                        ? <ShoppingBag weight="light" className="h-4 w-4 text-purple-600 mx-auto" />
                         : <span className="text-muted-foreground">—</span>
                       }
                     </td>
                     <td className="p-3 text-right">
                       <div className="flex justify-end gap-1">
                         <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => router.push(`/finance/vendors/edit/${v.id}`)}>
-                          <Pencil className="h-3.5 w-3.5" />
+                          <PencilSimple weight="light" className="h-3.5 w-3.5" />
                         </Button>
                         <Button
                           variant="ghost"
@@ -116,7 +118,7 @@ export default function VendorsPage({ user }: { user: User }) {
                           className="h-7 w-7 text-destructive hover:text-destructive"
                           onClick={() => handleDelete(v.id, v.name)}
                         >
-                          <Trash2 className="h-3.5 w-3.5" />
+                          <Trash weight="light" className="h-3.5 w-3.5" />
                         </Button>
                       </div>
                     </td>
@@ -124,6 +126,7 @@ export default function VendorsPage({ user }: { user: User }) {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </CardContent>
       </Card>

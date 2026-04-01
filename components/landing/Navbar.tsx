@@ -2,7 +2,7 @@
 
 import { NavigationMenu, NavigationMenuList } from '@/components/ui/navigation-menu';
 import { Button } from '@/components/ui/button';
-import { Menu } from 'lucide-react';
+import { List } from '@phosphor-icons/react';
 import { ModeToggle } from './mode-toggle';
 import { User } from '@supabase/supabase-js';
 import { createApiClient } from '@/utils/supabase/api';
@@ -35,7 +35,7 @@ export const Navbar = ({ user, onMenuClick }: NavbarProps) => {
           className="lg:hidden"
           onClick={onMenuClick}
         >
-          <Menu className="h-6 w-6" />
+          <List weight="light" className="h-6 w-6" />
         </Button>
 
         <div className="flex gap-2 items-center">

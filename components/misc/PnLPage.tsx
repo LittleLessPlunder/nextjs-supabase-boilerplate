@@ -11,10 +11,11 @@ import {
 import { toast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ChevronLeft, ChevronRight, Save } from 'lucide-react';
+import { CaretLeft, CaretRight, FloppyDisk } from '@phosphor-icons/react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from 'recharts';
+import { Loading } from '@/components/ui/loading';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -256,19 +257,19 @@ export default function PnLPage({ user }: { user: User }) {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="icon" onClick={prevMonth}>
-            <ChevronLeft className="h-4 w-4" />
+            <CaretLeft weight="light" className="h-4 w-4" />
           </Button>
           <span className="text-sm font-medium min-w-[140px] text-center">
             {MONTHS[month - 1]} {year}
           </span>
           <Button variant="outline" size="icon" onClick={nextMonth}>
-            <ChevronRight className="h-4 w-4" />
+            <CaretRight weight="light" className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
       {loading ? (
-        <div className="p-16 text-center text-muted-foreground">Loading P&L…</div>
+        <Loading />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
@@ -340,22 +341,22 @@ export default function PnLPage({ user }: { user: User }) {
                 </div>
                 <div className={`rounded-md p-3 col-span-1 ${
                   netProfit >= 0
-                    ? 'bg-green-50 border border-green-200'
-                    : 'bg-red-50 border border-red-200'
+                    ? 'bg-status-success border border-status-success-border'
+                    : 'bg-status-danger border border-status-danger-border'
                 }`}>
                   <p className="text-xs text-muted-foreground mb-0.5">Net Profit (PHP)</p>
                   <p className={`text-base font-bold tabular-nums ${
-                    netProfit >= 0 ? 'text-green-700' : 'text-red-600'
+                    netProfit >= 0 ? 'text-finance-positive' : 'text-finance-negative'
                   }`}>{php(netProfit)}</p>
                 </div>
                 <div className={`rounded-md p-3 ${
                   netProfit >= 0
-                    ? 'bg-green-50 border border-green-200'
-                    : 'bg-red-50 border border-red-200'
+                    ? 'bg-status-success border border-status-success-border'
+                    : 'bg-status-danger border border-status-danger-border'
                 }`}>
                   <p className="text-xs text-muted-foreground mb-0.5">Net Profit (%)</p>
                   <p className={`text-base font-bold ${
-                    netProfit >= 0 ? 'text-green-700' : 'text-red-600'
+                    netProfit >= 0 ? 'text-finance-positive' : 'text-finance-negative'
                   }`}>{pct(netProfitPct)}</p>
                 </div>
               </div>
@@ -370,7 +371,7 @@ export default function PnLPage({ user }: { user: User }) {
                 <div className="flex justify-between items-center py-[5px]">
                   <span className="text-sm text-muted-foreground">Profit / Loss of Period</span>
                   <span className={`text-sm font-semibold tabular-nums ${
-                    netProfit >= 0 ? 'text-green-700' : 'text-red-600'
+                    netProfit >= 0 ? 'text-finance-positive' : 'text-finance-negative'
                   }`}>{php(netProfit)}</span>
                 </div>
                 <div className="flex justify-between items-center py-[5px] font-semibold border-t mt-1 pt-2">
@@ -426,7 +427,7 @@ export default function PnLPage({ user }: { user: User }) {
 
             {/* Save button */}
             <Button onClick={handleSave} disabled={saving} className="w-full">
-              <Save className="h-4 w-4 mr-2" />
+              <FloppyDisk weight="light" className="h-4 w-4 mr-2" />
               {saving ? 'Saving…' : 'Save Period Settings'}
             </Button>
 

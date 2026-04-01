@@ -12,7 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from '@/components/ui/use-toast';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { ChevronDown, ChevronRight, BarChart2 } from 'lucide-react';
+import { CaretDown, CaretRight, ChartBar } from '@phosphor-icons/react';
+import { Loading } from '@/components/ui/loading';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -190,7 +191,7 @@ export default function ExpensesReport({ user }: { user: User }) {
 
       {/* Header */}
       <div className="flex items-center gap-2 mb-6">
-        <BarChart2 className="h-5 w-5 text-primary" />
+        <ChartBar weight="light" className="h-5 w-5 text-primary" />
         <div>
           <h1 className="text-xl font-semibold">Expense Report</h1>
           <p className="text-sm text-muted-foreground">Group, filter and analyse expenses by any dimension</p>
@@ -270,7 +271,7 @@ export default function ExpensesReport({ user }: { user: User }) {
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-muted-foreground">Loading…</div>
+        <Loading />
       ) : filtered.length === 0 ? (
         <div className="p-12 text-center text-muted-foreground">No expenses match the selected filters.</div>
       ) : (
@@ -332,7 +333,8 @@ export default function ExpensesReport({ user }: { user: User }) {
           {/* Breakdown table */}
           <Card>
             <CardContent className="p-0">
-              <table className="w-full text-sm">
+              <div className="overflow-x-auto -mx-0">
+              <table className="w-full min-w-[640px] text-sm">
                 <thead>
                   <tr className="border-b bg-muted text-left">
                     <th className="p-3 font-medium">
@@ -359,8 +361,8 @@ export default function ExpensesReport({ user }: { user: User }) {
                         >
                           <td className="p-3 font-medium flex items-center gap-2">
                             {isOpen
-                              ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                              : <ChevronRight className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                              ? <CaretDown weight="light" className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                              : <CaretRight weight="light" className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                             }
                             <span
                               className="inline-block h-2.5 w-2.5 rounded-full shrink-0"
@@ -392,7 +394,7 @@ export default function ExpensesReport({ user }: { user: User }) {
                                 {' · '}
                                 {e.particulars}
                                 {e.declarable_only && (
-                                  <span className="ml-2 px-1.5 py-0.5 rounded bg-violet-100 text-violet-700 text-[10px]">Decl.</span>
+                                  <span className="ml-2 px-1.5 py-0.5 rounded bg-violet-100 text-violet-700 text-xs">Decl.</span>
                                 )}
                               </td>
                               <td className="px-3 py-2 text-right text-muted-foreground">{vendorDisplay}</td>
@@ -425,6 +427,7 @@ export default function ExpensesReport({ user }: { user: User }) {
                   </tr>
                 </tfoot>
               </table>
+              </div>
             </CardContent>
           </Card>
         </>

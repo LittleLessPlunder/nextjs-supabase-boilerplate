@@ -18,19 +18,19 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
   ArrowLeft,
-  CheckCircle2,
+  CheckCircle,
   XCircle,
-  AlertTriangle,
+  Warning,
   Lock,
-  Unlock,
+  LockOpen,
   Plus,
-  Trash2,
-  TrendingUp,
+  Trash,
+  TrendUp,
   Receipt,
-  Store,
+  Storefront,
   CreditCard,
-  Loader2,
-} from 'lucide-react';
+  CircleNotch,
+} from '@phosphor-icons/react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -82,8 +82,8 @@ const STREAM_LABELS: Record<string, string> = {
 };
 
 const STREAM_COLORS: Record<string, string> = {
-  yoga: 'bg-blue-100 text-blue-800',
-  fnb: 'bg-orange-100 text-orange-800',
+  yoga: 'bg-status-info text-status-info-fg',
+  fnb: 'bg-status-warning text-status-warning-fg',
   boutique: 'bg-purple-100 text-purple-800',
 };
 
@@ -98,8 +98,8 @@ function SectionNumber({ n }: { n: number }) {
 function StatusBadge({ status }: { status: CloseStatus }) {
   if (status === 'locked') {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-        <Lock className="h-3 w-3" /> Locked
+      <span className="inline-flex items-center gap-1 rounded-full bg-status-success px-2.5 py-0.5 text-xs font-medium text-status-success-fg">
+        <Lock weight="light" className="h-3 w-3" /> Locked
       </span>
     );
   }
@@ -323,16 +323,16 @@ export default function MonthEndWalkthrough({
   // ── Difference color ─────────────────────────────────────────────────────────
   function diffColor(diff: number) {
     const abs = Math.abs(diff);
-    if (abs === 0) return 'text-green-700 font-semibold';
-    if (abs < 500) return 'text-amber-600 font-semibold';
-    return 'text-red-600 font-semibold';
+    if (abs === 0) return 'text-finance-positive font-semibold';
+    if (abs < 500) return 'text-finance-pending font-semibold';
+    return 'text-finance-negative font-semibold';
   }
 
   // ── Render ───────────────────────────────────────────────────────────────────
   if (dataLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+        <CircleNotch weight="light" className="h-8 w-8 animate-spin text-gray-400" />
       </div>
     );
   }
@@ -347,7 +347,7 @@ export default function MonthEndWalkthrough({
             className="text-gray-400 hover:text-gray-700 transition-colors"
             aria-label="Back"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft weight="light" className="h-5 w-5" />
           </button>
           <div>
             <div className="flex items-center gap-2">
@@ -359,21 +359,21 @@ export default function MonthEndWalkthrough({
         <div className="text-xs text-gray-400 min-w-16 text-right">
           {saveState === 'saving' && (
             <span className="flex items-center gap-1 justify-end">
-              <Loader2 className="h-3 w-3 animate-spin" /> Saving…
+              <CircleNotch weight="light" className="h-3 w-3 animate-spin" /> Saving…
             </span>
           )}
-          {saveState === 'saved' && <span className="text-green-600">Saved</span>}
+          {saveState === 'saved' && <span className="text-finance-positive">Saved</span>}
         </div>
       </div>
 
       {isLocked && (
-        <div className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 px-4 py-3">
-          <div className="flex items-center gap-2 text-green-800 text-sm font-medium">
-            <Lock className="h-4 w-4" />
+        <div className="flex items-center justify-between rounded-lg border border-status-success-border bg-status-success px-4 py-3">
+          <div className="flex items-center gap-2 text-status-success-fg text-sm font-medium">
+            <Lock weight="light" className="h-4 w-4" />
             This period is soft-locked. Editing will generate a warning.
           </div>
           <Button size="sm" variant="outline" onClick={unlock} className="gap-1.5">
-            <Unlock className="h-3.5 w-3.5" /> Unlock
+            <LockOpen weight="light" className="h-3.5 w-3.5" /> Unlock
           </Button>
         </div>
       )}
@@ -389,14 +389,15 @@ export default function MonthEndWalkthrough({
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm text-gray-600">
-              <CheckCircle2 className="h-4 w-4 text-green-500" />
+              <CheckCircle weight="light" className="h-4 w-4 text-finance-positive" />
               Revenue encoded: {revenue.length} entries
             </div>
             <div className="text-lg font-bold text-gray-900">{php(totalRevenue)}</div>
           </div>
 
           {Object.keys(STREAM_LABELS).length > 0 && (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto -mx-0">
+            <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b">
                   <th className="text-left py-2 font-medium text-gray-500">Stream</th>
@@ -431,6 +432,7 @@ export default function MonthEndWalkthrough({
                   ))}
               </tbody>
             </table>
+            </div>
           )}
 
           {revenue.length === 0 && (
@@ -456,7 +458,8 @@ export default function MonthEndWalkthrough({
           </div>
 
           {Object.keys(expensesByCategory).length > 0 && (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto -mx-0">
+            <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b">
                   <th className="text-left py-2 font-medium text-gray-500">Category</th>
@@ -476,19 +479,20 @@ export default function MonthEndWalkthrough({
                   ))}
               </tbody>
             </table>
+            </div>
           )}
 
           {unpaidExpenses.length > 0 ? (
-            <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700">
-              <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
+            <div className="flex items-start gap-2 rounded-lg border border-status-danger-border bg-status-danger px-3 py-2.5 text-sm text-status-danger-fg">
+              <Warning weight="light" className="h-4 w-4 mt-0.5 shrink-0" />
               <span>
                 {unpaidExpenses.length} expense{unpaidExpenses.length !== 1 ? 's' : ''} still marked
                 Unpaid — resolve before closing.
               </span>
             </div>
           ) : (
-            <div className="flex items-center gap-2 text-sm text-green-700">
-              <CheckCircle2 className="h-4 w-4" />
+            <div className="flex items-center gap-2 text-sm text-finance-positive">
+              <CheckCircle weight="light" className="h-4 w-4" />
               All expenses paid ✓
             </div>
           )}
@@ -514,7 +518,7 @@ export default function MonthEndWalkthrough({
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1 flex items-center gap-1">
-                <CreditCard className="h-3.5 w-3.5" /> Cash on Hand
+                <CreditCard weight="light" className="h-3.5 w-3.5" /> Cash on Hand
               </label>
               <Input
                 type="number"
@@ -528,7 +532,7 @@ export default function MonthEndWalkthrough({
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1 flex items-center gap-1">
-                <CreditCard className="h-3.5 w-3.5" /> GCash
+                <CreditCard weight="light" className="h-3.5 w-3.5" /> GCash
               </label>
               <Input
                 type="number"
@@ -542,7 +546,7 @@ export default function MonthEndWalkthrough({
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1 flex items-center gap-1">
-                <Store className="h-3.5 w-3.5" /> Metrobank
+                <Storefront weight="light" className="h-3.5 w-3.5" /> Metrobank
               </label>
               <Input
                 type="number"
@@ -556,7 +560,8 @@ export default function MonthEndWalkthrough({
             </div>
           </div>
 
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto -mx-0">
+          <table className="w-full min-w-[640px] text-sm">
             <tbody>
               <tr className="border-b">
                 <td className="py-2 text-gray-600">Total actual</td>
@@ -574,6 +579,7 @@ export default function MonthEndWalkthrough({
               </tr>
             </tbody>
           </table>
+          </div>
 
           <p className="text-xs text-gray-400 italic">
             A non-zero difference may reflect opening balance, timing differences, or missing entries.
@@ -618,7 +624,7 @@ export default function MonthEndWalkthrough({
                     disabled={isLocked}
                     className="text-gray-400 hover:text-red-500"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash weight="light" className="h-4 w-4" />
                   </Button>
                 </div>
               ))}
@@ -638,7 +644,7 @@ export default function MonthEndWalkthrough({
               disabled={isLocked}
               className="gap-1.5"
             >
-              <Plus className="h-3.5 w-3.5" /> Add set-aside
+              <Plus weight="light" className="h-3.5 w-3.5" /> Add set-aside
             </Button>
             <Button
               type="button"
@@ -648,11 +654,12 @@ export default function MonthEndWalkthrough({
               disabled={isLocked}
               className="text-violet-600 hover:text-violet-700 gap-1.5"
             >
-              <TrendingUp className="h-3.5 w-3.5" /> Suggest VAT
+              <TrendUp weight="light" className="h-3.5 w-3.5" /> Suggest VAT
             </Button>
           </div>
 
-          <table className="w-full text-sm border-t pt-2">
+          <div className="overflow-x-auto -mx-0">
+          <table className="w-full min-w-[640px] text-sm border-t pt-2">
             <tbody>
               <tr className="border-b">
                 <td className="py-2 text-gray-600">Total set-asides</td>
@@ -664,6 +671,7 @@ export default function MonthEndWalkthrough({
               </tr>
             </tbody>
           </table>
+          </div>
         </CardContent>
       </Card>
 
@@ -723,22 +731,22 @@ export default function MonthEndWalkthrough({
           <div className="flex flex-wrap items-center gap-3 pt-2">
             {!isLocked && status === 'draft' && (
               <Button onClick={markUnderReview} className="gap-2">
-                <Receipt className="h-4 w-4" />
+                <Receipt weight="light" className="h-4 w-4" />
                 Mark Under Review
               </Button>
             )}
             {!isLocked && status === 'reviewing' && (
               <Button onClick={softLock} className="gap-2 bg-green-700 hover:bg-green-800">
-                <Lock className="h-4 w-4" />
+                <Lock weight="light" className="h-4 w-4" />
                 Soft Lock Period
               </Button>
             )}
             {!isLocked && (
               <Button variant="outline" onClick={() => save()} className="gap-2">
                 {saveState === 'saving' ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <CircleNotch weight="light" className="h-4 w-4 animate-spin" />
                 ) : (
-                  <TrendingUp className="h-4 w-4" />
+                  <TrendUp weight="light" className="h-4 w-4" />
                 )}
                 Save
               </Button>
@@ -754,11 +762,11 @@ export default function MonthEndWalkthrough({
 
 function ChecklistItem({ label, ok }: { label: string; ok: boolean }) {
   return (
-    <div className={`flex items-center gap-2 text-sm ${ok ? 'text-green-700' : 'text-red-600'}`}>
+    <div className={`flex items-center gap-2 text-sm ${ok ? 'text-finance-positive' : 'text-finance-negative'}`}>
       {ok ? (
-        <CheckCircle2 className="h-4 w-4 shrink-0" />
+        <CheckCircle weight="light" className="h-4 w-4 shrink-0" />
       ) : (
-        <XCircle className="h-4 w-4 shrink-0" />
+        <XCircle weight="light" className="h-4 w-4 shrink-0" />
       )}
       {label}
     </div>

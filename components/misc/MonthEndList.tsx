@@ -9,7 +9,8 @@ import { useTenant } from '@/utils/tenant-context';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Lock, FileText, Plus, ChevronRight } from 'lucide-react';
+import { Lock, FileText, Plus, CaretRight } from '@phosphor-icons/react';
+import { Loading } from '@/components/ui/loading';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -43,7 +44,7 @@ function StatusBadge({ status }: { status: MonthEndClose['status'] }) {
   if (status === 'locked') {
     return (
       <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-        <Lock className="h-3 w-3" /> Locked
+        <Lock weight="light" className="h-3 w-3" /> Locked
       </span>
     );
   }
@@ -98,7 +99,7 @@ export default function MonthEndList({ user }: { user: User }) {
           </p>
         </div>
         <Button onClick={() => setShowForm((v) => !v)} className="gap-2">
-          <Plus className="h-4 w-4" />
+          <Plus weight="light" className="h-4 w-4" />
           Start New Close
         </Button>
       </div>
@@ -133,14 +134,15 @@ export default function MonthEndList({ user }: { user: User }) {
       <Card>
         <CardContent className="p-0">
           {loading ? (
-            <div className="py-12 text-center text-sm text-gray-400">Loading…</div>
+            <Loading />
           ) : closes.length === 0 ? (
             <div className="py-16 flex flex-col items-center gap-3 text-gray-400">
-              <FileText className="h-10 w-10 opacity-40" />
+              <FileText weight="light" className="h-10 w-10 opacity-40" />
               <p className="text-sm">No month-end closes yet. Start one above.</p>
             </div>
           ) : (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto -mx-0">
+            <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b bg-gray-50">
                   <th className="text-left px-5 py-3 font-medium text-gray-600">Period</th>
@@ -170,13 +172,14 @@ export default function MonthEndList({ user }: { user: User }) {
                         className="gap-1"
                         onClick={() => router.push(`/finance/close/${c.period}`)}
                       >
-                        Open <ChevronRight className="h-3.5 w-3.5" />
+                        Open <CaretRight weight="light" className="h-3.5 w-3.5" />
                       </Button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </CardContent>
       </Card>

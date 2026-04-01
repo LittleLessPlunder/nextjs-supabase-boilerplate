@@ -16,18 +16,19 @@ import {
 } from '@/components/ui/select';
 import { useTenant } from '@/utils/tenant-context';
 import {
-  AlertTriangle,
+  Warning,
   Clock,
   FileText,
-  ShieldAlert,
+  ShieldWarning,
   Star,
-  CheckCircle2,
+  CheckCircle,
   Download,
   Paperclip,
-  Filter,
-} from 'lucide-react';
+  Funnel,
+} from '@phosphor-icons/react';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
+import { Loading } from '@/components/ui/loading';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -62,19 +63,19 @@ interface Props {
 // ---------------------------------------------------------------------------
 
 const TYPE_META: Record<RecordType, { label: string; badge: string }> = {
-  tardiness:    { label: 'Tardiness',    badge: 'bg-yellow-100 text-yellow-800' },
-  warning:      { label: 'Warning',      badge: 'bg-red-100 text-red-800'       },
-  memo:         { label: 'Memo / NTE',   badge: 'bg-blue-100 text-blue-800'     },
-  suspension:   { label: 'Suspension',   badge: 'bg-orange-100 text-orange-800' },
-  commendation: { label: 'Commendation', badge: 'bg-green-100 text-green-800'   },
-  other:        { label: 'Other',        badge: 'bg-gray-100 text-gray-600'     },
+  tardiness:    { label: 'Tardiness',    badge: 'bg-status-warning text-status-warning-fg' },
+  warning:      { label: 'Warning',      badge: 'bg-status-danger text-status-danger-fg'   },
+  memo:         { label: 'Memo / NTE',   badge: 'bg-status-info text-status-info-fg'       },
+  suspension:   { label: 'Suspension',   badge: 'bg-status-warning text-status-warning-fg' },
+  commendation: { label: 'Commendation', badge: 'bg-status-success text-status-success-fg' },
+  other:        { label: 'Other',        badge: 'bg-gray-100 text-gray-600'                },
 };
 
 const TYPE_ICONS: Record<RecordType, React.ComponentType<{ className?: string }>> = {
   tardiness:    Clock,
-  warning:      AlertTriangle,
+  warning:      Warning,
   memo:         FileText,
-  suspension:   ShieldAlert,
+  suspension:   ShieldWarning,
   commendation: Star,
   other:        FileText,
 };
@@ -220,7 +221,7 @@ export default function EmployeeRecordsReport({ user }: Props) {
 
       {/* Header */}
       <div className="flex items-start gap-3 mb-6">
-        <FileText className="h-5 w-5 text-primary mt-1 shrink-0" />
+        <FileText weight="light" className="h-5 w-5 text-primary mt-1 shrink-0" />
         <div>
           <h1 className="text-xl font-semibold">Employee Records</h1>
           <p className="text-sm text-muted-foreground">
@@ -234,7 +235,7 @@ export default function EmployeeRecordsReport({ user }: Props) {
         <CardContent className="pt-4">
           <div className="flex flex-wrap gap-3 items-end">
             <div className="flex items-center gap-1.5 text-sm text-muted-foreground shrink-0 self-center">
-              <Filter className="h-4 w-4" />
+              <Funnel weight="light" className="h-4 w-4" />
               <span>Filters</span>
             </div>
 
@@ -318,13 +319,13 @@ export default function EmployeeRecordsReport({ user }: Props) {
         <Card>
           <CardContent className="pt-4 pb-4">
             <p className="text-xs text-muted-foreground">Warnings &amp; Memos</p>
-            <p className="text-2xl font-bold mt-1 text-red-600">{warningsMemos}</p>
+            <p className="text-2xl font-bold mt-1 text-finance-negative">{warningsMemos}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4 pb-4">
             <p className="text-xs text-muted-foreground">Tardiness Incidents</p>
-            <p className="text-2xl font-bold mt-1 text-yellow-600">{tardinessCount}</p>
+            <p className="text-2xl font-bold mt-1 text-finance-pending">{tardinessCount}</p>
           </CardContent>
         </Card>
         <Card>
@@ -337,7 +338,7 @@ export default function EmployeeRecordsReport({ user }: Props) {
 
       {/* Records table */}
       {loading ? (
-        <div className="py-16 text-center text-muted-foreground text-sm">Loading records…</div>
+        <Loading />
       ) : filtered.length === 0 ? (
         <div className="py-16 text-center text-muted-foreground text-sm">
           No records found. Adjust your filters or add records from individual employee profiles.
@@ -387,7 +388,7 @@ export default function EmployeeRecordsReport({ user }: Props) {
                           <span
                             className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${meta.badge}`}
                           >
-                            <Icon className="h-3 w-3" />
+                            <Icon weight="light" className="h-3 w-3" />
                             {meta.label}
                           </span>
                         </td>
@@ -413,8 +414,8 @@ export default function EmployeeRecordsReport({ user }: Props) {
                         {/* Acknowledged */}
                         <td className="px-4 py-3 whitespace-nowrap">
                           {record.acknowledged ? (
-                            <span className="inline-flex items-center gap-1 text-green-600 text-xs font-medium">
-                              <CheckCircle2 className="h-4 w-4 shrink-0" />
+                            <span className="inline-flex items-center gap-1 text-finance-positive text-xs font-medium">
+                              <CheckCircle weight="light" className="h-4 w-4 shrink-0" />
                               {record.acknowledged_at
                                 ? format(new Date(record.acknowledged_at), 'MMM d, yyyy')
                                 : 'Yes'}
@@ -442,7 +443,7 @@ export default function EmployeeRecordsReport({ user }: Props) {
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
-                                <Paperclip className="h-3 w-3" />
+                                <Paperclip weight="light" className="h-3 w-3" />
                                 {record.attachment_name ?? 'Download'}
                               </a>
                             </Button>
@@ -458,7 +459,7 @@ export default function EmployeeRecordsReport({ user }: Props) {
                             size="sm"
                             className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
                             onClick={() => router.push(`/employees/edit/${record.employee_id}`)}
-                            title="View employee profile"
+                            aria-label="View employee profile"
                           >
                             →
                           </Button>

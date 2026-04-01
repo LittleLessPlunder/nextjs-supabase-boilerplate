@@ -7,9 +7,10 @@ import { getEmployeeContracts } from '@/utils/supabase/queries';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Settings } from 'lucide-react';
+import { GearSix } from '@phosphor-icons/react';
 import { useRouter } from 'next/navigation';
 import { Pagination } from '@/components/ui/pagination';
+import { Loading } from '@/components/ui/loading';
 import { DEFAULT_ITEMS_PER_PAGE } from '@/utils/constants';
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from '@/components/ui/use-toast';
@@ -104,7 +105,7 @@ export default function EmployeeContractsPage({ user }: EmployeeContractsPagePro
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -119,7 +120,8 @@ export default function EmployeeContractsPage({ user }: EmployeeContractsPagePro
           </Link>
         </CardHeader>
         <CardContent>
-          <table className="w-full">
+          <div className="overflow-x-auto -mx-0">
+          <table className="w-full min-w-[640px]">
             <thead>
               <tr className="text-left bg-muted">
                 <th className="p-2">Employee</th>
@@ -155,13 +157,14 @@ export default function EmployeeContractsPage({ user }: EmployeeContractsPagePro
                         router.push(`/contracts/edit/${contract.id}`);
                       }}
                     >
-                      <Settings className="h-4 w-4" />
+                      <GearSix weight="light" className="h-4 w-4" />
                     </Button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          </div>
 
           <Pagination
             currentPage={currentPage}

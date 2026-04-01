@@ -50,6 +50,44 @@
 
     /* Slightly larger radius — modern feel */
     --radius: 0.625rem;
+
+    /* ── Semantic status tokens ──────────────────────────────────────────────
+       Use these instead of raw Tailwind green/red/blue/yellow/orange classes.
+       Keeps status colors themeable and consistent across the whole app.    */
+    --status-success-bg:    142 71% 93%;
+    --status-success-fg:    142 60% 25%;
+    --status-success-border:142 45% 80%;
+
+    --status-warning-bg:    45 95% 90%;
+    --status-warning-fg:    35 80% 28%;
+    --status-warning-border:45 70% 75%;
+
+    --status-danger-bg:     0  88% 94%;
+    --status-danger-fg:     0  72% 35%;
+    --status-danger-border: 0  60% 82%;
+
+    --status-info-bg:       210 90% 93%;
+    --status-info-fg:       210 70% 28%;
+    --status-info-border:   210 60% 80%;
+
+    --status-neutral-bg:    67  8% 93%;
+    --status-neutral-fg:    67 20% 30%;
+    --status-neutral-border:67  8% 80%;
+
+    /* Financial color tokens */
+    --finance-positive:     142 60% 30%;
+    --finance-negative:     0  65% 38%;
+    --finance-pending:      35  80% 35%;
+    --finance-neutral:      210 65% 35%;
+
+    /* ── Sidebar tokens — dark olive navigation shell ─────────────────────── */
+    --sidebar-bg:            67 20% 19%;
+    --sidebar-fg:            67  8% 78%;
+    --sidebar-fg-muted:      67  6% 52%;
+    --sidebar-active-bg:     16 50% 43%;
+    --sidebar-active-fg:     35 40% 97%;
+    --sidebar-hover-bg:      67 20% 24%;
+    --sidebar-user-avatar:   16 50% 43%;
   }
 
   .dark {
@@ -99,10 +137,8 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
-  /* ── Lucide icons — lighter stroke for a modern feel ───────────────────── */
-  svg[class*="lucide"] {
-    stroke-width: 1.5;
-  }
+  /* ── Phosphor icons — consistent sizing helper ──────────────────────────── */
+  /* weight="light" is passed directly as a prop — no global override needed */
 
   /* ── Global interaction transitions ─────────────────────────────────────── */
   /* Fast, spring-feel easing — smooth is fast */

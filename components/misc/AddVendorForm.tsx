@@ -10,7 +10,8 @@ import { createClient } from '@/utils/supabase/client';
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from '@/components/ui/use-toast';
 import { addVendor, getVendor, updateVendor } from '@/utils/supabase/queries';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from '@phosphor-icons/react';
+import { Loading } from '@/components/ui/loading';
 
 interface Props { vendorId: string | null }
 
@@ -78,13 +79,13 @@ export default function AddVendorForm({ vendorId }: Props) {
     }
   }
 
-  if (fetching) return <div className="p-8 text-muted-foreground">Loading…</div>;
+  if (fetching) return <Loading />;
 
   return (
     <div className="container mx-auto max-w-lg mt-8">
       <div className="flex items-center gap-3 mb-6">
         <Button variant="ghost" size="icon" onClick={() => router.push('/finance/vendors')}>
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft weight="light" className="h-4 w-4" />
         </Button>
         <h1 className="text-lg font-semibold">{isEdit ? 'Edit Vendor' : 'New Vendor'}</h1>
       </div>

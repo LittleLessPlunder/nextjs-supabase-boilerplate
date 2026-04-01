@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
-import { Filter } from "lucide-react";
+import { Funnel } from "@phosphor-icons/react";
 
 interface FilterOption<T extends string> {
   value: T;
@@ -31,7 +31,7 @@ export function DataFilter<T extends string>({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm">
-          <Filter className="h-4 w-4 mr-2" />
+          <Funnel weight="light" className="h-4 w-4 mr-2" />
           {label}
         </Button>
       </DropdownMenuTrigger>

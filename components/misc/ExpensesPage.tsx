@@ -10,8 +10,9 @@ import { DatePicker } from '@/components/ui/date-picker';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from '@/components/ui/use-toast';
-import { Plus, Pencil, Trash2, Receipt, ImageIcon, ExternalLink } from 'lucide-react';
+import { Plus, PencilSimple, Trash, Receipt, Image, ArrowSquareOut } from '@phosphor-icons/react';
 import { useRouter } from 'next/navigation';
+import { Loading } from '@/components/ui/loading';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -133,7 +134,7 @@ export default function ExpensesPage({ user }: { user: User }) {
           <p className="text-sm text-muted-foreground">Daily expense log with VAT tracking</p>
         </div>
         <Button size="sm" onClick={() => router.push('/finance/expenses/add')}>
-          <Plus className="h-4 w-4 mr-1.5" />Log Expense
+          <Plus weight="light" className="h-4 w-4 mr-1.5" />Log Expense
         </Button>
       </div>
 
@@ -189,11 +190,11 @@ export default function ExpensesPage({ user }: { user: User }) {
         </div>
         <div className="rounded-lg border p-3">
           <p className="text-xs text-muted-foreground">Total VAT</p>
-          <p className="text-lg font-bold text-green-700">{php(totalVAT)}</p>
+          <p className="text-lg font-bold text-finance-positive">{php(totalVAT)}</p>
         </div>
-        <div className="rounded-lg border border-orange-200 p-3 bg-orange-50">
+        <div className="rounded-lg border border-status-warning-border p-3 bg-status-warning/30">
           <p className="text-xs text-muted-foreground">Unpaid</p>
-          <p className="text-lg font-bold text-orange-700">{php(totalUnpaid)}</p>
+          <p className="text-lg font-bold text-finance-pending">{php(totalUnpaid)}</p>
         </div>
         {totalDeclOnly > 0 && (
           <div className="rounded-lg border border-violet-200 p-3 bg-violet-50">
@@ -207,10 +208,10 @@ export default function ExpensesPage({ user }: { user: User }) {
       <Card>
         <CardContent className="p-0">
           {loading ? (
-            <div className="p-8 text-center text-muted-foreground">Loading…</div>
+            <Loading />
           ) : visibleExpenses.length === 0 ? (
             <div className="p-10 text-center text-muted-foreground">
-              <Receipt className="h-8 w-8 mx-auto mb-2 opacity-40" />
+              <Receipt weight="light" className="h-8 w-8 mx-auto mb-2 opacity-40" />
               <p>No expenses for this period.</p>
             </div>
           ) : (
@@ -247,7 +248,7 @@ export default function ExpensesPage({ user }: { user: User }) {
                           {exp.category
                             ? <span className={`text-xs px-1.5 py-0.5 rounded ${
                                 exp.category.is_cogs
-                                  ? 'bg-blue-100 text-blue-800'
+                                  ? 'bg-status-info/50 text-status-info-fg'
                                   : 'bg-gray-100 text-gray-700'
                               }`}>
                                 {exp.category.name}
@@ -255,7 +256,7 @@ export default function ExpensesPage({ user }: { user: User }) {
                             : <span className="text-muted-foreground">—</span>
                           }
                         </td>
-                        <td className="p-2 text-right text-xs text-green-700">
+                        <td className="p-2 text-right text-xs text-finance-positive">
                           {exp.vat_amount > 0 ? php(exp.vat_amount) : '—'}
                         </td>
                         <td className="p-2 text-right font-medium">{php(exp.amount)}</td>
@@ -270,8 +271,8 @@ export default function ExpensesPage({ user }: { user: User }) {
                           ) : (
                             <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${
                               exp.status === 'Paid'
-                                ? 'bg-green-100 text-green-700'
-                                : 'bg-orange-100 text-orange-700'
+                                ? 'bg-status-success text-status-success-fg'
+                                : 'bg-status-warning text-status-warning-fg'
                             }`}>
                               {exp.status}
                             </span>
@@ -279,16 +280,16 @@ export default function ExpensesPage({ user }: { user: User }) {
                         </td>
                         <td className="p-2 text-center">
                           {exp.receipt_url
-                            ? <a href={exp.receipt_url} target="_blank" rel="noreferrer" title="View receipt">
-                                <ExternalLink className="h-3.5 w-3.5 text-primary mx-auto" />
+                            ? <a href={exp.receipt_url} target="_blank" rel="noreferrer" aria-label="View receipt">
+                                <ArrowSquareOut weight="light" className="h-3.5 w-3.5 text-primary mx-auto" />
                               </a>
-                            : <ImageIcon className="h-3.5 w-3.5 text-muted-foreground/40 mx-auto" />
+                            : <Image weight="light" className="h-3.5 w-3.5 text-muted-foreground/40 mx-auto" />
                           }
                         </td>
                         <td className="p-2 text-right">
                           <div className="flex justify-end gap-1">
                             <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => router.push(`/finance/expenses/edit/${exp.id}`)}>
-                              <Pencil className="h-3.5 w-3.5" />
+                              <PencilSimple weight="light" className="h-3.5 w-3.5" />
                             </Button>
                             <Button
                               variant="ghost"
@@ -296,7 +297,7 @@ export default function ExpensesPage({ user }: { user: User }) {
                               className="h-7 w-7 text-destructive hover:text-destructive"
                               onClick={() => handleDelete(exp.id, exp.particulars)}
                             >
-                              <Trash2 className="h-3.5 w-3.5" />
+                              <Trash weight="light" className="h-3.5 w-3.5" />
                             </Button>
                           </div>
                         </td>
@@ -307,7 +308,7 @@ export default function ExpensesPage({ user }: { user: User }) {
                 <tfoot>
                   <tr className="border-t-2 bg-muted font-semibold">
                     <td colSpan={5} className="p-2">YTW Total ({ytwExpenses.length} entries)</td>
-                    <td className="p-2 text-right text-green-700">{php(totalVAT)}</td>
+                    <td className="p-2 text-right text-finance-positive">{php(totalVAT)}</td>
                     <td className="p-2 text-right">{php(totalAmount)}</td>
                     <td colSpan={4} />
                   </tr>

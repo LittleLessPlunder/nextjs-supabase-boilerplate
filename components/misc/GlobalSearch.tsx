@@ -7,7 +7,7 @@ import { createClient } from '@/utils/supabase/client';
 import { useTenant } from '@/utils/tenant-context';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Receipt, TrendingUp, Store, Search, Loader2, ExternalLink, ArrowRight } from 'lucide-react';
+import { Receipt, TrendUp, Storefront, MagnifyingGlass, CircleNotch, ArrowSquareOut, ArrowRight } from '@phosphor-icons/react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -188,14 +188,14 @@ export default function GlobalSearch({ user }: { user: User }) {
           className="h-11 text-base pr-10 focus-visible:ring-0 focus-visible:ring-offset-0"
         />
         {loading && (
-          <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
+          <CircleNotch weight="light" className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
         )}
       </div>
 
       {/* Empty state */}
       {!query.trim() && (
         <div className="text-center py-16 text-muted-foreground">
-          <Search className="h-10 w-10 mx-auto mb-3 opacity-20" />
+          <MagnifyingGlass weight="light" className="h-10 w-10 mx-auto mb-3 opacity-20" />
           <p className="text-sm">Start typing to search across the BMS</p>
           <p className="text-xs mt-1 opacity-70">Min. 2 characters · searches expenses, revenue, and vendors</p>
         </div>
@@ -221,7 +221,7 @@ export default function GlobalSearch({ user }: { user: User }) {
           {results.expenses.length > 0 && (
             <section>
               <div className="flex items-center gap-2 mb-2">
-                <Receipt className="h-4 w-4 text-muted-foreground" />
+                <Receipt weight="light" className="h-4 w-4 text-muted-foreground" />
                 <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                   Expenses
                 </h2>
@@ -247,7 +247,7 @@ export default function GlobalSearch({ user }: { user: User }) {
                             </span>
                           )}
                           {e.declarable_only && (
-                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-violet-100 text-violet-700 font-medium">
+                            <span className="text-xs px-1.5 py-0.5 rounded bg-violet-100 text-violet-700 font-medium">
                               Decl. only
                             </span>
                           )}
@@ -261,7 +261,7 @@ export default function GlobalSearch({ user }: { user: User }) {
                       <div className="flex items-center gap-3 ml-4 shrink-0">
                         <div className="text-right">
                           <p className="text-sm font-semibold">{php(e.amount)}</p>
-                          <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
+                          <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${
                             e.status === 'Paid'
                               ? 'bg-green-100 text-green-700'
                               : 'bg-orange-100 text-orange-700'
@@ -269,7 +269,7 @@ export default function GlobalSearch({ user }: { user: User }) {
                             {e.status}
                           </span>
                         </div>
-                        <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <ArrowRight weight="light" className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
                     </button>
                   );
@@ -282,7 +282,7 @@ export default function GlobalSearch({ user }: { user: User }) {
           {results.revenue.length > 0 && (
             <section>
               <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                <TrendUp weight="light" className="h-4 w-4 text-muted-foreground" />
                 <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                   Revenue
                 </h2>
@@ -308,7 +308,7 @@ export default function GlobalSearch({ user }: { user: User }) {
                     </div>
                     <div className="flex items-center gap-3 ml-4 shrink-0">
                       <p className="text-sm font-semibold">{php(e.amount)}</p>
-                      <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <ArrowRight weight="light" className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                   </button>
                 ))}
@@ -320,7 +320,7 @@ export default function GlobalSearch({ user }: { user: User }) {
           {results.vendors.length > 0 && (
             <section>
               <div className="flex items-center gap-2 mb-2">
-                <Store className="h-4 w-4 text-muted-foreground" />
+                <Storefront weight="light" className="h-4 w-4 text-muted-foreground" />
                 <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                   Vendors
                 </h2>
@@ -350,7 +350,7 @@ export default function GlobalSearch({ user }: { user: User }) {
                       }`}>
                         {v.is_vat_registered ? 'VAT' : 'Non-VAT'}
                       </span>
-                      <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <ArrowRight weight="light" className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                   </button>
                 ))}

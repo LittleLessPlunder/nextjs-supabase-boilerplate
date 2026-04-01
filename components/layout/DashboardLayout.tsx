@@ -3,8 +3,9 @@
 import { Sidebar } from './Sidebar';
 import { User } from '@supabase/supabase-js';
 import { useState, Suspense } from 'react';
-import { Menu, Search } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { List, MagnifyingGlass } from '@phosphor-icons/react';
+import { Loading } from '@/components/ui/loading';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface DashboardLayoutProps {
   user: User;
@@ -14,9 +15,10 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ user, children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   return (
-    <div className="flex h-screen bg-[#F5F5F3]">
+    <div className="flex h-screen bg-background">
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
@@ -37,24 +39,26 @@ export function DashboardLayout({ user, children }: DashboardLayoutProps) {
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
 
         {/* Top bar — mobile only + search */}
-        <header className="flex items-center justify-between h-14 px-4 bg-[#F5F5F3] lg:hidden border-b border-black/5">
+        <header className="flex items-center justify-between h-14 px-4 bg-background lg:hidden border-b border-border">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-lg text-muted-foreground hover:bg-black/5"
+            className="p-2 rounded-lg text-muted-foreground hover:bg-muted"
           >
-            <Menu className="h-5 w-5" />
+            <List weight="light" className="h-5 w-5" />
           </button>
           <button
             onClick={() => router.push('/search')}
-            className="p-2 rounded-lg text-muted-foreground hover:bg-black/5"
+            className="p-2 rounded-lg text-muted-foreground hover:bg-muted"
           >
-            <Search className="h-4 w-4" />
+            <MagnifyingGlass weight="light" className="h-4 w-4" />
           </button>
         </header>
 
         <main className="flex-1 overflow-auto">
-          <Suspense fallback={<div className="p-8 text-muted-foreground text-sm">Loading…</div>}>
-            {children}
+          <Suspense fallback={<Loading />}>
+            <div key={pathname} className="animate-page-in h-full">
+              {children}
+            </div>
           </Suspense>
         </main>
       </div>

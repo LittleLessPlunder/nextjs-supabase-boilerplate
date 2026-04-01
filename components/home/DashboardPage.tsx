@@ -7,10 +7,10 @@ import { createClient } from '@/utils/supabase/client';
 import { useTenant } from '@/utils/tenant-context';
 import { getRevenue, getExpenses, getSettlements } from '@/utils/supabase/queries';
 import {
-  TrendingUp, Receipt, CreditCard, BarChart2,
-  Users, Calculator, Store, Plus, ArrowUpRight,
-  Search,
-} from 'lucide-react';
+  TrendUp, Receipt, CreditCard, ChartBar,
+  Users, Calculator, Storefront, Plus, ArrowUpRight,
+  MagnifyingGlass,
+} from '@phosphor-icons/react';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -150,9 +150,9 @@ export default function DashboardPage({ user }: { user: User }) {
           onClick={() => router.push('/search')}
           className="hidden lg:flex items-center gap-2 text-sm text-muted-foreground bg-white border border-black/8 rounded-xl px-3 py-2 hover:border-black/20 transition-colors shadow-sm"
         >
-          <Search className="h-3.5 w-3.5" />
+          <MagnifyingGlass weight="light" className="h-3.5 w-3.5" />
           <span>Search…</span>
-          <kbd className="ml-1 text-[10px] bg-muted px-1.5 py-0.5 rounded font-mono">⌘K</kbd>
+          <kbd className="ml-1 text-xs bg-muted px-1.5 py-0.5 rounded font-mono">⌘K</kbd>
         </button>
       </div>
 
@@ -162,7 +162,7 @@ export default function DashboardPage({ user }: { user: User }) {
           label="Total Revenue"
           value={php(totalRevenue)}
           sub={label}
-          icon={TrendingUp}
+          icon={TrendUp}
           iconBg="bg-emerald-50"
           iconColor="text-emerald-600"
           loading={loading}
@@ -180,9 +180,9 @@ export default function DashboardPage({ user }: { user: User }) {
           label="Net Profit"
           value={php(netProfit)}
           sub={label}
-          icon={BarChart2}
-          iconBg={netProfit >= 0 ? 'bg-blue-50' : 'bg-red-50'}
-          iconColor={netProfit >= 0 ? 'text-blue-600' : 'text-red-500'}
+          icon={ChartBar}
+          iconBg={netProfit >= 0 ? 'bg-status-info/30' : 'bg-status-danger/30'}
+          iconColor={netProfit >= 0 ? 'text-finance-neutral' : 'text-finance-negative'}
           loading={loading}
         />
         <StatCard
@@ -214,8 +214,8 @@ export default function DashboardPage({ user }: { user: User }) {
           Reports
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <Shortcut icon={BarChart2}  label="P&L Report"    href="/finance/pnl"              accent="bg-purple-50 text-purple-600" />
-          <Shortcut icon={TrendingUp} label="Revenue Log"   href="/finance/revenue"          accent="bg-emerald-50 text-emerald-600" />
+          <Shortcut icon={ChartBar}  label="P&L Report"    href="/finance/pnl"              accent="bg-purple-50 text-purple-600" />
+          <Shortcut icon={TrendUp} label="Revenue Log"   href="/finance/revenue"          accent="bg-emerald-50 text-emerald-600" />
           <Shortcut icon={Receipt}    label="Expense Log"   href="/finance/expenses"         accent="bg-orange-50 text-orange-500" />
         </div>
       </div>
@@ -228,7 +228,7 @@ export default function DashboardPage({ user }: { user: User }) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           <Shortcut icon={Users}      label="Employees"  href="/employees" accent="bg-sky-50 text-sky-600"  />
           <Shortcut icon={Calculator} label="Payroll"    href="/payroll"   accent="bg-rose-50 text-rose-500" />
-          <Shortcut icon={Store}      label="Vendors"    href="/finance/vendors" accent="bg-amber-50 text-amber-600" />
+          <Shortcut icon={Storefront} label="Vendors"    href="/finance/vendors" accent="bg-amber-50 text-amber-600" />
         </div>
       </div>
 

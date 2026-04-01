@@ -7,13 +7,14 @@ import { getEmployees } from '@/utils/supabase/queries';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Settings } from 'lucide-react';
+import { GearSix } from '@phosphor-icons/react';
 import { useRouter } from 'next/navigation';
 import { Pagination } from '@/components/ui/pagination';
 import { DEFAULT_ITEMS_PER_PAGE } from '@/utils/constants';
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from '@/components/ui/use-toast';
 import { RevenueStream } from '@/utils/types';
+import { Loading } from '@/components/ui/loading';
 
 interface EmployeesPageProps {
   user: User;
@@ -22,13 +23,13 @@ interface EmployeesPageProps {
 type EmploymentStatus = 'active' | 'probationary' | 'on_leave' | 'suspended' | 'under_investigation' | 'resigned' | 'terminated';
 
 const STATUS_META: Record<EmploymentStatus, { label: string; className: string }> = {
-  active:               { label: 'Active',               className: 'bg-green-100 text-green-800'  },
-  probationary:         { label: 'Probationary',         className: 'bg-blue-100 text-blue-800'    },
-  on_leave:             { label: 'On Leave',             className: 'bg-yellow-100 text-yellow-800'},
-  suspended:            { label: 'Suspended',            className: 'bg-orange-100 text-orange-800'},
-  under_investigation:  { label: 'Under Investigation',  className: 'bg-red-100 text-red-800'      },
-  resigned:             { label: 'Resigned',             className: 'bg-gray-100 text-gray-500'    },
-  terminated:           { label: 'Terminated',           className: 'bg-gray-200 text-gray-600'    },
+  active:               { label: 'Active',               className: 'bg-status-success text-status-success-fg'  },
+  probationary:         { label: 'Probationary',         className: 'bg-status-info text-status-info-fg'        },
+  on_leave:             { label: 'On Leave',             className: 'bg-status-warning text-status-warning-fg'  },
+  suspended:            { label: 'Suspended',            className: 'bg-status-warning text-status-warning-fg'  },
+  under_investigation:  { label: 'Under Investigation',  className: 'bg-status-danger text-status-danger-fg'    },
+  resigned:             { label: 'Resigned',             className: 'bg-gray-100 text-gray-500'                 },
+  terminated:           { label: 'Terminated',           className: 'bg-gray-200 text-gray-600'                 },
 };
 
 interface Employee {
@@ -90,7 +91,7 @@ export default function EmployeesPage({ user }: EmployeesPageProps) {
     );
   }
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
@@ -104,7 +105,8 @@ export default function EmployeesPage({ user }: EmployeesPageProps) {
           </Link>
         </CardHeader>
         <CardContent>
-          <table className="w-full">
+          <div className="overflow-x-auto -mx-0">
+          <table className="w-full min-w-[640px]">
             <thead>
               <tr className="text-left bg-muted">
                 <th className="p-2">Name</th>
@@ -156,13 +158,14 @@ export default function EmployeesPage({ user }: EmployeesPageProps) {
                         router.push(`/employees/edit/${employee.id}`);
                       }}
                     >
-                      <Settings className="h-4 w-4" />
+                      <GearSix weight="light" className="h-4 w-4" />
                     </Button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          </div>
 
           <Pagination
             currentPage={currentPage}

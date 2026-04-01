@@ -11,6 +11,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from "@/components/ui/use-toast";
 import { getWorkScheduleType, addWorkScheduleType, updateWorkScheduleType } from '@/utils/supabase/queries';
+import { Loading } from '@/components/ui/loading';
 
 interface FormData {
   name: string;
@@ -126,7 +127,7 @@ export default function AddWorkScheduleTypeForm({ scheduleTypeId }: { scheduleTy
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

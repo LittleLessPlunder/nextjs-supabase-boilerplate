@@ -10,8 +10,9 @@ import { DatePicker } from '@/components/ui/date-picker';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from '@/components/ui/use-toast';
-import { Plus, Pencil, Trash2, TrendingUp } from 'lucide-react';
+import { Plus, PencilSimple, Trash, TrendUp } from '@phosphor-icons/react';
 import { useRouter } from 'next/navigation';
+import { Loading } from '@/components/ui/loading';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -33,8 +34,8 @@ const STREAM_LABELS: Record<string, string> = {
   yoga: 'Yoga / Pilates', fnb: 'F&B', boutique: 'Boutique',
 };
 const STREAM_COLORS: Record<string, string> = {
-  yoga:     'bg-blue-100 text-blue-800',
-  fnb:      'bg-orange-100 text-orange-800',
+  yoga:     'bg-status-info text-status-info-fg',
+  fnb:      'bg-status-warning text-status-warning-fg',
   boutique: 'bg-purple-100 text-purple-800',
 };
 
@@ -125,7 +126,7 @@ export default function RevenuePage({ user }: { user: User }) {
           <p className="text-sm text-muted-foreground">Daily revenue log by stream</p>
         </div>
         <Button size="sm" onClick={() => router.push('/finance/revenue/add')}>
-          <Plus className="h-4 w-4 mr-1.5" />Log Revenue
+          <Plus weight="light" className="h-4 w-4 mr-1.5" />Log Revenue
         </Button>
       </div>
 
@@ -171,10 +172,10 @@ export default function RevenuePage({ user }: { user: User }) {
       <Card>
         <CardContent className="p-0">
           {loading ? (
-            <div className="p-8 text-center text-muted-foreground">Loading…</div>
+            <Loading />
           ) : entries.length === 0 ? (
             <div className="p-10 text-center text-muted-foreground">
-              <TrendingUp className="h-8 w-8 mx-auto mb-2 opacity-40" />
+              <TrendUp weight="light" className="h-8 w-8 mx-auto mb-2 opacity-40" />
               <p>No revenue entries for this period.</p>
             </div>
           ) : (
@@ -206,12 +207,12 @@ export default function RevenuePage({ user }: { user: User }) {
                         <div className="flex justify-end gap-1">
                           <Button variant="ghost" size="icon" className="h-7 w-7"
                             onClick={() => router.push(`/finance/revenue/edit/${e.id}`)}>
-                            <Pencil className="h-3.5 w-3.5" />
+                            <PencilSimple weight="light" className="h-3.5 w-3.5" />
                           </Button>
                           <Button variant="ghost" size="icon"
                             className="h-7 w-7 text-destructive hover:text-destructive"
                             onClick={() => handleDelete(e.id)}>
-                            <Trash2 className="h-3.5 w-3.5" />
+                            <Trash weight="light" className="h-3.5 w-3.5" />
                           </Button>
                         </div>
                       </td>

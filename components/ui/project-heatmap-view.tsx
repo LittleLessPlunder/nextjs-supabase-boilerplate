@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { startOfWeek, endOfWeek, eachDayOfInterval, format, addWeeks, isSameMonth } from 'date-fns';
 import { Button } from './button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { CaretLeft, CaretRight } from '@phosphor-icons/react';
 import { cn } from '@/utils/cn';
 
 interface Allocation {
@@ -90,14 +90,14 @@ export function ProjectHeatmapView({ allocations, weeks = 24 }: ProjectHeatmapVi
           size="icon"
           onClick={() => setStartWeekOffset(startWeekOffset - weeks)}
         >
-          <ChevronLeft className="h-4 w-4" />
+          <CaretLeft weight="light" className="h-4 w-4" />
         </Button>
         <Button
           variant="outline"
           size="icon"
           onClick={() => setStartWeekOffset(startWeekOffset + weeks)}
         >
-          <ChevronRight className="h-4 w-4" />
+          <CaretRight weight="light" className="h-4 w-4" />
         </Button>
       </div>
       <div className="min-w-max">

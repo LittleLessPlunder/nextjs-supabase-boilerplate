@@ -11,8 +11,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
-import { ArrowLeft, Save, AlertCircle, SendToBack, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, FloppyDisk, Warning, CornersOut, CheckCircle } from '@phosphor-icons/react';
 import { RevenueStream } from '@/utils/types';
+import { Loading } from '@/components/ui/loading';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -98,8 +99,8 @@ const STREAM_LABELS: Record<RevenueStream, string> = {
 };
 
 const STREAM_COLORS: Record<RevenueStream, string> = {
-  fnb:      'bg-orange-100 text-orange-800',
-  yoga:     'bg-blue-100 text-blue-800',
+  fnb:      'bg-status-warning text-status-warning-fg',
+  yoga:     'bg-status-info text-status-info-fg',
   boutique: 'bg-purple-100 text-purple-800',
   general:  'bg-gray-100 text-gray-700',
 };
@@ -360,7 +361,7 @@ export default function PayrollGrid({ year, month, period }: Props) {
   }).filter(s => s.count > 0);
 
   // ── Render ─────────────────────────────────────────────────────────────────
-  if (loading) return <div className="p-8 text-muted-foreground">Loading payroll data...</div>;
+  if (loading) return <Loading />;
 
   return (
     <div className="container mx-auto px-4 pb-16">
@@ -369,7 +370,7 @@ export default function PayrollGrid({ year, month, period }: Props) {
       <div className="flex items-center justify-between py-4">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => router.push('/payroll')}>
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft weight="light" className="h-4 w-4" />
           </Button>
           <div>
             <h1 className="text-lg font-semibold">Payroll Run</h1>
@@ -381,8 +382,8 @@ export default function PayrollGrid({ year, month, period }: Props) {
             {period === 1 ? 'PhilHealth + Pag-IBIG deducted this period' : 'SSS deducted this period'}
           </span>
           {isPosted && (
-            <span className="flex items-center gap-1 text-xs text-green-700 font-medium bg-green-50 border border-green-200 px-2 py-1 rounded-md">
-              <CheckCircle2 className="h-3 w-3" /> Posted to P&L
+            <span className="flex items-center gap-1 text-xs text-status-success-fg font-medium bg-status-success border border-status-success-border px-2 py-1 rounded-md">
+              <CheckCircle weight="light" className="h-3 w-3" /> Posted to P&L
             </span>
           )}
           <Button
@@ -391,11 +392,11 @@ export default function PayrollGrid({ year, month, period }: Props) {
             onClick={handlePost}
             disabled={posting || saving}
           >
-            <SendToBack className="h-3.5 w-3.5 mr-1.5" />
+            <CornersOut weight="light" className="h-3.5 w-3.5 mr-1.5" />
             {posting ? 'Posting…' : 'Post to P&L'}
           </Button>
           <Button onClick={handleSave} disabled={saving || posting} size="sm">
-            <Save className="h-3.5 w-3.5 mr-1.5" />
+            <FloppyDisk weight="light" className="h-3.5 w-3.5 mr-1.5" />
             {saving ? 'Saving...' : 'Save'}
           </Button>
         </div>
@@ -404,7 +405,7 @@ export default function PayrollGrid({ year, month, period }: Props) {
       {/* Grid */}
       {rows.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-muted-foreground gap-2">
-          <AlertCircle className="h-8 w-8" />
+          <Warning weight="light" className="h-8 w-8" />
           <p>No active employees found. Add employees first.</p>
           <Button variant="outline" size="sm" onClick={() => router.push('/employees')}>
             Go to Employees
@@ -438,9 +439,9 @@ export default function PayrollGrid({ year, month, period }: Props) {
                 }
                 <th className="p-2 text-center font-medium min-w-[80px]">Other<br/>Deductions</th>
                 {/* Computed */}
-                <th className="p-2 text-right font-medium min-w-[100px] border-l bg-green-50">Gross Pay</th>
-                <th className="p-2 text-right font-medium min-w-[100px] bg-red-50">Total Ded.</th>
-                <th className="p-2 text-right font-medium min-w-[100px] bg-blue-50">Net Pay</th>
+                <th className="p-2 text-right font-medium min-w-[100px] border-l bg-status-success/30">Gross Pay</th>
+                <th className="p-2 text-right font-medium min-w-[100px] bg-status-danger/30">Total Ded.</th>
+                <th className="p-2 text-right font-medium min-w-[100px] bg-status-info/30">Net Pay</th>
               </tr>
             </thead>
             <tbody>
@@ -453,19 +454,19 @@ export default function PayrollGrid({ year, month, period }: Props) {
                     <td className="p-2 sticky left-0 bg-white font-medium">
                       {row.employee_name}
                       {missingRate && (
-                        <span className="ml-1 text-orange-500" title="No daily rate set">⚠</span>
+                        <span className="ml-1 text-finance-pending" aria-label="No daily rate set">⚠</span>
                       )}
                     </td>
                     <td className="p-2">
                       {row.revenue_stream
-                        ? <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${STREAM_COLORS[row.revenue_stream]}`}>
+                        ? <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${STREAM_COLORS[row.revenue_stream]}`}>
                             {STREAM_LABELS[row.revenue_stream]}
                           </span>
                         : <span className="text-muted-foreground">—</span>
                       }
                     </td>
                     <td className="p-2 text-right text-muted-foreground">
-                      {row.daily_rate ? php(row.daily_rate) : <span className="text-orange-500">Not set</span>}
+                      {row.daily_rate ? php(row.daily_rate) : <span className="text-finance-pending">Not set</span>}
                     </td>
                     {/* Earnings inputs */}
                     <td className="p-1 text-center border-l"><N value={row.days_worked}          onChange={v => update(i, 'days_worked', v)} /></td>
@@ -486,9 +487,9 @@ export default function PayrollGrid({ year, month, period }: Props) {
                     }
                     <td className="p-1 text-center"><N value={row.other_deductions}      onChange={v => update(i, 'other_deductions', v)} /></td>
                     {/* Computed */}
-                    <td className="p-2 text-right font-medium bg-green-50">{php(c.gross_pay)}</td>
-                    <td className="p-2 text-right font-medium bg-red-50">{php(c.total_deductions)}</td>
-                    <td className="p-2 text-right font-semibold bg-blue-50">{php(c.net_pay)}</td>
+                    <td className="p-2 text-right font-medium bg-status-success/30">{php(c.gross_pay)}</td>
+                    <td className="p-2 text-right font-medium bg-status-danger/30">{php(c.total_deductions)}</td>
+                    <td className="p-2 text-right font-semibold bg-status-info/30">{php(c.net_pay)}</td>
                   </tr>
                 );
               })}
@@ -497,9 +498,9 @@ export default function PayrollGrid({ year, month, period }: Props) {
               <tr className="border-t-2 bg-muted font-semibold">
                 <td className="p-2 sticky left-0 bg-muted" colSpan={3}>TOTAL ({rows.length} employees)</td>
                 <td colSpan={period === 1 ? 9 : 8} className="border-l" />
-                <td className="p-2 text-right bg-green-100">{php(sumField('gross_pay'))}</td>
-                <td className="p-2 text-right bg-red-100">{php(sumField('total_deductions'))}</td>
-                <td className="p-2 text-right bg-blue-100">{php(sumField('net_pay'))}</td>
+                <td className="p-2 text-right bg-status-success/50">{php(sumField('gross_pay'))}</td>
+                <td className="p-2 text-right bg-status-danger/50">{php(sumField('total_deductions'))}</td>
+                <td className="p-2 text-right bg-status-info/50">{php(sumField('net_pay'))}</td>
               </tr>
             </tbody>
           </table>
@@ -528,11 +529,11 @@ export default function PayrollGrid({ year, month, period }: Props) {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Deductions</span>
-                    <span className="font-medium text-red-600">−{php(s.deductions)}</span>
+                    <span className="font-medium text-finance-negative">−{php(s.deductions)}</span>
                   </div>
                   <div className="flex justify-between border-t pt-1">
                     <span className="font-semibold">Net Pay</span>
-                    <span className="font-bold text-blue-700">{php(s.net)}</span>
+                    <span className="font-bold text-finance-neutral">{php(s.net)}</span>
                   </div>
                 </div>
               </div>
@@ -540,9 +541,9 @@ export default function PayrollGrid({ year, month, period }: Props) {
           </div>
 
           {/* Grand total */}
-          <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-4 flex items-center justify-between">
-            <span className="font-semibold text-blue-900">Total Net Payroll — {periodLabel}</span>
-            <span className="text-xl font-bold text-blue-700">{php(sumField('net_pay'))}</span>
+          <div className="mt-3 rounded-lg border border-status-info-border bg-status-info/30 p-4 flex items-center justify-between">
+            <span className="font-semibold text-finance-neutral">Total Net Payroll — {periodLabel}</span>
+            <span className="text-xl font-bold text-finance-neutral">{php(sumField('net_pay'))}</span>
           </div>
         </div>
       )}

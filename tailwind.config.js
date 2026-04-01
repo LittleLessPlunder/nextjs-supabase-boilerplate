@@ -53,7 +53,39 @@ module.exports = {
         card: {
           DEFAULT:    'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
-        }
+        },
+        status: {
+          success:        'hsl(var(--status-success-bg))',
+          'success-fg':   'hsl(var(--status-success-fg))',
+          'success-border':'hsl(var(--status-success-border))',
+          warning:        'hsl(var(--status-warning-bg))',
+          'warning-fg':   'hsl(var(--status-warning-fg))',
+          'warning-border':'hsl(var(--status-warning-border))',
+          danger:         'hsl(var(--status-danger-bg))',
+          'danger-fg':    'hsl(var(--status-danger-fg))',
+          'danger-border':'hsl(var(--status-danger-border))',
+          info:           'hsl(var(--status-info-bg))',
+          'info-fg':      'hsl(var(--status-info-fg))',
+          'info-border':  'hsl(var(--status-info-border))',
+          neutral:        'hsl(var(--status-neutral-bg))',
+          'neutral-fg':   'hsl(var(--status-neutral-fg))',
+          'neutral-border':'hsl(var(--status-neutral-border))',
+        },
+        finance: {
+          positive: 'hsl(var(--finance-positive))',
+          negative: 'hsl(var(--finance-negative))',
+          pending:  'hsl(var(--finance-pending))',
+          neutral:  'hsl(var(--finance-neutral))',
+        },
+        sidebar: {
+          DEFAULT:    'hsl(var(--sidebar-bg))',
+          fg:         'hsl(var(--sidebar-fg))',
+          'fg-muted': 'hsl(var(--sidebar-fg-muted))',
+          active:     'hsl(var(--sidebar-active-bg))',
+          'active-fg':'hsl(var(--sidebar-active-fg))',
+          hover:      'hsl(var(--sidebar-hover-bg))',
+          avatar:     'hsl(var(--sidebar-user-avatar))',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',

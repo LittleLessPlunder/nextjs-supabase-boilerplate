@@ -7,8 +7,9 @@ import { getDepartments } from '@/utils/supabase/queries';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Settings, ChevronRight, ChevronDown } from 'lucide-react';
+import { GearSix, CaretRight, CaretDown } from '@phosphor-icons/react';
 import { useRouter } from 'next/navigation';
+import { Loading } from '@/components/ui/loading';
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from '@/components/ui/use-toast';
 import { Department } from '@/utils/types';
@@ -39,9 +40,9 @@ const DepartmentNode = ({ department, level, onEdit, allDepartments }: Departmen
           {hasChildren && (
             <button onClick={() => setIsExpanded(!isExpanded)} className="p-1">
               {isExpanded ? (
-                <ChevronDown className="h-4 w-4" />
+                <CaretDown weight="light" className="h-4 w-4" />
               ) : (
-                <ChevronRight className="h-4 w-4" />
+                <CaretRight weight="light" className="h-4 w-4" />
               )}
             </button>
           )}
@@ -56,7 +57,7 @@ const DepartmentNode = ({ department, level, onEdit, allDepartments }: Departmen
           size="icon"
           onClick={() => onEdit(department.id)}
         >
-          <Settings className="h-4 w-4" />
+          <GearSix weight="light" className="h-4 w-4" />
         </Button>
       </div>
       {hasChildren && isExpanded && (
@@ -130,7 +131,7 @@ export default function DepartmentsPage({ user }: DepartmentsPageProps) {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   const rootDepartments = departments.filter(d => !d.parent_department_id);

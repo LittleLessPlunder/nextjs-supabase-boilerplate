@@ -13,6 +13,7 @@ import { Department } from '@/utils/types';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { CustomCheckbox } from '@/components/ui/custom-checkbox';
 import { useTenant } from '@/utils/tenant-context';
+import { Loading } from '@/components/ui/loading';
 import { toast } from '@/components/ui/use-toast';
 
 interface FormattedDepartment extends Department {
@@ -167,7 +168,7 @@ export default function AddDepartmentForm({ departmentId }: { departmentId: stri
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

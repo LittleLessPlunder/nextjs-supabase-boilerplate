@@ -9,8 +9,9 @@ import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from '@/components/ui/use-toast';
-import { Plus, Pencil, Trash2, CreditCard } from 'lucide-react';
+import { Plus, PencilSimple, Trash, CreditCard } from '@phosphor-icons/react';
 import { useRouter } from 'next/navigation';
+import { Loading } from '@/components/ui/loading';
 
 interface Settlement {
   id: string;
@@ -85,7 +86,7 @@ export default function SettlementsPage({ user }: { user: User }) {
           <p className="text-sm text-muted-foreground">Daily terminal settlement amounts pushed to bank</p>
         </div>
         <Button size="sm" onClick={() => router.push('/finance/settlements/add')}>
-          <Plus className="h-4 w-4 mr-1.5" />Log Settlement
+          <Plus weight="light" className="h-4 w-4 mr-1.5" />Log Settlement
         </Button>
       </div>
 
@@ -117,14 +118,15 @@ export default function SettlementsPage({ user }: { user: User }) {
       <Card>
         <CardContent className="p-0">
           {loading ? (
-            <div className="p-8 text-center text-muted-foreground">Loading…</div>
+            <Loading />
           ) : settlements.length === 0 ? (
             <div className="p-10 text-center text-muted-foreground">
-              <CreditCard className="h-8 w-8 mx-auto mb-2 opacity-40" />
+              <CreditCard weight="light" className="h-8 w-8 mx-auto mb-2 opacity-40" />
               <p>No settlements for this period.</p>
             </div>
           ) : (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto -mx-0">
+            <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b bg-muted text-left">
                   <th className="p-3 font-medium">Date</th>
@@ -145,12 +147,12 @@ export default function SettlementsPage({ user }: { user: User }) {
                       <div className="flex justify-end gap-1">
                         <Button variant="ghost" size="icon" className="h-7 w-7"
                           onClick={() => router.push(`/finance/settlements/edit/${s.id}`)}>
-                          <Pencil className="h-3.5 w-3.5" />
+                          <PencilSimple weight="light" className="h-3.5 w-3.5" />
                         </Button>
                         <Button variant="ghost" size="icon"
                           className="h-7 w-7 text-destructive hover:text-destructive"
                           onClick={() => handleDelete(s.id, s.date)}>
-                          <Trash2 className="h-3.5 w-3.5" />
+                          <Trash weight="light" className="h-3.5 w-3.5" />
                         </Button>
                       </div>
                     </td>
@@ -165,6 +167,7 @@ export default function SettlementsPage({ user }: { user: User }) {
                 </tr>
               </tfoot>
             </table>
+            </div>
           )}
         </CardContent>
       </Card>

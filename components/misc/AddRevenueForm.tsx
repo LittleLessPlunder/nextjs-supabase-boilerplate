@@ -12,7 +12,8 @@ import { createClient } from '@/utils/supabase/client';
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from '@/components/ui/use-toast';
 import { getConsignors, addRevenueEntry, updateRevenueEntry, getRevenueEntry } from '@/utils/supabase/queries';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from '@phosphor-icons/react';
+import { Loading } from '@/components/ui/loading';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -151,14 +152,14 @@ export default function AddRevenueForm({ revenueId }: Props) {
     }
   }
 
-  if (fetching) return <div className="p-8 text-muted-foreground">Loading…</div>;
+  if (fetching) return <Loading />;
 
   return (
     <div className="container mx-auto max-w-xl mt-6 pb-16">
 
       <div className="flex items-center gap-3 mb-6">
         <Button variant="ghost" size="icon" onClick={() => router.push('/finance/revenue')}>
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft weight="light" className="h-4 w-4" />
         </Button>
         <h1 className="text-lg font-semibold">{isEdit ? 'Edit Revenue Entry' : 'Log Revenue'}</h1>
       </div>
@@ -170,7 +171,7 @@ export default function AddRevenueForm({ revenueId }: Props) {
           <CardHeader><CardTitle className="text-sm">Basic Info</CardTitle></CardHeader>
           <CardContent className="grid gap-4">
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <Label>Date *</Label>
                 <DatePicker value={form.date} onChange={val => set('date', val)} />
@@ -205,7 +206,7 @@ export default function AddRevenueForm({ revenueId }: Props) {
         {form.revenue_stream === 'yoga' && (
           <Card>
             <CardHeader><CardTitle className="text-sm">Class Details</CardTitle></CardHeader>
-            <CardContent className="grid grid-cols-2 gap-4">
+            <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <Label>Class Type</Label>
                 <Select value={form.class_type} onValueChange={v => set('class_type', v)}>

@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { Facebook, Instagram, Linkedin } from 'lucide-react';
+import { FacebookLogo, InstagramLogo, LinkedinLogo } from '@phosphor-icons/react';
 
 interface TeamProps {
   imageUrl: string;
@@ -86,13 +86,13 @@ export const Team = () => {
   const socialIcon = (iconName: string) => {
     switch (iconName) {
       case 'Linkedin':
-        return <Linkedin size="20" />;
+        return <LinkedinLogo weight="light" size={20} />;
 
       case 'Facebook':
-        return <Facebook size="20" />;
+        return <FacebookLogo weight="light" size={20} />;
 
       case 'Instagram':
-        return <Instagram size="20" />;
+        return <InstagramLogo weight="light" size={20} />;
     }
   };
 

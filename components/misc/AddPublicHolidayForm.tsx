@@ -13,6 +13,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from "@/components/ui/use-toast";
 import { getPublicHoliday, addPublicHoliday, updatePublicHoliday } from '@/utils/supabase/queries';
+import { Loading } from '@/components/ui/loading';
 
 // ─── Pay rule reference ──────────────────────────────────────────────────────
 
@@ -126,7 +127,7 @@ export default function AddPublicHolidayForm({ holidayId }: { holidayId: string 
     );
   }
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
 
   const rule = PAY_RULES[formData.type] ?? PAY_RULES.regular;
 

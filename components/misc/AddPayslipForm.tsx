@@ -12,7 +12,8 @@ import { format, parse, startOfMonth, endOfMonth, addMonths } from 'date-fns';
 import { useTenant } from '@/utils/tenant-context';
 import { toast } from "@/components/ui/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
+import { CheckCircle, XCircle, Warning } from '@phosphor-icons/react';
+import { Loading } from '@/components/ui/loading';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -360,7 +361,7 @@ export default function AddPayslipForm({
     }
   };
 
-  if (loading) return <div>Loading…</div>;
+  if (loading) return <Loading />;
 
   const workedHolidays   = holidayItems.filter(i => i.worked);
   const unworkedHolidays = holidayItems.filter(i => !i.worked);
@@ -381,7 +382,7 @@ export default function AddPayslipForm({
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <Label>Period Start</Label>
                 <DatePicker value={formData.period_start} onChange={val => setFormData(prev => ({ ...prev, period_start: val }))} />
@@ -392,7 +393,7 @@ export default function AddPayslipForm({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <Label>Base Salary</Label>
                 <Input name="base_salary" type="number" step="0.01" value={formData.base_salary} onChange={handleInputChange} readOnly required />
@@ -403,7 +404,7 @@ export default function AddPayslipForm({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <Label>Total Allowances</Label>
                 <Input name="total_allowances" type="number" step="0.01" value={formData.total_allowances} onChange={handleInputChange} />
@@ -414,7 +415,7 @@ export default function AddPayslipForm({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <Label>
                   Holiday Pay
@@ -426,7 +427,7 @@ export default function AddPayslipForm({
                   step="0.01"
                   value={formData.total_holiday_pay}
                   onChange={handleInputChange}
-                  className={parseFloat(formData.total_holiday_pay) > 0 ? 'border-blue-300 bg-blue-50/40' : ''}
+                  className={parseFloat(formData.total_holiday_pay) > 0 ? 'border-status-info-border bg-status-info/30' : ''}
                 />
               </div>
               <div>
@@ -461,7 +462,7 @@ export default function AddPayslipForm({
               </Select>
             </div>
 
-            {error && <div className="text-red-500 bg-red-100 p-2 rounded text-sm">{error}</div>}
+            {error && <div className="text-status-danger-fg bg-status-danger p-2 rounded text-sm">{error}</div>}
 
             <div className="flex justify-end gap-2">
               <Button type="button" variant="outline" onClick={() => router.push('/payslips')}>Cancel</Button>
@@ -481,7 +482,8 @@ export default function AddPayslipForm({
         </CardHeader>
         {holidays.length > 0 && (
           <CardContent className="p-0">
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto -mx-0">
+            <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b bg-muted text-left">
                   <th className="px-4 py-2 font-medium">Date</th>
@@ -493,26 +495,26 @@ export default function AddPayslipForm({
               </thead>
               <tbody>
                 {holidayItems.map(item => (
-                  <tr key={item.date} className={`border-b ${item.premium > 0 ? 'bg-blue-50/30' : ''}`}>
+                  <tr key={item.date} className={`border-b ${item.premium > 0 ? 'bg-status-info/30' : ''}`}>
                     <td className="px-4 py-2 text-muted-foreground whitespace-nowrap">
                       {format(new Date(item.date + 'T12:00:00'), 'MMM d')}
                     </td>
                     <td className="px-4 py-2 font-medium">{item.name}</td>
                     <td className="px-4 py-2">
                       {item.type === 'regular'
-                        ? <span className="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-800">Regular</span>
+                        ? <span className="text-xs px-1.5 py-0.5 rounded bg-status-info text-status-info-fg">Regular</span>
                         : <span className="text-xs px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Special</span>
                       }
                     </td>
                     <td className="px-4 py-2 text-center">
                       {item.worked
-                        ? <CheckCircle2 className="h-4 w-4 text-green-600 mx-auto" />
-                        : <XCircle className="h-4 w-4 text-muted-foreground/40 mx-auto" />
+                        ? <CheckCircle weight="light" className="h-4 w-4 text-finance-positive mx-auto" />
+                        : <XCircle weight="light" className="h-4 w-4 text-muted-foreground/40 mx-auto" />
                       }
                     </td>
                     <td className="px-4 py-2 text-right font-medium">
                       {item.premium > 0
-                        ? <span className="text-blue-700">{php(item.premium)}</span>
+                        ? <span className="text-finance-neutral">{php(item.premium)}</span>
                         : <span className="text-muted-foreground text-xs">{item.multiplierLabel}</span>
                       }
                     </td>
@@ -527,25 +529,26 @@ export default function AddPayslipForm({
                       ({workedHolidays.length} worked · {unworkedHolidays.length} not worked)
                     </span>
                   </td>
-                  <td className="px-4 py-2 text-right text-blue-700">
+                  <td className="px-4 py-2 text-right text-finance-neutral">
                     {php(computedHolidayTotal)}
                   </td>
                 </tr>
               </tfoot>
             </table>
+            </div>
 
             {/* Pay rule reference */}
             <div className="px-4 py-3 border-t bg-muted/30 space-y-1">
               <p className="text-xs font-medium text-muted-foreground">DOLE pay rules (monthly-paid)</p>
               <div className="flex flex-wrap gap-x-6 gap-y-1 text-xs text-muted-foreground">
-                <span><span className="font-medium text-blue-700">Regular</span> not worked → 100% in salary · worked → +100% premium</span>
-                <span><span className="font-medium text-amber-700">Special</span> not worked → no add'l pay · worked → +30% premium</span>
+                <span><span className="font-medium text-finance-neutral">Regular</span> not worked → 100% in salary · worked → +100% premium</span>
+                <span><span className="font-medium text-finance-pending">Special</span> not worked → no add'l pay · worked → +30% premium</span>
               </div>
             </div>
 
             {workedHolidays.length > 0 && (
               <div className="px-4 py-2 border-t flex items-center gap-2 text-xs text-muted-foreground">
-                <AlertTriangle className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+                <Warning weight="light" className="h-3.5 w-3.5 text-amber-500 shrink-0" />
                 Verify work logs are marked <strong>approved</strong> for holiday premiums to be included.
               </div>
             )}
@@ -562,7 +565,8 @@ export default function AddPayslipForm({
           {workLogs.length === 0
             ? <p className="px-4 pb-4 text-sm text-muted-foreground">No work logs for this period.</p>
             : (
-              <table className="w-full text-sm">
+              <div className="overflow-x-auto -mx-0">
+              <table className="w-full min-w-[640px] text-sm">
                 <thead>
                   <tr className="border-b bg-muted text-left">
                     <th className="px-4 py-2 font-medium">Date</th>
@@ -581,10 +585,10 @@ export default function AddPayslipForm({
                     const otHours = Math.max(0, worked - 480) / 60;
                     const isHoliday = holidays.some(h => h.date === log.date);
                     return (
-                      <tr key={log.id} className={`border-b ${isHoliday ? 'bg-blue-50/40' : ''}`}>
+                      <tr key={log.id} className={`border-b ${isHoliday ? 'bg-status-info/30' : ''}`}>
                         <td className="px-4 py-2 whitespace-nowrap">
                           {format(new Date(log.date + 'T12:00:00'), 'dd/MM/yyyy')}
-                          {isHoliday && <span className="ml-1.5 text-[10px] px-1 py-0.5 rounded bg-blue-100 text-blue-700">Holiday</span>}
+                          {isHoliday && <span className="ml-1.5 text-xs px-1 py-0.5 rounded bg-status-info text-status-info-fg">Holiday</span>}
                         </td>
                         <td className="px-4 py-2">{log.schedule_type_name} ({log.schedule_type_multiplier}x)</td>
                         <td className="px-4 py-2">{log.start_time} – {log.end_time}</td>
@@ -598,6 +602,7 @@ export default function AddPayslipForm({
                   })}
                 </tbody>
               </table>
+              </div>
             )
           }
         </CardContent>

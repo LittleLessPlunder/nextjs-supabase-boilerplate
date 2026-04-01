@@ -30,20 +30,32 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { toast } from '@/components/ui/use-toast';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   Plus,
-  Pencil,
-  Trash2,
-  AlertTriangle,
+  PencilSimple,
+  Trash,
+  Warning,
   Clock,
   FileText,
-  ShieldAlert,
+  ShieldWarning,
   Star,
-  CheckCircle2,
+  CheckCircle,
   Paperclip,
   Download,
-} from 'lucide-react';
+} from '@phosphor-icons/react';
+import { Loading } from '@/components/ui/loading';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -90,32 +102,32 @@ const TYPE_META: Record<
   tardiness: {
     label: 'Tardiness',
     icon: Clock,
-    color: 'text-yellow-600',
-    badge: 'bg-yellow-100 text-yellow-800',
+    color: 'text-finance-pending',
+    badge: 'bg-status-warning text-status-warning-fg',
   },
   warning: {
     label: 'Warning',
-    icon: AlertTriangle,
-    color: 'text-red-600',
-    badge: 'bg-red-100 text-red-800',
+    icon: Warning,
+    color: 'text-finance-negative',
+    badge: 'bg-status-danger text-status-danger-fg',
   },
   memo: {
     label: 'Memo / NTE',
     icon: FileText,
-    color: 'text-blue-600',
-    badge: 'bg-blue-100 text-blue-800',
+    color: 'text-finance-neutral',
+    badge: 'bg-status-info text-status-info-fg',
   },
   suspension: {
     label: 'Suspension',
-    icon: ShieldAlert,
-    color: 'text-orange-600',
-    badge: 'bg-orange-100 text-orange-800',
+    icon: ShieldWarning,
+    color: 'text-finance-pending',
+    badge: 'bg-status-warning text-status-warning-fg',
   },
   commendation: {
     label: 'Commendation',
     icon: Star,
-    color: 'text-green-600',
-    badge: 'bg-green-100 text-green-800',
+    color: 'text-finance-positive',
+    badge: 'bg-status-success text-status-success-fg',
   },
   other: {
     label: 'Other',
@@ -198,6 +210,7 @@ export default function EmployeeRecordsSection({ employeeId, tenantId }: Props) 
   const [editingRecord, setEditingRecord] = useState<EmployeeRecord | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<EmployeeRecord | null>(null);
   const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
   const [lastSuggestion, setLastSuggestion] = useState('');
 
@@ -360,15 +373,17 @@ export default function EmployeeRecordsSection({ employeeId, tenantId }: Props) 
   // Delete
   // -------------------------------------------------------------------------
 
-  async function handleDelete(record: EmployeeRecord) {
-    if (!window.confirm(`Delete "${record.title}"? This cannot be undone.`)) return;
+  async function confirmDelete() {
+    if (!pendingDelete) return;
     try {
-      await deleteEmployeeRecord(supabase, record.id);
+      await deleteEmployeeRecord(supabase, pendingDelete.id);
       toast({ title: 'Record deleted' });
       fetchRecords();
     } catch (err: any) {
       console.error('Delete error:', err);
       toast({ title: 'Error', description: err?.message ?? 'Failed to delete record.', variant: 'destructive' });
+    } finally {
+      setPendingDelete(null);
     }
   }
 
@@ -407,7 +422,7 @@ export default function EmployeeRecordsSection({ employeeId, tenantId }: Props) 
           <Dialog open={dialogOpen} onOpenChange={(open) => { if (!open) closeDialog(); }}>
             <DialogTrigger asChild>
               <Button size="sm" onClick={openAdd} className="gap-1">
-                <Plus className="h-4 w-4" />
+                <Plus weight="light" className="h-4 w-4" />
                 Add Record
               </Button>
             </DialogTrigger>
@@ -551,7 +566,7 @@ export default function EmployeeRecordsSection({ employeeId, tenantId }: Props) 
                   <Label htmlFor="rec-attachment">Attachment <span className="text-xs font-normal text-muted-foreground">(scanned signed copy)</span></Label>
                   {editingRecord?.attachment_url && !attachmentFile && (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
-                      <Paperclip className="h-3.5 w-3.5 shrink-0" />
+                      <Paperclip weight="light" className="h-3.5 w-3.5 shrink-0" />
                       <a href={editingRecord.attachment_url} target="_blank" rel="noopener noreferrer" className="truncate underline text-blue-600 hover:text-blue-800">
                         {editingRecord.attachment_name ?? 'View attachment'}
                       </a>
@@ -595,7 +610,7 @@ export default function EmployeeRecordsSection({ employeeId, tenantId }: Props) 
                     key={type}
                     className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${meta.badge}`}
                   >
-                    <Icon className="h-3 w-3" />
+                    <Icon weight="light" className="h-3 w-3" />
                     {count} {meta.label}
                   </span>
                 );
@@ -605,7 +620,7 @@ export default function EmployeeRecordsSection({ employeeId, tenantId }: Props) 
 
           {/* Table */}
           {loading ? (
-            <p className="text-sm text-muted-foreground py-4">Loading records…</p>
+            <Loading size={16} />
           ) : records.length === 0 ? (
             <p className="text-sm text-muted-foreground py-6 text-center">
               No records yet. Use this section to track tardiness, warnings, memos, and disciplinary
@@ -655,7 +670,7 @@ export default function EmployeeRecordsSection({ employeeId, tenantId }: Props) 
                         </td>
                         <td className="py-2 pr-3">
                           <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${meta.badge}`}>
-                            <Icon className="h-3 w-3" />
+                            <Icon weight="light" className="h-3 w-3" />
                             {meta.label}
                           </span>
                         </td>
@@ -670,8 +685,8 @@ export default function EmployeeRecordsSection({ employeeId, tenantId }: Props) 
                         </td>
                         <td className="py-2 pr-3">
                           {record.acknowledged ? (
-                            <span className="inline-flex items-center gap-1 text-green-600 text-xs">
-                              <CheckCircle2 className="h-4 w-4" />
+                            <span className="inline-flex items-center gap-1 text-finance-positive text-xs">
+                              <CheckCircle weight="light" className="h-4 w-4" />
                               Yes
                             </span>
                           ) : (
@@ -682,7 +697,7 @@ export default function EmployeeRecordsSection({ employeeId, tenantId }: Props) 
                           {record.attachment_url ? (
                             <a href={record.attachment_url} target="_blank" rel="noopener noreferrer">
                               <Button variant="outline" size="sm" className="h-6 gap-1 text-xs px-2">
-                                <Download className="h-3 w-3" />
+                                <Download weight="light" className="h-3 w-3" />
                                 {record.attachment_name ? record.attachment_name.split('.').pop()?.toUpperCase() : 'View'}
                               </Button>
                             </a>
@@ -691,26 +706,36 @@ export default function EmployeeRecordsSection({ employeeId, tenantId }: Props) 
                           )}
                         </td>
                         <td className="py-2 text-right">
+                          <TooltipProvider delayDuration={400}>
                           <div className="inline-flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-7 w-7"
-                              onClick={() => openEdit(record)}
-                              title="Edit"
-                            >
-                              <Pencil className="h-3.5 w-3.5" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-7 w-7 text-destructive hover:text-destructive"
-                              onClick={() => handleDelete(record)}
-                              title="Delete"
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </Button>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-7 w-7"
+                                  onClick={() => openEdit(record)}
+                                >
+                                  <PencilSimple weight="light" className="h-3.5 w-3.5" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Edit</TooltipContent>
+                            </Tooltip>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-7 w-7 text-destructive hover:text-destructive"
+                                  onClick={() => setPendingDelete(record)}
+                                >
+                                  <Trash weight="light" className="h-3.5 w-3.5" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Delete</TooltipContent>
+                            </Tooltip>
                           </div>
+                          </TooltipProvider>
                         </td>
                       </tr>
                     );
@@ -722,9 +747,30 @@ export default function EmployeeRecordsSection({ employeeId, tenantId }: Props) 
         </CardContent>
       </Card>
 
+      {/* Delete confirmation */}
+      <AlertDialog open={!!pendingDelete} onOpenChange={(open) => { if (!open) setPendingDelete(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete record?</AlertDialogTitle>
+            <AlertDialogDescription>
+              &ldquo;{pendingDelete?.title}&rdquo; will be permanently deleted. This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={confirmDelete}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       {/* DOLE compliance note */}
-      <div className="flex gap-2 rounded-md border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
-        <span className="mt-0.5 shrink-0 text-blue-500">ⓘ</span>
+      <div className="flex gap-2 rounded-md border border-status-info-border bg-status-info/30 px-4 py-3 text-sm text-status-info-fg">
+        <span className="mt-0.5 shrink-0 text-status-info-fg">ⓘ</span>
         <p>
           <span className="font-medium">DOLE compliance: </span>
           DOLE requires two written notices before termination: a Notice to Explain (NTE) giving the

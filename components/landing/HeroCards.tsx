@@ -10,7 +10,7 @@ import {
   CardTitle,
   CardFooter
 } from '@/components/ui/card';
-import { Check, Linkedin } from 'lucide-react';
+import { Check, LinkedinLogo } from '@phosphor-icons/react';
 import { LightBulbIcon } from '@/components/landing/Icons';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 
@@ -100,7 +100,7 @@ export const HeroCards = () => {
               })}
             >
               <span className="sr-only">Linkedin icon</span>
-              <Linkedin size="20" />
+              <LinkedinLogo weight="light" size={20} />
             </a>
           </div>
         </CardFooter>
@@ -136,7 +136,7 @@ export const HeroCards = () => {
             {['4 Team member', '4 GB Storage', 'Upto 6 pages'].map(
               (benefit: string) => (
                 <span key={benefit} className="flex">
-                  <Check className="text-green-500" />{' '}
+                  <Check weight="light" className="text-green-500" />{' '}
                   <h3 className="ml-2">{benefit}</h3>
                 </span>
               )

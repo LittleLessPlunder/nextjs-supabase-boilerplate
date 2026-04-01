@@ -13,7 +13,7 @@ import {
   isWeekend
 } from 'date-fns';
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import { cn } from "@/utils/cn";
 
 // Constants for row limits
@@ -228,14 +228,14 @@ export function CalendarView({ allocations }: CalendarViewProps) {
             size="icon"
             onClick={() => setCurrentDate(subMonths(currentDate, 1))}
           >
-            <ChevronLeft className="h-4 w-4" />
+            <CaretLeft weight="light" className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"
             size="icon"
             onClick={() => setCurrentDate(addMonths(currentDate, 1))}
           >
-            <ChevronRight className="h-4 w-4" />
+            <CaretRight weight="light" className="h-4 w-4" />
           </Button>
         </div>
       </div>

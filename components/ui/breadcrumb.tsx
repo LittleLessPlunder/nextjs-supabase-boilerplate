@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { CaretRight } from "@phosphor-icons/react";
 import Link from "next/link";
 
 interface BreadcrumbItem {
@@ -15,7 +15,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
     <nav className="flex items-center space-x-1 text-sm text-muted-foreground mb-4">
       {items.map((item, index) => (
         <div key={item.label} className="flex items-center">
-          {index > 0 && <ChevronRight className="h-4 w-4 mx-1" />}
+          {index > 0 && <CaretRight weight="light" className="h-4 w-4 mx-1" />}
           {item.href ? (
             <Link 
               href={item.href}

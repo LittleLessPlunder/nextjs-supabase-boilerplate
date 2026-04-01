@@ -174,7 +174,7 @@ export default function AddEmployeeForm({ employeeId }: { employeeId: string | n
               <div>
                 <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">Basic Info</h3>
                 <div className="grid gap-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                       <Label htmlFor="given_name">Given Name *</Label>
                       <Input
@@ -206,7 +206,7 @@ export default function AddEmployeeForm({ employeeId }: { employeeId: string | n
                       required
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                       <Label htmlFor="mobile_number">Mobile Number</Label>
                       <Input
@@ -230,7 +230,7 @@ export default function AddEmployeeForm({ employeeId }: { employeeId: string | n
                       onChange={handleInputChange}
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                       <Label htmlFor="hire_date">Hire Date</Label>
                       <DatePicker value={formData.hire_date} onChange={val => setFormData(prev => ({ ...prev, hire_date: val }))} />
@@ -264,7 +264,7 @@ export default function AddEmployeeForm({ employeeId }: { employeeId: string | n
               <div>
                 <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">YTW Details</h3>
                 <div className="grid gap-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                       <Label>Position</Label>
                       <Select

@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import { createApiClient } from '@/utils/supabase/api';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTenant } from '@/utils/tenant-context';
+import { Loading } from '@/components/ui/loading';
 import { getUserTenants } from '@/utils/supabase/queries';
 
 interface Tenant {
@@ -166,7 +167,7 @@ export default function AccountPage({
               </CardHeader>
               <CardContent>
                 {loading ? (
-                  <div>Loading tenants...</div>
+                  <Loading message="Loading tenants…" />
                 ) : (
                   <Select 
                     value={currentTenant?.id} 
