@@ -25,6 +25,7 @@ import {
   Download,
   Paperclip,
   Funnel,
+  type Icon as PhosphorIcon,
 } from '@phosphor-icons/react';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
@@ -71,7 +72,7 @@ const TYPE_META: Record<RecordType, { label: string; badge: string }> = {
   other:        { label: 'Other',        badge: 'bg-gray-100 text-gray-600'                },
 };
 
-const TYPE_ICONS: Record<RecordType, React.ComponentType<{ className?: string; weight?: string }>> = {
+const TYPE_ICONS: Record<RecordType, PhosphorIcon> = {
   tardiness:    Clock,
   warning:      Warning,
   memo:         FileText,
