@@ -62,8 +62,8 @@ export default function AuthForm() {
     } catch (err: any) {
       const msg: string = err.message ?? '';
       if (msg.toLowerCase().includes('rate limit')) {
-        setError('Too many requests — please wait a minute before trying again.');
-        startCooldown();
+        // A link was already sent — show the check-your-email screen instead of looping
+        setSent(true);
       } else {
         setError(msg || 'Something went wrong');
       }
