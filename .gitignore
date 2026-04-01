@@ -42,3 +42,11 @@ certificates
 
 # cursor
 .cursorrules
+
+# claude worktrees
+.claude/worktrees/
+
+# local data files
+backfill_*.sql
+*.bak
+tsconfig.tsbuildinfo

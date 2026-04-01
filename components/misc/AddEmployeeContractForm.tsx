@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createClient } from '@/utils/supabase/client';
@@ -271,25 +272,12 @@ export default function AddEmployeeContractForm({ contractId }: { contractId: st
 
               <div>
                 <Label htmlFor="start_date">Start Date *</Label>
-                <Input
-                  id="start_date"
-                  name="start_date"
-                  type="date"
-                  value={formData.start_date}
-                  onChange={handleInputChange}
-                  required
-                />
+                <DatePicker value={formData.start_date} onChange={val => setFormData(prev => ({ ...prev, start_date: val }))} />
               </div>
 
               <div>
                 <Label htmlFor="end_date">End Date</Label>
-                <Input
-                  id="end_date"
-                  name="end_date"
-                  type="date"
-                  value={formData.end_date}
-                  onChange={handleInputChange}
-                />
+                <DatePicker value={formData.end_date ?? ''} onChange={val => setFormData(prev => ({ ...prev, end_date: val }))} />
               </div>
             </div>
 

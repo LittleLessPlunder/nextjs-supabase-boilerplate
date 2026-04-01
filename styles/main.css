@@ -2,51 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
-/* *=========== Green theme =========== */
+/* ── YTW Brand Theme — Yoga Tayo Wellness, El Nido ───────────────────────────
+   Terracotta:  #A55437  HSL(16, 50%, 43%)  — primary actions
+   Olive:       #808368  HSL(67, 12%, 46%)  — surfaces & navigation
+   Background:  warm parchment cream, slightly cooled
+   Font:        Rubik
+   ──────────────────────────────────────────────────────────────────────────── */
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 355.7 100% 97.3%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
+    /* Background: warm but cooled — less parchment, more fresh linen */
+    --background:          34 12% 96%;
+    --foreground:          20 18% 14%;
+
+    /* Cards: clean white so they lift off the background */
+    --card:                0 0% 100%;
+    --card-foreground:     20 18% 14%;
+
+    --popover:             0 0% 100%;
+    --popover-foreground:  20 18% 14%;
+
+    /* Terracotta — primary action color */
+    --primary:             16 50% 43%;
+    --primary-foreground:  35 40% 97%;
+
+    /* Olive-tinted secondary */
+    --secondary:           67 12% 90%;
+    --secondary-foreground: 67 20% 22%;
+
+    /* Olive-tinted muted */
+    --muted:               67  8% 93%;
+    --muted-foreground:    67  6% 44%;
+
+    /* Olive accent */
+    --accent:              67 12% 90%;
+    --accent-foreground:   67 20% 22%;
+
+    --destructive:         0  84% 58%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 142.1 76.2% 36.3%;
-    --radius: 0.5rem;
+
+    /* Softer border — less grid-like */
+    --border:              34  8% 90%;
+    --input:               34  8% 90%;
+
+    /* Terracotta focus ring */
+    --ring:                16 50% 43%;
+
+    /* Slightly larger radius — modern feel */
+    --radius: 0.625rem;
   }
 
   .dark {
-    --background: 20 14.3% 4.1%;
-    --foreground: 0 0% 95%;
-    --card: 24 9.8% 10%;
-    --card-foreground: 0 0% 95%;
-    --popover: 0 0% 9%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 142.1 70.6% 45.3%;
-    --primary-foreground: 144.9 80.4% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 12 6.5% 15.1%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 85.7% 97.3%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 142.4 71.8% 29.2%;
+    --background:          24 10%  8%;
+    --foreground:          35 18% 92%;
+
+    --card:                24 10% 12%;
+    --card-foreground:     35 18% 92%;
+
+    --popover:             24 10% 10%;
+    --popover-foreground:  35 18% 92%;
+
+    --primary:             16 55% 58%;
+    --primary-foreground:  24 10%  8%;
+
+    --secondary:           67  8% 18%;
+    --secondary-foreground: 35 18% 90%;
+
+    --muted:               67  8% 15%;
+    --muted-foreground:    35  8% 54%;
+
+    --accent:              67  8% 18%;
+    --accent-foreground:   35 18% 90%;
+
+    --destructive:         0  63% 31%;
+    --destructive-foreground: 0 86% 97%;
+
+    --border:              24  8% 20%;
+    --input:               24  8% 20%;
+    --ring:                16 55% 58%;
   }
 }
 
@@ -54,7 +87,76 @@
   * {
     @apply border-border;
   }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* ── Lucide icons — lighter stroke for a modern feel ───────────────────── */
+  svg[class*="lucide"] {
+    stroke-width: 1.5;
+  }
+
+  /* ── Global interaction transitions ─────────────────────────────────────── */
+  /* Fast, spring-feel easing — smooth is fast */
+  a, button, [role="button"],
+  input, select, textarea {
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ── Focus rings — smooth and on-brand ───────────────────────────────────── */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring) / 0.7);
+    outline-offset: 2px;
+    border-radius: var(--radius);
+    transition: outline-offset 100ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ── Table rows — smooth hover ───────────────────────────────────────────── */
+  tbody tr {
+    transition: background-color 120ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ── Scrollbar — subtle, on-brand ───────────────────────────────────────── */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.4);
+  }
+}
+
+/* ── Page-level entry animation ─────────────────────────────────────────────
+   Applied to the <main> wrapper — content fades up gently on navigation.
+   Fast: 180ms. Never obstructs, just smooths the transition.            */
+@layer utilities {
+  .animate-page-in {
+    animation: page-in 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

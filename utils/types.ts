@@ -15,18 +15,23 @@ export type StateInfo = {
   hasOAuth: boolean;
 };
 
+export type RevenueStream = 'fnb' | 'yoga' | 'boutique' | 'general';
+
 export type Employee = {
   id: string;
-  company_email: string;
-  personal_email: string;
+  email: string;
   given_name: string;
   surname?: string;
-  citizenship?: string;
-  tax_residence?: string;
-  location?: string;
   mobile_number?: string;
   home_address?: string;
   birth_date?: string;
+  hire_date?: string;
+  position_id?: string;
+  revenue_stream?: RevenueStream;
+  daily_rate?: number;
+  sss_number?: string;
+  philhealth_number?: string;
+  pagibig_number?: string;
   is_active: boolean;
   is_deleted: boolean;
   created_at: string;

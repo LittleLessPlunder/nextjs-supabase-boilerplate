@@ -14,6 +14,7 @@ import { parse } from 'papaparse';
 interface Holiday {
   date: string;
   name: string;
+  type: string;
   tenant_id: string;
 }
 
@@ -68,9 +69,11 @@ export default function BulkImportHolidays({ onComplete }: { onComplete: () => v
                   return;
                 }
 
+                const type = row.type === 'special_non_working' ? 'special_non_working' : 'regular';
                 holidays.push({
                   date: row.date,
                   name: row.name,
+                  type,
                   tenant_id: currentTenant.id
                 });
               });
@@ -110,7 +113,7 @@ export default function BulkImportHolidays({ onComplete }: { onComplete: () => v
   };
 
   const handleDownloadTemplate = () => {
-    const template = 'date,name\n2024-01-01,New Year\'s Day\n2024-12-25,Christmas Day';
+    const template = 'date,name,type\n2026-01-01,New Year\'s Day,regular\n2026-11-01,All Saints\' Day,special_non_working';
     const blob = new Blob([template], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -138,7 +141,7 @@ export default function BulkImportHolidays({ onComplete }: { onComplete: () => v
               className="mt-1"
             />
             <p className="text-sm text-muted-foreground mt-1">
-              CSV should contain columns: date (YYYY-MM-DD), name
+              CSV columns: date (YYYY-MM-DD), name, type (regular or special_non_working)
             </p>
           </div>
 

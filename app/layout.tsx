@@ -1,17 +1,25 @@
 import { Metadata } from 'next';
 import { PropsWithChildren } from 'react';
+import { Rubik } from 'next/font/google';
 import { getURL } from '@/utils/helpers';
 import '@/styles/main.css';
 import { ThemeProvider } from '@/app/theme-provider';
 import { TenantProvider } from '@/utils/tenant-context';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@/components/ui/sonner';
+import NextTopLoader from 'nextjs-toploader';
+
+const rubik = Rubik({
+  subsets: ['latin'],
+  variable: '--font-rubik',
+  display: 'swap',
+});
 
 const meta = {
-  title: 'Your HRM SaaS',
-  description: 'Brought to you by Vercel and Supabase.',
+  title: 'YTW Portal',
+  description: 'Business Management System — Yoga Tayo Wellness, El Nido',
   cardImage: '/og.png',
-  robots: 'follow, index',
-  favicon: '/favicon.ico',
+  robots: 'noindex, nofollow',
+  favicon: '/ytw-favicon-olive.jpg',
   url: getURL()
 };
 
@@ -20,10 +28,10 @@ export async function generateMetadata(): Promise<Metadata> {
     title: meta.title,
     description: meta.description,
     referrer: 'origin-when-cross-origin',
-    keywords: ['Next.js', 'Supabase', 'Boilerplate'],
-    authors: [{ name: 'Vercel', url: 'https://vercel.com/' }],
-    creator: 'Vercel',
-    publisher: 'Vercel',
+    keywords: ['YTW', 'Yoga Tayo', 'El Nido', 'BMS'],
+    authors: [{ name: 'Yoga Tayo Wellness' }],
+    creator: 'Yoga Tayo Wellness',
+    publisher: 'Yoga Tayo Wellness',
     robots: meta.robots,
     icons: { icon: meta.favicon },
     metadataBase: new URL(meta.url),
@@ -52,8 +60,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className={rubik.variable}>
+      <body className="font-sans">
+        <NextTopLoader color="#A55437" showSpinner={false} />
         <TenantProvider>
           <ThemeProvider
             defaultTheme="system"
