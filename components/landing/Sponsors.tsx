@@ -1,5 +1,5 @@
 'use client';
-import { Radar } from '@phosphor-icons/react';
+import { Broadcast } from '@phosphor-icons/react';
 
 interface SponsorProps {
   icon: JSX.Element;
@@ -8,27 +8,27 @@ interface SponsorProps {
 
 const sponsors: SponsorProps[] = [
   {
-    icon: <Radar weight="light" size={34} />,
+    icon: <Broadcast weight="light" size={34} />,
     name: 'Sponsor 1'
   },
   {
-    icon: <Radar weight="light" size={34} />,
+    icon: <Broadcast weight="light" size={34} />,
     name: 'Sponsor 2'
   },
   {
-    icon: <Radar weight="light" size={34} />,
+    icon: <Broadcast weight="light" size={34} />,
     name: 'Sponsor 3'
   },
   {
-    icon: <Radar weight="light" size={34} />,
+    icon: <Broadcast weight="light" size={34} />,
     name: 'Sponsor 4'
   },
   {
-    icon: <Radar weight="light" size={34} />,
+    icon: <Broadcast weight="light" size={34} />,
     name: 'Sponsor 5'
   },
   {
-    icon: <Radar weight="light" size={34} />,
+    icon: <Broadcast weight="light" size={34} />,
     name: 'Sponsor 6'
   }
 ];
