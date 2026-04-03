@@ -43,10 +43,12 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(new URL('/auth/signin', request.url));
   }
 
-  if (session) {
+  if (session && !isAuthPage) {
     // ALLOWED_EMAILS is a comma-separated list of email addresses permitted to access
     // this portal. It can hold any number of emails — add or remove addresses freely
     // without touching code. If the env var is unset, the check is skipped entirely.
+    // Auth pages (signin, callback, update-password) are exempt so the password
+    // reset flow always completes regardless of allow-list membership.
     const allowedEmails = process.env.ALLOWED_EMAILS?.split(',').map(e => e.trim()).filter(Boolean) ?? [];
     if (allowedEmails.length > 0 && !allowedEmails.includes(session.user.email ?? '')) {
       await supabase.auth.signOut();
