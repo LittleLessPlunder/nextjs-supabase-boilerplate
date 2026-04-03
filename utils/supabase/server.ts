@@ -17,18 +17,15 @@ export async function createClient() {
           try {
             cookieStore.set(name, value, options);
           } catch (error) {
-            // Handle any errors that occur when setting cookies
+            // Expected in Server Components — cookies can only be written in
+            // Server Actions or Route Handlers. Safe to ignore here.
           }
         },
         remove(name: string, options: Omit<ResponseCookie, 'name' | 'value'>) {
           try {
-            // Pass options as a single object instead of separate arguments
-            cookieStore.delete({
-              name,
-              ...options
-            });
+            cookieStore.delete({ name, ...options });
           } catch (error) {
-            // Handle any errors that occur when removing cookies
+            // Expected in Server Components — safe to ignore here.
           }
         },
       },
