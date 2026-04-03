@@ -10,13 +10,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export type AuthState = 'signin' | 'forgot_password';
 
-export default function AuthForm({ state = 'signin' }: { state?: AuthState }) {
+export default function AuthForm({ state = 'signin', resetError }: { state?: AuthState; resetError?: string }) {
   const [email, setEmail]     = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError]     = useState<string | null>(null);
+  const [error, setError]     = useState<string | null>(resetError ?? null);
   const [sent, setSent]       = useState(false);
   const [loading, setLoading] = useState(false);
-  const [mode, setMode]       = useState<AuthState>(state);
+  const [mode, setMode]       = useState<AuthState>(resetError ? 'forgot_password' : state);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
