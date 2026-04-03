@@ -3,14 +3,16 @@ import { NextResponse } from 'next/server';
 import { updateSession } from '@/utils/supabase/middleware';
 
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
-  const { pathname } = request.nextUrl;
+  // Always run updateSession so cookies are refreshed on every route.
+  // The /landing page is public but still needs session cookie maintenance.
+  const sessionResponse = await updateSession(request);
 
-  if (pathname === '/landing') {
-    return response;
+  // Override the auth redirect for /landing — let it through regardless of session.
+  if (request.nextUrl.pathname === '/landing' && sessionResponse.status === 307) {
+    return NextResponse.next();
   }
 
-  return await updateSession(request);
+  return sessionResponse;
 }
 
 export const config = {

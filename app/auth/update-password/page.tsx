@@ -18,8 +18,9 @@ export default function UpdatePassword() {
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
+    // Use getUser() so the token is verified server-side, not just read from local storage.
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) {
         setError('Your reset link has expired or was already used. Please request a new one.');
       } else {
         setSessionReady(true);
@@ -38,8 +39,15 @@ export default function UpdatePassword() {
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
       router.push('/');
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong');
+    } catch (err: unknown) {
+      const code = (err as { code?: string })?.code;
+      if (code === 'same_password') {
+        setError('Your new password must be different from your current password.');
+      } else if (code === 'weak_password') {
+        setError('Password is too weak. Please choose a stronger password.');
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

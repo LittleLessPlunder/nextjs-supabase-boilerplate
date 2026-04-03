@@ -34,25 +34,29 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  const { data: { session } } = await supabase.auth.getSession();
+  // Use getUser() (not getSession()) so the JWT is verified server-side on every request.
+  const { data: { user } } = await supabase.auth.getUser();
 
   const isAuthPage = ['/auth/signin', '/auth/callback', '/auth/update-password'].some(p =>
     request.nextUrl.pathname.startsWith(p)
   );
-  if (!session && !isAuthPage) {
+  if (!user && !isAuthPage) {
     return NextResponse.redirect(new URL('/auth/signin', request.url));
   }
 
-  if (session && !isAuthPage) {
+  if (user && !isAuthPage) {
     // ALLOWED_EMAILS is a comma-separated list of email addresses permitted to access
     // this portal. It can hold any number of emails — add or remove addresses freely
     // without touching code. If the env var is unset, the check is skipped entirely.
     // Auth pages (signin, callback, update-password) are exempt so the password
     // reset flow always completes regardless of allow-list membership.
     const allowedEmails = process.env.ALLOWED_EMAILS?.split(',').map(e => e.trim()).filter(Boolean) ?? [];
-    if (allowedEmails.length > 0 && !allowedEmails.includes(session.user.email ?? '')) {
+    if (allowedEmails.length > 0 && !allowedEmails.includes(user.email ?? '')) {
+      // Return a redirect that carries the cleared session cookies from the signOut call.
       await supabase.auth.signOut();
-      return NextResponse.redirect(new URL('/auth/signin?error=unauthorized', request.url));
+      const redirectResponse = NextResponse.redirect(new URL('/auth/signin?error=unauthorized', request.url));
+      response.cookies.getAll().forEach(cookie => redirectResponse.cookies.set(cookie));
+      return redirectResponse;
     }
   }
 

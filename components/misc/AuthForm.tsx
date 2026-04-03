@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { getURL } from '@/utils/helpers';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { Button } from "@/components/ui/button";
@@ -34,13 +35,22 @@ export default function AuthForm({ state = 'signin', resetError }: { state?: Aut
         router.refresh();
       } else {
         const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/auth/callback?next=/auth/update-password`,
+          redirectTo: getURL('auth/callback?next=/auth/update-password'),
         });
         if (resetError) throw resetError;
         setSent(true);
       }
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong');
+    } catch (err: unknown) {
+      const code = (err as { code?: string })?.code;
+      if (code === 'invalid_credentials' || code === 'user_not_found') {
+        setError('Invalid email or password.');
+      } else if (code === 'over_email_send_rate_limit' || code === 'over_request_rate_limit') {
+        setError('Too many attempts. Please wait a few minutes and try again.');
+      } else if (code === 'email_not_confirmed') {
+        setError('Please confirm your email address before signing in.');
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

@@ -36,10 +36,14 @@ export async function GET(request: NextRequest) {
     if (code) {
       const { error } = await supabase.auth.exchangeCodeForSession(code);
       authError = error;
-    } else if (tokenHash && type) {
-      // Password reset links use token_hash + type=recovery instead of code
-      const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: type as 'recovery' | 'email' });
+    } else if (tokenHash && (type === 'recovery' || type === 'email')) {
+      // Password reset links use token_hash + type=recovery instead of code.
+      // type is validated at runtime — only accepted values are 'recovery' and 'email'.
+      const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
       authError = error;
+    } else if (tokenHash) {
+      // token_hash present but type is missing or not an accepted value — treat as error.
+      authError = { message: 'Invalid or missing token type' };
     }
 
     if (authError) {
