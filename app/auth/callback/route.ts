@@ -31,11 +31,21 @@ export async function GET(request: NextRequest) {
       }
     );
 
+    let authError: { message: string } | null = null;
+
     if (code) {
-      await supabase.auth.exchangeCodeForSession(code);
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      authError = error;
     } else if (tokenHash && type) {
       // Password reset links use token_hash + type=recovery instead of code
-      await supabase.auth.verifyOtp({ token_hash: tokenHash, type: type as 'recovery' | 'email' });
+      const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: type as 'recovery' | 'email' });
+      authError = error;
+    }
+
+    if (authError) {
+      return NextResponse.redirect(
+        new URL('/auth/signin?reset_error=1', request.url)
+      );
     }
   }
 

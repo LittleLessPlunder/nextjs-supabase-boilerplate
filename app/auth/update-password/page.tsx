@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { Button } from "@/components/ui/button";
@@ -9,11 +9,23 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function UpdatePassword() {
-  const [password, setPassword] = useState('');
-  const [confirm, setConfirm]   = useState('');
-  const [error, setError]       = useState<string | null>(null);
-  const [loading, setLoading]   = useState(false);
+  const [password, setPassword]     = useState('');
+  const [confirm, setConfirm]       = useState('');
+  const [error, setError]           = useState<string | null>(null);
+  const [loading, setLoading]       = useState(false);
+  const [sessionReady, setSessionReady] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        setError('Your reset link has expired or was already used. Please request a new one.');
+      } else {
+        setSessionReady(true);
+      }
+    });
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,9 +68,16 @@ export default function UpdatePassword() {
                   placeholder="Repeat your password" />
               </div>
               {error && (
-                <div className="bg-destructive/10 text-destructive text-sm p-2 rounded">{error}</div>
+                <div className="bg-destructive/10 text-destructive text-sm p-2 rounded space-y-2">
+                  <p>{error}</p>
+                  {!sessionReady && (
+                    <a href="/auth/signin" className="block text-xs underline underline-offset-2">
+                      Back to sign in to request a new link
+                    </a>
+                  )}
+                </div>
               )}
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button type="submit" className="w-full" disabled={loading || !sessionReady}>
                 {loading ? 'Saving…' : 'Set Password'}
               </Button>
             </form>
