@@ -3,12 +3,28 @@ import { NextResponse } from 'next/server';
 import { updateSession } from '@/utils/supabase/middleware';
 
 export async function middleware(request: NextRequest) {
-  // Always run updateSession so cookies are refreshed on every route.
-  // The /landing page is public but still needs session cookie maintenance.
+  const hostname = request.headers.get('host') ?? '';
+  const pathname = request.nextUrl.pathname;
+
+  // Public website — www.yogatayoelnido.com (or bare domain)
+  // Rewrite internally to /www/* so Next.js serves app/www/* pages.
+  // No auth required.
+  const isWww =
+    hostname.startsWith('www.') ||
+    hostname === 'yogatayoelnido.com' ||
+    process.env.NEXT_PUBLIC_SITE === 'www';
+
+  if (isWww) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname === '/' ? '/www' : `/www${pathname}`;
+    return NextResponse.rewrite(url);
+  }
+
+  // Portal — portal.yogatayoelnido.com (or localhost dev default)
+  // Run existing session + auth logic.
   const sessionResponse = await updateSession(request);
 
-  // Override the auth redirect for /landing — let it through regardless of session.
-  if (request.nextUrl.pathname === '/landing' && sessionResponse.status === 307) {
+  if (pathname === '/landing' && sessionResponse.status === 307) {
     return NextResponse.next();
   }
 
@@ -17,14 +33,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - images - .svg, .png, .jpg, .jpeg, .gif, .webp
-     * Feel free to modify this pattern to include more paths.
-     */
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'
   ]
 };

@@ -18,7 +18,8 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ['var(--font-rubik)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans:   ['var(--font-rubik)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        averia: ['var(--font-averia)', 'Georgia', 'serif'],
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -53,7 +54,22 @@ module.exports = {
         card: {
           DEFAULT:    'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
-        }
+        },
+
+        // ─── Yoga Tayo brand palette ──────────────────────────────────
+        'yt-terracotta': '#A55437',
+        'yt-olive':      '#808368',
+        'yt-cognac':     '#C08253',
+        'yt-sand':       '#E9D6C1',
+        'yt-beach':      '#D4B28F',
+        'yt-beige':      '#F9ECDE',
+
+        // ─── Om Nom Nom brand palette ─────────────────────────────────
+        'onn-mango':    '#F8B94E',
+        'onn-matcha':   '#555934',
+        'onn-mocha':    '#D4B28F',  // same as yt-beach
+        'onn-cream':    '#F9ECDE',  // same as yt-beige
+        'onn-milk-tea': '#E9D6C1',  // same as yt-sand
       },
       borderRadius: {
         lg: 'var(--radius)',
