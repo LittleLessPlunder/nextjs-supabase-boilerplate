@@ -3,8 +3,9 @@
   "configurations": [
     {
       "name": "Next.js dev server",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeExecutable": "/usr/local/bin/node",
+      "env": { "PATH": "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" },
+      "runtimeArgs": ["/Users/franciscocowper/Documents/nextjs-supabase-boilerplate/node_modules/.bin/next", "dev"],
       "port": 3000,
       "autoPort": true
     }

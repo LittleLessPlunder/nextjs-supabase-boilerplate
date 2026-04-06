@@ -18,7 +18,9 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ['var(--font-rubik)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans:    ['var(--font-rubik)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['var(--font-averia)', 'Georgia', 'serif'],
+        label:   ['var(--font-lekton)', 'ui-monospace', 'monospace'],
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -53,7 +55,25 @@ module.exports = {
         card: {
           DEFAULT:    'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
-        }
+        },
+        // ── Yoga Tayo brand palette (www site — explicit values, not CSS vars)
+        ytw: {
+          dark:       '#1C1207',
+          'off-white': '#F5F0E8',
+          offwhite:   '#F5F0E8',
+          sand:       '#D4C5A9',
+          cognac:     '#8B5A2B',
+          terracotta: '#C25C3E',
+          olive:      '#4A5240',
+        },
+        // ── Om Nom Nom brand palette
+        onn: {
+          cream:   '#F9ECDE',
+          greige:  '#E9D6C1',
+          mocha:   '#D4B28F',
+          mango:   '#F8B94E',
+          matcha:  '#555934',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',

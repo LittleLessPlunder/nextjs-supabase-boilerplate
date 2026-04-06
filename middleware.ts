@@ -3,16 +3,14 @@ import { NextResponse } from 'next/server';
 import { updateSession } from '@/utils/supabase/middleware';
 
 export async function middleware(request: NextRequest) {
-  // Always run updateSession so cookies are refreshed on every route.
-  // The /landing page is public but still needs session cookie maintenance.
-  const sessionResponse = await updateSession(request);
-
-  // Override the auth redirect for /landing — let it through regardless of session.
-  if (request.nextUrl.pathname === '/landing' && sessionResponse.status === 307) {
+  // Public routes — bypass auth entirely (no Supabase client needed).
+  const { pathname } = request.nextUrl;
+  if (pathname === '/landing' || pathname.startsWith('/yoga-tayo')) {
     return NextResponse.next();
   }
 
-  return sessionResponse;
+  // All other routes: refresh session cookies.
+  return await updateSession(request);
 }
 
 export const config = {
