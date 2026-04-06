@@ -7,7 +7,6 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Public website — www.yogatayoelnido.com (or bare domain)
-  // Rewrite internally to /www/* so Next.js serves app/www/* pages.
   // No auth required.
   const isWww =
     hostname.startsWith('www.') ||
@@ -20,8 +19,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
-  // Portal — portal.yogatayoelnido.com (or localhost dev default)
-  // Run existing session + auth logic.
+  // Dev convenience — /yoga-tayo path also bypasses auth.
+  if (pathname === '/landing' || pathname.startsWith('/yoga-tayo')) {
+    return NextResponse.next();
+  }
+
+  // Portal — portal.yogatayoelnido.com — run session + auth logic.
   const sessionResponse = await updateSession(request);
 
   if (pathname === '/landing' && sessionResponse.status === 307) {

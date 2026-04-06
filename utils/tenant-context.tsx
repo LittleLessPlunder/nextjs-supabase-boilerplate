@@ -38,8 +38,11 @@ export function TenantProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const initializeTenant = async () => {
+      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        return;
+      }
       const supabase = createClient();
-      
+
       try {
         const { data: { user } } = await supabase.auth.getUser();
         
