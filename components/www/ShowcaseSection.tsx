@@ -1,12 +1,11 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+gsap.registerPlugin(ScrollTrigger);
 
 const IMAGES = [
   {
@@ -32,7 +31,7 @@ const IMAGES = [
 export default function ShowcaseSection() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  useGSAP(() => {
+  useEffect(() => {
     gsap.from('.showcase-label', {
       y: 40, opacity: 0, duration: 1.0, ease: 'power3.out',
       scrollTrigger: { trigger: '.showcase-label', start: 'top 85%' },
@@ -53,7 +52,7 @@ export default function ShowcaseSection() {
       y: 20, opacity: 0, duration: 0.8, stagger: 0.12, ease: 'power3.out',
       scrollTrigger: { trigger: '.showcase-stats', start: 'top 85%' },
     });
-  }, { scope: sectionRef });
+  }, []);
 
   return (
     <section

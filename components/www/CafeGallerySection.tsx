@@ -1,12 +1,11 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+gsap.registerPlugin(ScrollTrigger);
 
 const CAFE_POSTS = [
   {
@@ -38,7 +37,7 @@ const CAFE_POSTS = [
 export default function CafeGallerySection() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  useGSAP(() => {
+  useEffect(() => {
     gsap.from('.cafe-label', {
       y: 40, opacity: 0, duration: 1.0, ease: 'power3.out',
       scrollTrigger: { trigger: '.cafe-label', start: 'top 85%' },
@@ -55,7 +54,7 @@ export default function CafeGallerySection() {
       y: 20, opacity: 0, duration: 0.8, ease: 'power3.out',
       scrollTrigger: { trigger: '.cafe-footer', start: 'top 90%' },
     });
-  }, { scope: sectionRef });
+  }, []);
 
   return (
     <section

@@ -2,9 +2,6 @@
 
 import { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-
-gsap.registerPlugin(useGSAP);
 
 interface SiteNavProps {
   onBook: () => void;
@@ -20,11 +17,11 @@ export default function SiteNav({ onBook }: SiteNavProps) {
     return () => window.removeEventListener('scroll', handler);
   }, []);
 
-  useGSAP(() => {
+  useEffect(() => {
     gsap.from(navRef.current, {
       y: -20, opacity: 0, duration: 1.0, ease: 'power3.out', delay: 0.2,
     });
-  }, { scope: navRef });
+  }, []);
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
