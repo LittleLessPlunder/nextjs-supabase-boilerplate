@@ -57,7 +57,7 @@ function StatCard({
   label, value, sub, icon: Icon, iconBg, iconColor, loading,
 }: {
   label: string; value: string; sub?: string;
-  icon: React.ElementType; iconBg: string; iconColor: string; loading: boolean;
+  icon: React.ComponentType<{ className?: string }>; iconBg: string; iconColor: string; loading: boolean;
 }) {
   return (
     <div className="bg-white rounded-2xl p-5 shadow-sm border border-black/5 flex flex-col gap-3">
@@ -82,7 +82,7 @@ function StatCard({
 function Shortcut({
   icon: Icon, label, href, accent = 'bg-gray-100 text-gray-600',
 }: {
-  icon: React.ElementType; label: string; href: string; accent?: string;
+  icon: React.ComponentType<{ className?: string }>; label: string; href: string; accent?: string;
 }) {
   const router = useRouter();
   return (

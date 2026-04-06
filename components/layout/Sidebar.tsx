@@ -16,9 +16,9 @@ interface SidebarProps {
   user?: User | null;
 }
 
-type NavChild = { title: string; href: string; icon: React.ElementType };
+type NavChild = { title: string; href: string; icon: React.ComponentType<{ className?: string }> };
 type NavSection =
-  | { kind: 'link';    title: string; href: string; icon: React.ElementType }
+  | { kind: 'link';    title: string; href: string; icon: React.ComponentType<{ className?: string }> }
   | { kind: 'section'; title: string; children: NavChild[] };
 
 const NAV: NavSection[] = [
