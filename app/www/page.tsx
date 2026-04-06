@@ -1,24 +1,19 @@
 import { Metadata } from 'next';
-import HeroSection from '@/components/public/HeroSection';
-import SpaceSection from '@/components/public/SpaceSection';
-import ClassesSection from '@/components/public/ClassesSection';
-import BookSection from '@/components/public/BookSection';
-import CafeSection from '@/components/public/CafeSection';
-import LocationSection from '@/components/public/LocationSection';
+import YogaTayoPage from '@/components/www/YogaTayoPage';
 
 export const metadata: Metadata = {
-  title: 'Yoga Tayo — El Nido, Palawan',
+  title: 'Yoga Tayo + Om Nom Nom — El Nido, Palawan',
+  description:
+    'A yoga & pilates studio and café in the heart of El Nido, Palawan. Find your flow. Good food, good mood.',
+  robots: 'index, follow',
+  icons: { icon: '/ytw-favicon-olive.jpg' },
+  openGraph: {
+    title: 'Yoga Tayo + Om Nom Nom — El Nido, Palawan',
+    description: 'A yoga & pilates studio and café in the heart of El Nido, Palawan.',
+    type: 'website',
+  },
 };
 
 export default function PublicHome() {
-  return (
-    <main>
-      <HeroSection />
-      <SpaceSection />
-      <ClassesSection />
-      <BookSection />
-      <CafeSection />
-      <LocationSection />
-    </main>
-  );
+  return <YogaTayoPage />;
 }
