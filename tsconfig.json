@@ -21,6 +21,9 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "three": [
+        "./node_modules/@types/three/index.d.ts"
       ]
     },
     "incremental": true,
