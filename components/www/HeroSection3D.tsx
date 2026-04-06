@@ -1,11 +1,8 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-
-gsap.registerPlugin(useGSAP);
 
 const HeroScene = dynamic(() => import('./HeroScene'), { ssr: false });
 
@@ -16,13 +13,16 @@ interface HeroSection3DProps {
 export default function HeroSection3D({ onBook }: HeroSection3DProps) {
   const containerRef = useRef<HTMLElement>(null);
 
-  useGSAP(() => {
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    tl.from('.hero-eyebrow', { y: 30, opacity: 0, duration: 1.0, delay: 0.6 })
-      .from('.hero-title', { y: 60, opacity: 0, duration: 1.4, stagger: 0.12 }, '-=0.5')
-      .from('.hero-sub', { y: 24, opacity: 0, duration: 1.0 }, '-=0.6')
-      .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, '-=0.5');
-  }, { scope: containerRef });
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      tl.from('.hero-eyebrow', { y: 30, opacity: 0, duration: 1.0, delay: 0.5 })
+        .from('.hero-title', { y: 60, opacity: 0, duration: 1.4, stagger: 0.12 }, '-=0.5')
+        .from('.hero-sub', { y: 24, opacity: 0, duration: 1.0 }, '-=0.6')
+        .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, '-=0.5');
+    }, containerRef);
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section
