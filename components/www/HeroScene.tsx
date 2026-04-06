@@ -3,25 +3,34 @@
 import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float } from '@react-three/drei';
-import * as THREE from 'three';
+
+// ─── Wave plane — manipulates geometry vertices each frame ───────────────────
 
 function WavePlane() {
-  const meshRef = useRef<THREE.Mesh>(null);
-  const posRef = useRef<Float32Array | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const meshRef = useRef<any>(null);
+  const origPositions = useRef<Float32Array | null>(null);
   const clock = useRef(0);
 
-  const geometry = useMemo(() => {
-    const geo = new THREE.PlaneGeometry(18, 10, 80, 50);
-    posRef.current = new Float32Array(geo.attributes.position.array);
-    return geo;
-  }, []);
+  const args = useMemo(
+    (): [number, number, number, number] => [18, 10, 80, 50],
+    [],
+  );
 
   useFrame((_, delta) => {
     if (!meshRef.current) return;
+    const geo = meshRef.current.geometry;
+    if (!geo) return;
+
+    // Capture original positions once
+    if (!origPositions.current) {
+      origPositions.current = new Float32Array(geo.attributes.position.array);
+    }
+
     clock.current += delta * 0.4;
     const t = clock.current;
-    const pos = meshRef.current.geometry.attributes.position;
-    const orig = posRef.current!;
+    const pos = geo.attributes.position;
+    const orig = origPositions.current;
 
     for (let i = 0; i < pos.count; i++) {
       const ox = orig[i * 3];
@@ -33,23 +42,29 @@ function WavePlane() {
       pos.setZ(i, z);
     }
     pos.needsUpdate = true;
-    meshRef.current.geometry.computeVertexNormals();
+    geo.computeVertexNormals();
   });
 
   return (
-    <mesh ref={meshRef} geometry={geometry} rotation={[-Math.PI / 5, 0, 0]} position={[0, -0.8, 0]}>
-      <meshStandardMaterial
-        color="#3B3020"
-        wireframe={false}
-        roughness={0.85}
-        metalness={0.05}
-        side={THREE.DoubleSide}
-      />
+    <mesh ref={meshRef} rotation={[-Math.PI / 5, 0, 0]} position={[0, -0.8, 0]}>
+      <planeGeometry args={args} />
+      {/* side={2} = DoubleSide */}
+      <meshStandardMaterial color="#3B3020" side={2} roughness={0.85} metalness={0.05} />
     </mesh>
   );
 }
 
-function FloatingOrb({ position, color, scale }: { position: [number, number, number]; color: string; scale: number }) {
+// ─── Floating ambient orb ─────────────────────────────────────────────────────
+
+function FloatingOrb({
+  position,
+  color,
+  scale,
+}: {
+  position: [number, number, number];
+  color: string;
+  scale: number;
+}) {
   return (
     <Float speed={1.2} rotationIntensity={0.3} floatIntensity={0.6}>
       <mesh position={position} scale={scale}>
@@ -59,6 +74,8 @@ function FloatingOrb({ position, color, scale }: { position: [number, number, nu
     </Float>
   );
 }
+
+// ─── Scene ────────────────────────────────────────────────────────────────────
 
 function Scene() {
   return (
@@ -75,6 +92,8 @@ function Scene() {
     </>
   );
 }
+
+// ─── Canvas export ───────────────────────────────────────────────────────────
 
 export default function HeroScene() {
   return (
