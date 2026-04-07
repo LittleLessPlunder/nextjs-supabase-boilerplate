@@ -13,7 +13,7 @@ export interface PublicSlot {
   class_date: string; // YYYY-MM-DD
   start_time: string; // HH:MM:SS
   duration_minutes: number;
-  price: number;
+  price_php: number;
   teacher_name: string;
   max_capacity: number;
   notes: string | null;
@@ -471,7 +471,7 @@ export function BookingModal({ open, preselectedSlot, onClose }: BookingModalPro
                   {formatSlotDate(selectedSlot)} · {formatTime(selectedSlot.start_time)} · {selectedSlot.duration_minutes} min
                 </p>
                 <p className="text-sm font-medium text-foreground mt-1">
-                  PHP {selectedSlot.price.toLocaleString()}
+                  PHP {selectedSlot.price_php.toLocaleString()}
                 </p>
                 {selectedSlot.notes && (
                   <p className="text-xs text-muted-foreground mt-1.5 italic">{selectedSlot.notes}</p>

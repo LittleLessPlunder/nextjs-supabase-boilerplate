@@ -1,6 +1,6 @@
 'use client';
 
-import { MapPin, Users, Clock } from 'lucide-react';
+import { MapPin, Users } from 'lucide-react';
 
 const pillars = [
   {
@@ -12,11 +12,6 @@ const pillars = [
     icon: Users,
     label: 'Inclusive community',
     description: 'Locals, expats, and travellers — all welcome, every day.',
-  },
-  {
-    icon: Clock,
-    label: 'Flexible schedule',
-    description: 'Morning, afternoon, and evening sessions, seven days a week.',
   },
 ];
 
@@ -39,17 +34,17 @@ export const About = () => {
             {/* Overlapping accent card */}
             <div className="absolute -bottom-6 -right-4 lg:-right-8 rounded-2xl bg-card border border-border shadow-lg p-5 max-w-[220px]">
               <p className="text-xs text-muted-foreground uppercase tracking-widest mb-2">
-                Our shala
+                Our Studio
               </p>
               <p className="text-sm text-foreground leading-snug">
-                Open-air, sea-breeze cooled, and built from local materials.
+                Classes at our beachfront space and in our air-conditioned studio room.
               </p>
             </div>
 
             {/* Top-left badge */}
             <div className="absolute -top-4 -left-4 lg:-left-6 rounded-2xl bg-primary text-primary-foreground px-5 py-3 shadow-md">
               <p className="text-xs font-medium opacity-80 uppercase tracking-widest">Founded</p>
-              <p className="text-2xl font-bold">2018</p>
+              <p className="text-2xl font-bold">2021</p>
             </div>
           </div>
 

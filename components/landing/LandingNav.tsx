@@ -81,18 +81,7 @@ export function LandingNav({ user, onBook }: LandingNavProps) {
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
-          {user ? (
-            <Button asChild size="sm">
-              <Link href="/auth/signin">Go to Portal</Link>
-            </Button>
-          ) : (
-            <>
-              <Button asChild variant="ghost" size="sm">
-                <Link href="/auth/signin">Sign in</Link>
-              </Button>
-              <Button size="sm" onClick={() => onBook()}>Book a Class</Button>
-            </>
-          )}
+          <Button size="sm" onClick={() => onBook()}>Book a Class</Button>
         </div>
 
         {/* Mobile menu button */}
@@ -118,10 +107,7 @@ export function LandingNav({ user, onBook }: LandingNavProps) {
               {label}
             </a>
           ))}
-          <div className="pt-2 flex flex-col gap-2">
-            <Button asChild variant="outline" size="sm" className="w-full">
-              <Link href="/auth/signin">Sign in</Link>
-            </Button>
+          <div className="pt-2">
             <Button size="sm" className="w-full" onClick={() => { setOpen(false); onBook(); }}>Book a Class</Button>
           </div>
         </div>

@@ -308,7 +308,7 @@ function SlotCard({
           <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
           {style.tag}
         </div>
-        <span className="text-sm font-semibold text-foreground">PHP {slot.price.toLocaleString()}</span>
+        <span className="text-sm font-semibold text-foreground">PHP {slot.price_php.toLocaleString()}</span>
       </div>
 
       <div className="flex-1">
