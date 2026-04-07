@@ -30,10 +30,10 @@ function buildWhatsAppUrl(params: {
   class_name: string;
   class_date: string;
   start_time: string;
-  price: number;
+  price_php: number;
   client_name: string;
 }): string {
-  const { class_name, class_date, start_time, price, client_name } = params;
+  const { class_name, class_date, start_time, price_php, client_name } = params;
 
   // Format date nicely: "Wed Apr 9"
   const dateObj = new Date(`${class_date}T${start_time}+08:00`);
@@ -50,7 +50,7 @@ function buildWhatsAppUrl(params: {
     timeZone: 'Asia/Manila',
   });
 
-  const msg = `Hi! I'd like to book ${class_name} on ${dateFmt} at ${timeFmt} (PHP ${price.toLocaleString()}). My name is ${client_name}.`;
+  const msg = `Hi! I'd like to book ${class_name} on ${dateFmt} at ${timeFmt} (PHP ${price_php.toLocaleString()}). My name is ${client_name}.`;
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
 }
 
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
   // Fetch the slot to verify it exists, is active, and has capacity
   const { data: slot, error: slotError } = await supabase
     .from('class_slots')
-    .select('id, class_name, category, class_date, start_time, price, max_capacity, tenant_id, is_active')
+    .select('id, class_name, category, class_date, start_time, price_php, max_capacity, tenant_id, is_active')
     .eq('id', slot_id)
     .eq('is_active', true)
     .single();
@@ -125,7 +125,7 @@ export async function POST(request: NextRequest) {
     class_name: slot.class_name,
     class_date: slot.class_date,
     start_time: slot.start_time,
-    price: slot.price,
+    price_php: slot.price_php,
     client_name,
   });
 

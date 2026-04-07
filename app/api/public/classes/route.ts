@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
 
   const { data: slots, error } = await supabase
     .from('class_slots')
-    .select('id, class_name, category, class_date, start_time, duration_minutes, price, teacher_name, max_capacity, notes')
+    .select('id, class_name, category, class_date, start_time, duration_minutes, price_php, teacher_name, max_capacity, notes')
     .gte('class_date', startStr)
     .lte('class_date', endStr)
     .eq('is_active', true)

@@ -4,6 +4,10 @@ import { ArrowRight, Wind } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { PublicSlot } from './BookingModal';
 
+// Google Maps Place ID for Yoga Tayo at Lio Beach
+const GOOGLE_REVIEW_URL =
+  'https://www.google.com/maps/place/?q=place_id:ChIJEddJOwSrtzMRTidZR6tQhfA';
+
 interface HeroProps {
   onBook: (slot?: PublicSlot) => void;
 }
@@ -89,10 +93,15 @@ export function Hero({ onBook }: HeroProps) {
               <p className="text-xs text-muted-foreground">Class styles</p>
             </div>
             <div className="w-px h-8 bg-border" />
-            <div className="text-center">
+            <a
+              href={GOOGLE_REVIEW_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-center hover:opacity-80 transition-opacity"
+            >
               <p className="text-2xl font-bold text-foreground">4.9★</p>
-              <p className="text-xs text-muted-foreground">Guest rating</p>
-            </div>
+              <p className="text-xs text-muted-foreground underline underline-offset-2">Guest rating</p>
+            </a>
           </div>
         </div>
 
@@ -103,7 +112,7 @@ export function Hero({ onBook }: HeroProps) {
             <div className="col-span-1 row-span-2 rounded-2xl overflow-hidden bg-[hsl(16_30%_88%)] aspect-[3/4] flex items-end p-5">
               <div className="space-y-1">
                 <p className="text-xs font-medium text-[hsl(16_50%_35%)] uppercase tracking-widest">Morning Flow</p>
-                <p className="text-sm text-[hsl(16_30%_25%)]">Sunrise Hatha</p>
+                <p className="text-sm text-[hsl(16_30%_25%)]">Vinyasa (Mellow or Dynamic)</p>
               </div>
             </div>
 
@@ -111,7 +120,7 @@ export function Hero({ onBook }: HeroProps) {
             <div className="rounded-2xl overflow-hidden bg-[hsl(67_15%_86%)] aspect-square flex items-end p-5">
               <div className="space-y-1">
                 <p className="text-xs font-medium text-[hsl(67_20%_30%)] uppercase tracking-widest">Pilates</p>
-                <p className="text-sm text-[hsl(67_20%_20%)]">Mat & Reform</p>
+                <p className="text-sm text-[hsl(67_20%_20%)]">Reformer</p>
               </div>
             </div>
 
@@ -124,16 +133,19 @@ export function Hero({ onBook }: HeroProps) {
             </div>
           </div>
 
-          {/* Floating accent badge */}
-          <div className="absolute -bottom-4 -left-6 rounded-2xl bg-card border border-border shadow-md px-5 py-4 flex items-center gap-3">
+          {/* Floating "Book a class" badge — links to modal */}
+          <button
+            onClick={() => onBook()}
+            className="absolute -bottom-4 -left-6 rounded-2xl bg-card border border-border shadow-md px-5 py-4 flex items-center gap-3 hover:shadow-lg transition-shadow cursor-pointer text-left"
+          >
             <div className="w-9 h-9 rounded-full bg-primary/15 flex items-center justify-center">
               <Wind className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Next class</p>
-              <p className="text-sm font-semibold text-foreground">Tomorrow · 7 AM</p>
+              <p className="text-xs text-muted-foreground">Ready to start?</p>
+              <p className="text-sm font-semibold text-foreground">Book a class →</p>
             </div>
-          </div>
+          </button>
         </div>
       </div>
 
