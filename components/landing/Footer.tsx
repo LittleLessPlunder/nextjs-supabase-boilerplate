@@ -28,9 +28,6 @@ const links = {
     { label: 'Instagram', href: 'https://instagram.com' },
     { label: 'Facebook', href: 'https://facebook.com' },
   ],
-  Team: [
-    { label: 'Staff portal', href: '/auth/signin' },
-  ],
 };
 
 export function Footer() {
@@ -53,6 +50,7 @@ export function Footer() {
               Yoga, pilates, and mindful movement in the heart of El Nido, Palawan.
             </p>
             <address className="not-italic text-xs text-muted-foreground space-y-0.5">
+              <p>Shops at Lio Beach, Lio</p>
               <p>El Nido, Palawan 5313</p>
               <p>Philippines</p>
             </address>

@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -10,20 +9,25 @@ export const Cta = () => {
       <div className="max-w-6xl mx-auto px-6">
         {/* Location strip */}
         <div className="rounded-3xl overflow-hidden grid lg:grid-cols-2 gap-0 border border-border">
-          {/* Map-like colour block */}
-          <div
-            className="min-h-56 lg:min-h-auto"
-            style={{
-              background:
-                'linear-gradient(160deg, hsl(200 45% 72%) 0%, hsl(185 50% 60%) 40%, hsl(175 45% 55%) 100%)',
-            }}
-          >
-            {/* Decorative overlay */}
-            <div className="h-full flex items-end p-8">
+          {/* Google Maps embed */}
+          <div className="relative min-h-56 lg:min-h-full overflow-hidden">
+            <iframe
+              src="https://maps.google.com/maps?q=11.208226,119.41645&z=17&output=embed"
+              width="100%"
+              height="100%"
+              className="absolute inset-0 w-full h-full"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Yoga Tayo El Nido location"
+            />
+            {/* "Find us" overlay card */}
+            <div className="absolute bottom-0 left-0 p-8 z-10 pointer-events-none">
               <div className="rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 px-5 py-4 text-white">
                 <p className="text-xs font-medium opacity-80 uppercase tracking-widest mb-1">Find us</p>
-                <p className="font-semibold text-lg leading-snug">El Nido, Palawan</p>
-                <p className="text-sm opacity-80">Philippines · 5313</p>
+                <p className="font-semibold text-lg leading-snug">Lio Beach, El Nido</p>
+                <p className="text-sm opacity-80">Shops at Lio · Palawan 5313</p>
               </div>
             </div>
           </div>
@@ -54,14 +58,6 @@ export const Cta = () => {
                   View schedule
                   <ArrowRight className="h-4 w-4" />
                 </a>
-              </Button>
-              <Button
-                asChild
-                variant="ghost"
-                size="lg"
-                className="rounded-full px-7 text-primary-foreground hover:bg-white/15"
-              >
-                <Link href="/auth/signin">Team login</Link>
               </Button>
             </div>
           </div>

@@ -25,6 +25,7 @@ function YTWMark({ className = '' }: { className?: string }) {
 const navLinks = [
   { label: 'Classes', href: '#classes' },
   { label: 'About', href: '#about' },
+  { label: 'Café', href: '#cafe' },
   { label: 'Location', href: '#location' },
 ];
 
