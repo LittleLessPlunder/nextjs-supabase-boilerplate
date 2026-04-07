@@ -1,18 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { z } from 'zod';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-const bookingSchema = z.object({
-  slot_id: z.string().uuid(),
-  client_name: z.string().min(2).max(100),
-  client_phone: z.string().min(7).max(20),
-  client_email: z.string().email(),
-});
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validateBody(body: unknown): { slot_id: string; client_name: string; client_phone: string; client_email: string } | null {
+  if (!body || typeof body !== 'object') return null;
+  const b = body as Record<string, unknown>;
+  if (typeof b.slot_id !== 'string' || !UUID_RE.test(b.slot_id)) return null;
+  if (typeof b.client_name !== 'string' || b.client_name.trim().length < 2 || b.client_name.length > 100) return null;
+  if (typeof b.client_phone !== 'string' || b.client_phone.trim().length < 7 || b.client_phone.length > 20) return null;
+  if (typeof b.client_email !== 'string' || !EMAIL_RE.test(b.client_email)) return null;
+  return {
+    slot_id: b.slot_id,
+    client_name: b.client_name.trim(),
+    client_phone: b.client_phone.trim(),
+    client_email: b.client_email.trim(),
+  };
+}
 
 const WHATSAPP_NUMBER = '639166832927';
 
@@ -52,12 +62,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const parsed = bookingSchema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json({ error: 'Invalid request', details: parsed.error.flatten() }, { status: 400 });
+  const parsed = validateBody(body);
+  if (!parsed) {
+    return NextResponse.json({ error: 'Invalid request: check all fields are present and valid' }, { status: 400 });
   }
 
-  const { slot_id, client_name, client_phone, client_email } = parsed.data;
+  const { slot_id, client_name, client_phone, client_email } = parsed;
 
   // Fetch the slot to verify it exists, is active, and has capacity
   const { data: slot, error: slotError } = await supabase
