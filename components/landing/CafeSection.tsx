@@ -157,6 +157,25 @@ export function CafeSection() {
                 </p>
               </div>
             </div>
+            <a
+              href="https://www.google.com/maps/place/?q=place_id:ChIJEddJOwSrtzMRTidZR6tQhfA"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-start gap-4 hover:opacity-80 transition-opacity"
+            >
+              <div
+                className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-lg"
+                style={{ background: 'hsl(38 90% 88%)' }}
+              >
+                ⭐
+              </div>
+              <div>
+                <p className="font-semibold text-foreground text-sm mb-0.5">4.8 on Google</p>
+                <p className="text-sm text-muted-foreground underline underline-offset-2">
+                  See reviews
+                </p>
+              </div>
+            </a>
           </div>
         </div>
 

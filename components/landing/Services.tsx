@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button'; // used on individual slot cards
 import type { PublicSlot } from './BookingModal';
 
 const MANILA_TZ = 'Asia/Manila';
@@ -96,26 +96,17 @@ export function Services({ onBook }: ServicesProps) {
     <section id="classes" className="py-24 sm:py-32 bg-background">
       <div className="max-w-6xl mx-auto px-6">
         {/* Section header */}
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
-          <div className="max-w-xl">
-            <p className="text-xs font-medium text-primary uppercase tracking-widest mb-3">
-              Weekly schedule
-            </p>
-            <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground mb-4">
-              Classes for every body.
-            </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed">
-              From energising morning flows to restorative evening sessions — all held
-              in our open-air shala overlooking the sea.
-            </p>
-          </div>
-          <Button
-            size="lg"
-            className="rounded-full px-7 shrink-0"
-            onClick={() => onBook()}
-          >
-            Book a Class
-          </Button>
+        <div className="max-w-xl mb-10">
+          <p className="text-xs font-medium text-primary uppercase tracking-widest mb-3">
+            Weekly schedule
+          </p>
+          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground mb-4">
+            Classes for every body.
+          </h2>
+          <p className="text-muted-foreground text-lg leading-relaxed">
+            From energising morning flows to restorative evening sessions — all held
+            in our open-air studio overlooking the sea.
+          </p>
         </div>
 
         {/* Week navigation */}
