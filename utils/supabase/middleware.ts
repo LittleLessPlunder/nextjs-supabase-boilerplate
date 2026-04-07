@@ -40,7 +40,14 @@ export async function updateSession(request: NextRequest) {
   const isAuthPage = ['/auth/signin', '/auth/callback', '/auth/update-password'].some(p =>
     request.nextUrl.pathname.startsWith(p)
   );
-  if (!user && !isAuthPage) {
+  const isPublicPage = request.nextUrl.pathname === '/landing';
+
+  // Root path: send unauthenticated visitors to the public site, not the sign-in page.
+  if (!user && request.nextUrl.pathname === '/') {
+    return NextResponse.redirect(new URL('/landing', request.url));
+  }
+
+  if (!user && !isAuthPage && !isPublicPage) {
     return NextResponse.redirect(new URL('/auth/signin', request.url));
   }
 
