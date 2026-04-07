@@ -2649,3 +2649,140 @@ export async function getAllEmployeeRecords(supabase: SupabaseClient, tenantId: 
   if (error) throw error;
   return data ?? [];
 }
+
+// ─── Class Slots ────────────────────────────────────────────────────────────
+
+export interface ClassSlot {
+  id: string;
+  tenant_id: string;
+  class_name: string;
+  class_date: string;        // ISO date string YYYY-MM-DD
+  start_time: string;        // HH:MM:SS
+  duration_minutes: number;
+  price_php: number;
+  category: 'yoga' | 'reformer_pilates' | 'sound_healing' | 'private';
+  teacher_name: string | null;
+  max_capacity: number;
+  notes: string | null;
+  is_active: boolean;
+  created_at: string;
+  booking_count?: number;    // joined client-side from class_bookings
+}
+
+export interface ClassBooking {
+  id: string;
+  tenant_id: string;
+  slot_id: string;
+  client_name: string;
+  client_phone: string;
+  client_email: string;
+  payment_status: 'pending' | 'paid' | 'cancelled';
+  paymaya_ref: string | null;
+  notes: string | null;
+  created_at: string;
+}
+
+export async function getClassSlots(
+  supabase: SupabaseClient,
+  tenantId: string,
+  dateFrom?: string,
+  dateTo?: string
+): Promise<ClassSlot[]> {
+  let query = supabase
+    .from('class_slots')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .eq('is_active', true)
+    .order('class_date', { ascending: true })
+    .order('start_time', { ascending: true });
+
+  if (dateFrom) query = query.gte('class_date', dateFrom);
+  if (dateTo)   query = query.lte('class_date', dateTo);
+
+  const { data, error } = await query;
+  if (error) { console.error('Error fetching class slots:', error); return []; }
+  return data ?? [];
+}
+
+export async function getClassSlot(
+  supabase: SupabaseClient,
+  id: string
+): Promise<ClassSlot | null> {
+  const { data, error } = await supabase
+    .from('class_slots')
+    .select('*')
+    .eq('id', id)
+    .single();
+  if (error) { console.error('Error fetching class slot:', error); return null; }
+  return data;
+}
+
+export async function addClassSlot(
+  supabase: SupabaseClient,
+  tenantId: string,
+  slot: Omit<ClassSlot, 'id' | 'tenant_id' | 'created_at' | 'booking_count'>
+): Promise<ClassSlot> {
+  const { data, error } = await supabase
+    .from('class_slots')
+    .insert([{ ...slot, tenant_id: tenantId }])
+    .select()
+    .single();
+  if (error) { console.error('Error adding class slot:', error); throw error; }
+  return data;
+}
+
+export async function updateClassSlot(
+  supabase: SupabaseClient,
+  id: string,
+  updates: Partial<Omit<ClassSlot, 'id' | 'tenant_id' | 'created_at' | 'booking_count'>>
+): Promise<ClassSlot> {
+  const { data, error } = await supabase
+    .from('class_slots')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) { console.error('Error updating class slot:', error); throw error; }
+  return data;
+}
+
+export async function deactivateClassSlot(
+  supabase: SupabaseClient,
+  id: string
+): Promise<void> {
+  const { error } = await supabase
+    .from('class_slots')
+    .update({ is_active: false })
+    .eq('id', id);
+  if (error) { console.error('Error deactivating class slot:', error); throw error; }
+}
+
+export async function getBookingsForSlot(
+  supabase: SupabaseClient,
+  slotId: string
+): Promise<ClassBooking[]> {
+  const { data, error } = await supabase
+    .from('class_bookings')
+    .select('*')
+    .eq('slot_id', slotId)
+    .order('created_at', { ascending: true });
+  if (error) { console.error('Error fetching bookings:', error); return []; }
+  return data ?? [];
+}
+
+export async function getBookingCountsBySlots(
+  supabase: SupabaseClient,
+  slotIds: string[]
+): Promise<Record<string, number>> {
+  if (slotIds.length === 0) return {};
+  const { data, error } = await supabase
+    .from('class_bookings')
+    .select('slot_id')
+    .in('slot_id', slotIds)
+    .neq('payment_status', 'cancelled');
+  if (error) { console.error('Error fetching booking counts:', error); return {}; }
+  return (data ?? []).reduce<Record<string, number>>((acc, row) => {
+    acc[row.slot_id] = (acc[row.slot_id] ?? 0) + 1;
+    return acc;
+  }, {});
+}
