@@ -132,6 +132,11 @@ module.exports = {
           from: { opacity: '0', transform: 'translateX(-6px)' },
           to:   { opacity: '1', transform: 'translateX(0)' }
         },
+        'scrollDrop': {
+          '0%':   { transform: 'translateY(-100%)' },
+          '50%':  { transform: 'translateY(0%)' },
+          '100%': { transform: 'translateY(100%)' },
+        },
       },
       animation: {
         'accordion-down':  'accordion-down 0.2s ease-out',
@@ -139,6 +144,7 @@ module.exports = {
         'fade-in':         'fade-in 0.15s cubic-bezier(0.16, 1, 0.3, 1) both',
         'fade-in-scale':   'fade-in-scale 0.15s cubic-bezier(0.16, 1, 0.3, 1) both',
         'slide-in-left':   'slide-in-left 0.15s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'scrollDrop':      'scrollDrop 1.8s ease-in-out infinite',
       }
     }
   },
