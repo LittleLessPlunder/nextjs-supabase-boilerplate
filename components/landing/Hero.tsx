@@ -4,9 +4,7 @@ import { ArrowRight, Wind } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { PublicSlot } from './BookingModal';
 
-// Google Maps Place ID for Yoga Tayo at Lio Beach
-const GOOGLE_REVIEW_URL =
-  'https://www.google.com/maps/place/?q=place_id:ChIJEddJOwSrtzMRTidZR6tQhfA';
+const YOGA_TAYO_REVIEW_URL = 'https://share.google/SJpSaF5cKYQ9j2lWp';
 
 interface HeroProps {
   onBook: (slot?: PublicSlot) => void;
@@ -94,13 +92,13 @@ export function Hero({ onBook }: HeroProps) {
             </div>
             <div className="w-px h-8 bg-border" />
             <a
-              href={GOOGLE_REVIEW_URL}
+              href={YOGA_TAYO_REVIEW_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="text-center hover:opacity-80 transition-opacity"
             >
-              <p className="text-2xl font-bold text-foreground">4.9★</p>
-              <p className="text-xs text-muted-foreground underline underline-offset-2">Guest rating</p>
+              <p className="text-2xl font-bold text-foreground">5★</p>
+              <p className="text-xs text-muted-foreground underline underline-offset-2">Studio rating</p>
             </a>
           </div>
         </div>
@@ -133,19 +131,16 @@ export function Hero({ onBook }: HeroProps) {
             </div>
           </div>
 
-          {/* Floating "Book a class" badge — links to modal */}
-          <button
-            onClick={() => onBook()}
-            className="absolute -bottom-4 -left-6 rounded-2xl bg-card border border-border shadow-md px-5 py-4 flex items-center gap-3 hover:shadow-lg transition-shadow cursor-pointer text-left"
-          >
+          {/* Floating info badge */}
+          <div className="absolute -bottom-4 -left-6 rounded-2xl bg-card border border-border shadow-md px-5 py-4 flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-primary/15 flex items-center justify-center">
               <Wind className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Ready to start?</p>
-              <p className="text-sm font-semibold text-foreground">Book a class →</p>
+              <p className="text-xs text-muted-foreground">All levels welcome</p>
+              <p className="text-sm font-semibold text-foreground">Lio Beach · El Nido</p>
             </div>
-          </button>
+          </div>
         </div>
       </div>
 
