@@ -1,12 +1,90 @@
 'use client';
 
+import Link from 'next/link';
+
+function YTWMark({ className = '' }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 1080 339"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden
+    >
+      <path d="M770.634 101.641L754.776 68.553C751.347 61.4282 740.345 63.9018 729.493 62.4242H605.195C593.835 63.1375 583.329 59.6098 583.329 49.4931V14.0721C583.329 6.31342 576.315 0 567.651 0H509.17C500.506 0 493.493 6.28807 493.493 14.0721V49.4931C493.493 59.6098 483.665 63.4579 471.627 62.4242L335.945 62.9669C324.63 63.8627 325.449 61.4282 322.045 68.553L306.187 101.641C302.758 108.766 306.445 117.057 314.387 120.125L432.201 129.182C437.951 131.413 441.69 136.485 441.69 142.113V324.906C441.69 332.665 448.703 338.978 457.367 338.978H494.782C503.446 338.978 510.459 332.69 510.459 324.906V281.727C510.459 273.969 517.473 267.655 526.137 267.655H550.685C559.349 267.655 566.362 273.943 566.362 281.727V324.906C566.362 332.665 573.376 338.978 582.04 338.978H619.454C628.118 338.978 635.132 332.69 635.132 324.906V142.113C635.132 136.485 638.871 131.413 644.621 129.182L762.435 120.125C770.377 117.057 774.064 108.791 770.634 101.641Z" fill="currentColor"/>
+      <path d="M459.15 101.641L443.563 72.7051C440.133 65.5803 441.02 63.2579 431.591 62.4242H293.71C282.519 63.6807 271.844 59.6098 271.844 49.4931V14.0721C271.844 6.31342 264.831 0 256.167 0H197.686C189.022 0 182.008 6.28807 182.008 14.0721V49.4931C182.008 59.6098 170.482 66.405 160.142 62.4242L42.644 6.51069C34.7021 3.44272 20.5444 9.85599 17.1407 16.9808L1.28272 50.0692C-2.14674 57.1939 1.54055 65.485 9.48247 68.553L120.716 129.182C126.466 131.414 130.205 136.485 130.205 142.113V323.793C130.205 331.552 137.219 337.866 145.883 337.866H183.297C191.961 337.866 198.975 331.577 198.975 323.793V280.615C198.975 272.856 205.989 266.543 214.652 266.543H239.2C247.864 266.543 254.877 272.831 254.877 280.615V323.793C254.877 331.552 261.891 337.866 270.555 337.866H307.97C316.634 337.866 323.647 331.577 323.647 323.793V142.113C323.647 136.485 327.386 131.414 333.136 129.182L450.95 120.125C458.892 117.057 462.579 108.792 459.15 101.641Z" fill="currentColor"/>
+      <path d="M620.85 101.641L636.437 72.7051C639.866 65.5803 638.98 63.2579 648.409 62.4242H786.289C797.481 63.6807 808.156 59.6098 808.156 49.4931V14.0721C808.156 6.31342 815.169 0 823.833 0H882.314C890.978 0 897.992 6.28807 897.992 14.0721V49.4931C897.992 59.6098 909.518 66.405 919.858 62.4242L1037.36 6.51069C1045.3 3.44272 1059.46 9.85599 1062.86 16.9808L1078.72 50.0692C1082.15 57.1939 1078.46 65.485 1070.52 68.553L959.284 129.182C953.534 131.414 949.795 136.485 949.795 142.113V323.793C949.795 331.552 942.781 337.866 934.117 337.866H896.703C888.039 337.866 881.025 331.577 881.025 323.793V280.615C881.025 272.856 874.011 266.543 865.348 266.543H840.8C832.136 266.543 825.122 272.831 825.122 280.615V323.793C825.122 331.552 818.109 337.866 809.445 337.866H772.03C763.366 337.866 756.353 331.577 756.353 323.793V142.113C756.353 136.485 752.614 131.414 746.864 129.182L629.05 120.125C621.108 117.057 617.421 108.792 620.85 101.641Z" fill="currentColor"/>
+    </svg>
+  );
+}
+
+const links = {
+  Studio: [
+    { label: 'Classes', href: '#classes' },
+    { label: 'About', href: '#about' },
+    { label: 'Location', href: '#location' },
+  ],
+  Connect: [
+    { label: 'Instagram', href: 'https://instagram.com' },
+    { label: 'Facebook', href: 'https://facebook.com' },
+  ],
+  Team: [
+    { label: 'Staff portal', href: '/auth/signin' },
+  ],
+};
+
 export function Footer() {
   return (
-    <footer className="border-t mt-12 py-6">
-      <div className="container mx-auto px-4">
-        <p className="text-center text-muted-foreground">
-          © {new Date().getFullYear()} Your HRM SaaS. All rights reserved.
-        </p>
+    <footer className="border-t border-border bg-background">
+      <div className="max-w-6xl mx-auto px-6 py-16">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+          {/* Brand column */}
+          <div className="sm:col-span-2 lg:col-span-1 space-y-4">
+            <div className="flex items-center gap-2.5">
+              <YTWMark className="h-6 w-auto text-primary" />
+              <div className="leading-none">
+                <span className="font-semibold text-sm tracking-tight text-foreground">Yoga Tayo</span>
+                <span className="block text-[10px] text-muted-foreground tracking-widest uppercase">
+                  Wellness
+                </span>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-[220px]">
+              Yoga, pilates, and mindful movement in the heart of El Nido, Palawan.
+            </p>
+            <address className="not-italic text-xs text-muted-foreground space-y-0.5">
+              <p>El Nido, Palawan 5313</p>
+              <p>Philippines</p>
+            </address>
+          </div>
+
+          {/* Link columns */}
+          {Object.entries(links).map(([group, items]) => (
+            <div key={group}>
+              <p className="text-xs font-semibold text-foreground uppercase tracking-widest mb-4">
+                {group}
+              </p>
+              <ul className="space-y-2.5">
+                {items.map(({ label, href }) => (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom bar */}
+        <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
+          <p>© {new Date().getFullYear()} Yoga Tayo Wellness. All rights reserved.</p>
+          <p className="tracking-wide">El Nido · Palawan · Philippines</p>
+        </div>
       </div>
     </footer>
   );
