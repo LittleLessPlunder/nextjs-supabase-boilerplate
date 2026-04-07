@@ -1,10 +1,14 @@
 'use client';
 
-import Link from 'next/link';
 import { ArrowRight, Wind } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import type { PublicSlot } from './BookingModal';
 
-export function Hero() {
+interface HeroProps {
+  onBook: (slot?: PublicSlot) => void;
+}
+
+export function Hero({ onBook }: HeroProps) {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-background">
       {/* Warm radial backdrop */}
@@ -64,11 +68,9 @@ export function Hero() {
 
           {/* CTAs */}
           <div className="flex flex-wrap gap-3">
-            <Button asChild size="lg" className="rounded-full px-7 gap-2">
-              <a href="#classes">
-                Browse classes
-                <ArrowRight className="h-4 w-4" />
-              </a>
+            <Button size="lg" className="rounded-full px-7 gap-2" onClick={() => onBook()}>
+              Browse classes
+              <ArrowRight className="h-4 w-4" />
             </Button>
             <Button asChild variant="outline" size="lg" className="rounded-full px-7">
               <a href="#about">Our story</a>

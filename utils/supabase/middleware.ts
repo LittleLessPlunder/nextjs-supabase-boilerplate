@@ -40,7 +40,9 @@ export async function updateSession(request: NextRequest) {
   const isAuthPage = ['/auth/signin', '/auth/callback', '/auth/update-password'].some(p =>
     request.nextUrl.pathname.startsWith(p)
   );
-  const isPublicPage = request.nextUrl.pathname === '/landing';
+  const isPublicPage =
+    request.nextUrl.pathname === '/landing' ||
+    request.nextUrl.pathname.startsWith('/api/public/');
 
   // Hostname-based routing: on the public domain (www.*) serve only the landing page;
   // everything else redirects to /landing. On the portal domain (portal.*) apply the
