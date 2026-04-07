@@ -40,7 +40,23 @@ export async function updateSession(request: NextRequest) {
   const isAuthPage = ['/auth/signin', '/auth/callback', '/auth/update-password'].some(p =>
     request.nextUrl.pathname.startsWith(p)
   );
-  if (!user && !isAuthPage) {
+  const isPublicPage = request.nextUrl.pathname === '/landing';
+
+  // Hostname-based routing: on the public domain (www.*) serve only the landing page;
+  // everything else redirects to /landing. On the portal domain (portal.*) apply the
+  // standard BMS auth guards.
+  const host = request.headers.get('host') ?? '';
+  const isPublicHost = host.startsWith('www.') || host === 'yogatayoelnido.com';
+  if (isPublicHost && !isPublicPage && request.nextUrl.pathname !== '/') {
+    return NextResponse.redirect(new URL('/landing', request.url));
+  }
+
+  // Root path: send unauthenticated visitors to the public site, not the sign-in page.
+  if (!user && request.nextUrl.pathname === '/') {
+    return NextResponse.redirect(new URL('/landing', request.url));
+  }
+
+  if (!user && !isAuthPage && !isPublicPage) {
     return NextResponse.redirect(new URL('/auth/signin', request.url));
   }
 
