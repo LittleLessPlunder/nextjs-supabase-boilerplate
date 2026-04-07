@@ -29,11 +29,14 @@ const navLinks = [
   { label: 'Location', href: '#location' },
 ];
 
+import type { PublicSlot } from './BookingModal';
+
 interface LandingNavProps {
   user: { email?: string } | null;
+  onBook: (slot?: PublicSlot) => void;
 }
 
-export function LandingNav({ user }: LandingNavProps) {
+export function LandingNav({ user, onBook }: LandingNavProps) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -87,9 +90,7 @@ export function LandingNav({ user }: LandingNavProps) {
               <Button asChild variant="ghost" size="sm">
                 <Link href="/auth/signin">Sign in</Link>
               </Button>
-              <Button asChild size="sm">
-                <a href="#classes">Book a Class</a>
-              </Button>
+              <Button size="sm" onClick={() => onBook()}>Book a Class</Button>
             </>
           )}
         </div>
@@ -121,9 +122,7 @@ export function LandingNav({ user }: LandingNavProps) {
             <Button asChild variant="outline" size="sm" className="w-full">
               <Link href="/auth/signin">Sign in</Link>
             </Button>
-            <Button asChild size="sm" className="w-full">
-              <a href="#classes" onClick={() => setOpen(false)}>Book a Class</a>
-            </Button>
+            <Button size="sm" className="w-full" onClick={() => { setOpen(false); onBook(); }}>Book a Class</Button>
           </div>
         </div>
       )}

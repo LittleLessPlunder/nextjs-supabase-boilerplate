@@ -6,7 +6,7 @@ import { Logo } from './Logo';
 import {
   Users, Briefcase, X, Calendar, FileText, Clock, Database,
   Calculator, Receipt, Store, TrendingUp, CreditCard, BarChart2,
-  LayoutDashboard, Search, CheckSquare, LogOut,
+  LayoutDashboard, Search, CheckSquare, LogOut, Dumbbell, BookOpen,
 } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
@@ -24,6 +24,12 @@ type NavSection =
 const NAV: NavSection[] = [
   { kind: 'link',    title: 'Dashboard', href: '/',       icon: LayoutDashboard },
   { kind: 'link',    title: 'Search',    href: '/search', icon: Search          },
+  {
+    kind: 'section', title: 'Studio',
+    children: [
+      { title: 'Class Schedule', href: '/classes',          icon: Dumbbell  },
+    ],
+  },
   {
     kind: 'section', title: 'Finance',
     children: [
