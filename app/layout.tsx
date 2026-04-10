@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/app/theme-provider';
 import { TenantProvider } from '@/utils/tenant-context';
 import { Toaster } from '@/components/ui/sonner';
 import NextTopLoader from 'nextjs-toploader';
+import { Analytics } from '@vercel/analytics/next';
 
 const rubik = Rubik({
   subsets: ['latin'],
@@ -76,6 +77,7 @@ export default async function RootLayout({
             <Toaster />
           </ThemeProvider>
         </TenantProvider>
+        <Analytics />
       </body>
     </html>
   );
